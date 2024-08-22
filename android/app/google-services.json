@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "951002606",
+    "project_id": "link-win-daf7d",
+    "storage_bucket": "link-win-daf7d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:951002606:android:b745ffb2e669b6f2e29aff",
+        "android_client_info": {
+          "package_name": "com.linkwin.linkwin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtpUr7FlpXDT6JwBm7aZEONZ-xt4heTyk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
