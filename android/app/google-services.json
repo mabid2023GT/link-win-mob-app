@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:951002606:android:91d975e8a5248d99e29aff",
+        "android_client_info": {
+          "package_name": "com.linkwin.link_win_mob_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtpUr7FlpXDT6JwBm7aZEONZ-xt4heTyk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:951002606:android:b745ffb2e669b6f2e29aff",
         "android_client_info": {
           "package_name": "com.linkwin.linkwin"
