@@ -23,3 +23,5 @@ const kCaption = Color(0xFF656565);
 const kSelectedTabColor = Color(0xFF7DB9B3);
 
 const transparent = Colors.transparent;
+
+const white = Colors.white;
