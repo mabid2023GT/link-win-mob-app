@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
+import 'package:link_win_mob_app/features/on_boarding/on_boarding_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'LinkWin',
       debugShowCheckedModeBanner: false,
       theme: kAppThemeData,
-      home: const Scaffold(),
+      home: OnBoardingScreen(),
     );
   }
 }
