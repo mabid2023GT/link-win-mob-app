@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/features/on_boarding/on_boarding_screen_background.dart';
@@ -62,7 +63,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 pageIndex: _pageIndex,
                 pageCount: _onboardingData.length),
             NextButton(
-              onTap: () {},
+              onTap: () {
+                context.go('/auth');
+              },
             ),
           ],
         ),
