@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'LinkWin',
       debugShowCheckedModeBanner: false,
       theme: kAppThemeData,
-      home: OnBoardingScreen(),
+      home: const OnBoardingScreen(),
     );
   }
 }
