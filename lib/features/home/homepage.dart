@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       child: (minSize, maxSize) {
         Size bottomNavBarSize = Size(maxSize.width, maxSize.height * 0.1);
         return Scaffold(
-          backgroundColor: k2MainThemeColor,
+          backgroundColor: kWhite,
           body: IndexedStack(
             index: _selectedIndex,
             children: _pages,

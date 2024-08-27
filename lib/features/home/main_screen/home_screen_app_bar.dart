@@ -13,6 +13,7 @@ class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       automaticallyImplyLeading: false,
       centerTitle: false,
+      backgroundColor: kWhite,
       title: Padding(
         padding: EdgeInsets.only(
           left: screenUtil.screenWidth * 0.05,

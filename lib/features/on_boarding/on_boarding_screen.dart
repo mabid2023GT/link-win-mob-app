@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/features/on_boarding/on_boarding_screen_background.dart';
+import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/responsive_percentage_layout.dart';
 import 'dart:math' as math;
@@ -93,30 +94,47 @@ class OnBoardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
-      child: (minSize, maxSize) => Container(
-        color: Colors.transparent,
-        width: maxSize.width,
-        height: maxSize.height,
-        child: ResponsivePercentageLayout(
-          size: maxSize,
-          screenUtil: screenUtil,
-          isRow: false,
-          percentages: const [
-            5,
-            15,
-            60,
-            20,
-          ],
-          children: [
-            _welcomToWidget(context),
-            _linkWinWidget(context),
-            _imageWidget(context),
-            _descriptionWidget(context),
-          ],
-        ),
-      ),
+    return AutoResponsivePercentageLayout(
+      screenUtil: screenUtil,
+      isRow: false,
+      percentages: const [
+        5,
+        15,
+        60,
+        20,
+      ],
+      children: [
+        _welcomToWidget(context),
+        _linkWinWidget(context),
+        _imageWidget(context),
+        _descriptionWidget(context),
+      ],
     );
+
+    // return LayoutBuilderChild(
+    //   child: (minSize, maxSize) => Container(
+    //     color: Colors.transparent,
+    //     width: maxSize.width,
+    //     height: maxSize.height,
+    //     child: ResponsivePercentageLayout(
+    //       size: maxSize,
+    //       screenUtil: screenUtil,
+    //       isRow: false,
+    //       percentages: const [
+    //         5,
+    //         15,
+    //         60,
+    //         20,
+    //       ],
+    //       children: [
+    //         _welcomToWidget(context),
+    //         _linkWinWidget(context),
+    //         _imageWidget(context),
+    //         _descriptionWidget(context),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 
   _welcomToWidget(BuildContext context) {

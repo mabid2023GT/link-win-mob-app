@@ -15,12 +15,21 @@ class HomeNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BorderSide borderSide = const BorderSide(
+      color: kSelectedTabColor,
+      width: 2,
+    );
     return Container(
       height: size.height,
       width: size.width,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: kWhite,
+        border: Border(
+          left: borderSide,
+          right: borderSide,
+          top: borderSide,
+        ),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(
             size.width * 0.1,
