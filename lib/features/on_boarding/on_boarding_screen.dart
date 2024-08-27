@@ -64,7 +64,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 pageCount: _onboardingData.length),
             NextButton(
               onTap: () {
-                context.go('/auth');
+                context.go('/nav');
               },
             ),
           ],

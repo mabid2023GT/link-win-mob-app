@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/features/auth/auth_screen.dart';
+import 'package:link_win_mob_app/features/home/homepage.dart';
 import 'package:link_win_mob_app/features/on_boarding/on_boarding_screen.dart';
 
 void main() {
@@ -12,18 +13,25 @@ void main() {
 final GoRouter _router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
-        path: '/',
-        builder: (BuildContext context, GoRouterState state) {
-          return const OnBoardingScreen();
-        },
-        routes: <RouteBase>[
-          GoRoute(
-            path: 'auth',
-            builder: (BuildContext context, GoRouterState state) {
-              return const AuthScreen();
-            },
-          ),
-        ])
+      path: '/',
+      builder: (BuildContext context, GoRouterState state) {
+        return const OnBoardingScreen();
+      },
+      routes: <RouteBase>[
+        GoRoute(
+          path: 'auth',
+          builder: (BuildContext context, GoRouterState state) {
+            return const AuthScreen();
+          },
+        ),
+        GoRoute(
+          path: 'nav',
+          builder: (BuildContext context, GoRouterState state) {
+            return const HomePage();
+          },
+        ),
+      ],
+    ),
   ],
 );
 
@@ -39,12 +47,6 @@ class MyApp extends StatelessWidget {
       theme: kAppThemeData,
       routerConfig: _router,
     );
-    // return MaterialApp(
-    //   title: 'LinkWin',
-    //   debugShowCheckedModeBanner: false,
-    //   theme: kAppThemeData,
-    //   home: const OnBoardingScreen(),
-    // );
   }
 }
 
@@ -55,6 +57,10 @@ ThemeData _buildAppTheme() {
   final baseTextTheme = GoogleFonts.poppinsTextTheme(base.textTheme);
   return base.copyWith(
     scaffoldBackgroundColor: kWhite,
+    appBarTheme: const AppBarTheme(
+      backgroundColor: transparent,
+      elevation: 0.0,
+    ),
     textTheme: baseTextTheme.copyWith(
       // Title
       displayLarge: baseTextTheme.displayLarge!.copyWith(
