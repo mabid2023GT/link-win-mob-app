@@ -41,15 +41,16 @@ class HomeScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     margin: EdgeInsets.only(left: 24.0),
                     decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: k3GradientAccent,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 12.0,
-                            offset: const Offset(0, 4),
-                            color: k3Pink.withOpacity(0.52),
-                          )
-                        ]),
+                      shape: BoxShape.circle,
+                      gradient: k3GradientAccent,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 12.0,
+                          offset: const Offset(0, 4),
+                          color: k3Pink.withOpacity(0.52),
+                        )
+                      ],
+                    ),
                   )
                 ],
               )

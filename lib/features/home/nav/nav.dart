@@ -3,37 +3,35 @@ import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/features/home/nav/nav_svg_icon.dart';
 
 class HomeNav extends StatelessWidget {
-  final Size maxSize;
+  final Size size;
   final void Function(int index) changePageTo;
   final int selectedIndex;
   const HomeNav({
     super.key,
-    required this.maxSize,
+    required this.size,
     required this.changePageTo,
     required this.selectedIndex,
   });
 
   @override
   Widget build(BuildContext context) {
-    double bottomNavBarHeight = maxSize.height * 0.1;
-
     return Container(
-      height: bottomNavBarHeight,
-      width: maxSize.width,
+      height: size.height,
+      width: size.width,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: kWhite,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(
-            maxSize.width * 0.1,
+            size.width * 0.1,
           ),
           topRight: Radius.circular(
-            maxSize.width * 0.1,
+            size.width * 0.1,
           ),
         ),
         boxShadow: [
           BoxShadow(
-            blurRadius: bottomNavBarHeight * 0.5,
+            blurRadius: size.height * 0.5,
             // offset: Offset(0, 4),
             color: kBlack.withOpacity(0.15),
             // color: k2MainThemeColor,
@@ -46,29 +44,29 @@ class HomeNav extends StatelessWidget {
           NavSvgIcon(
             iconIndex: 0,
             iconPath: 'assets/icons/home.svg',
-            bottomNavBarHeight: bottomNavBarHeight,
+            bottomNavBarHeight: size.height,
             changePageTo: changePageTo,
             selectedIndex: selectedIndex,
           ),
           NavSvgIcon(
             iconIndex: 1,
-            iconPath: 'assets/icons/message.svg',
-            bottomNavBarHeight: bottomNavBarHeight,
+            iconPath: 'assets/icons/construction_tools.svg',
+            bottomNavBarHeight: size.height,
             changePageTo: changePageTo,
             selectedIndex: selectedIndex,
           ),
           const SizedBox(),
           NavSvgIcon(
             iconIndex: 2,
-            iconPath: 'assets/icons/favorite.svg',
-            bottomNavBarHeight: bottomNavBarHeight,
+            iconPath: 'assets/icons/looking-for-job.svg',
+            bottomNavBarHeight: size.height,
             changePageTo: changePageTo,
             selectedIndex: selectedIndex,
           ),
           NavSvgIcon(
             iconIndex: 3,
             iconPath: 'assets/icons/profile.svg',
-            bottomNavBarHeight: bottomNavBarHeight,
+            bottomNavBarHeight: size.height,
             changePageTo: changePageTo,
             selectedIndex: selectedIndex,
           ),

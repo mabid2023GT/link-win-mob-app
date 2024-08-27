@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen.dart';
 import 'package:link_win_mob_app/features/home/nav/nav.dart';
@@ -42,17 +41,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return LayoutBuilderChild(
       child: (minSize, maxSize) {
+        Size bottomNavBarSize = Size(maxSize.width, maxSize.height * 0.1);
         return Scaffold(
           backgroundColor: k2MainThemeColor,
           body: IndexedStack(
             index: _selectedIndex,
             children: _pages,
           ),
-          floatingActionButton: _floatingActionButton(),
+          floatingActionButton: NavFloatingActionButton(
+            iconPath: _fetchFloatingActionButtonIcon(),
+            bottomNavBarSize: bottomNavBarSize,
+            onTap: () {},
+          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: HomeNav(
-            maxSize: maxSize,
+            size: bottomNavBarSize,
             changePageTo: _changePageTo,
             selectedIndex: _selectedIndex,
           ),
@@ -61,16 +65,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _floatingActionButton() {
-    return NavFloatingActionButton(
-      child: SvgPicture.asset(
-        'assets/icons/plus.svg',
-        colorFilter: const ColorFilter.mode(
-          kWhite,
-          BlendMode.srcIn,
-        ),
-      ),
-      onTap: () {},
-    );
+  _fetchFloatingActionButtonIcon() {
+    return _selectedIndex == 3
+        ? 'assets/icons/settings.svg'
+        : 'assets/icons/plus.svg';
   }
 }
