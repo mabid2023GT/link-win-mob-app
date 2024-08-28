@@ -6,8 +6,6 @@ import 'package:link_win_mob_app/features/home/main_screen/home_screen_backgroun
 import 'package:link_win_mob_app/features/home/main_screen/home_screen_body.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen_header.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
-import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
-import 'package:link_win_mob_app/responsive_ui_tools/widgets/responsive_percentage_layout.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

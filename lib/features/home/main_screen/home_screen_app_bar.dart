@@ -68,8 +68,8 @@ class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       child: SvgPicture.asset(
         iconPath,
-        width: kToolbarHeight * 0.6,
-        height: kToolbarHeight * 0.6,
+        width: kToolbarHeight * 0.5,
+        height: kToolbarHeight * 0.5,
       ),
     );
   }

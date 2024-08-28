@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/core/extensions/size_extensions/size_extensions.dart';
+import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
+import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
+import 'package:link_win_mob_app/core/utils/extensions/size_extensions.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
+import 'package:link_win_mob_app/features/home/main_screen/home_screen_post_body.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/responsive_percentage_layout.dart';
 
 class HomeScreenPost extends StatelessWidget {
-  const HomeScreenPost({super.key});
+  final HomeScreenPostData homeScreenPostData;
+  const HomeScreenPost({
+    super.key,
+    required this.homeScreenPostData,
+  });
   final double borderRadiusPercentage = 0.05;
 
   @override
@@ -69,7 +75,7 @@ class HomeScreenPost extends StatelessWidget {
         children: [
           _headerDetailsImage(maxSize),
           Container(
-            alignment: Alignment.center,
+            alignment: AlignmentDirectional.centerStart,
             width: maxSize.width * 0.75,
             height: maxSize.height,
             child: Column(
@@ -77,13 +83,17 @@ class HomeScreenPost extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Mohammad Abid AAAAAAAAAAA',
-                  style: Theme.of(context).textTheme.titleMedium,
+                  'Mohammad Abid',
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        color: kWhite,
+                      ),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   '10 h',
-                  style: Theme.of(context).textTheme.titleSmall,
+                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                        color: kWhite,
+                      ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -106,7 +116,7 @@ class HomeScreenPost extends StatelessWidget {
       decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: kBlack,
+            color: kWhite,
             width: 1,
           )),
       child: ClipOval(
@@ -130,6 +140,7 @@ class HomeScreenPost extends StatelessWidget {
           child: Icon(
             Icons.more_vert,
             size: maxSize.height * 0.75,
+            color: kWhite,
           ),
         ),
       ),
@@ -148,17 +159,12 @@ class HomeScreenPost extends StatelessWidget {
         );
         return Stack(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.purple,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(
-                    maxSize.width * borderRadiusPercentage,
-                  ),
-                  topRight: Radius.circular(
-                    maxSize.width * borderRadiusPercentage,
-                  ),
-                ),
+            SizedBox(
+              width: maxSize.width,
+              height: maxSize.height,
+              child: HomeScreenPostBody(
+                borderRadiusPercentage: borderRadiusPercentage,
+                homeScreenPostData: homeScreenPostData,
               ),
             ),
             Positioned(
@@ -193,14 +199,18 @@ class HomeScreenPost extends StatelessWidget {
         _actionButton(
           context: context,
           svgPath: 'assets/icons/hands_clapping.svg',
-          actionLabel: '1.2 K',
+          actionLabel: homeScreenPostData.fetchActionsData(
+            action: HomeScreenPostActions.support,
+          ),
           isClicked: true,
         ),
         const SizedBox(),
         _actionButton(
           context: context,
           svgPath: 'assets/icons/heart.svg',
-          actionLabel: '10.2 K',
+          actionLabel: homeScreenPostData.fetchActionsData(
+            action: HomeScreenPostActions.favorite,
+          ),
           isClicked: true,
           color: kRed,
         ),
@@ -208,7 +218,9 @@ class HomeScreenPost extends StatelessWidget {
         _actionButton(
           context: context,
           svgPath: 'assets/icons/like.svg',
-          actionLabel: '400',
+          actionLabel: homeScreenPostData.fetchActionsData(
+            action: HomeScreenPostActions.like,
+          ),
           isClicked: false,
         ),
         const SizedBox(),
