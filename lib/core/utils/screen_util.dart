@@ -18,6 +18,9 @@ class ScreenUtil {
   /// Returns the screen height
   double get screenHeight => MediaQuery.of(_context).size.height;
 
+  /// Returns the screen size
+  Size get size => Size(screenWidth, screenHeight);
+
   /// Returns the responsive size based on the percentage of the screen width
   double widthPercentage(double percentage) => screenWidth * (percentage / 100);
 

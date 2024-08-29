@@ -79,6 +79,7 @@ class HomeScreenPostBody extends StatelessWidget {
             builder: (context) => FullScreenMedia(
               fullScreenMediaType: FullScreenMediaType.image,
               urls: [homeScreenPostData.content[0]],
+              homeScreenPostData: homeScreenPostData,
             ),
           ),
         );

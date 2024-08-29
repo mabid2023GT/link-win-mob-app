@@ -1,3 +1,4 @@
+import 'package:link_win_mob_app/core/models/home_screen_post_profile_details.dart';
 import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
 
 class HomeScreenPostData {
@@ -5,12 +6,16 @@ class HomeScreenPostData {
   final List<String> content;
   final String postId;
   final Map<HomeScreenPostActions, String> actionsData;
+  final HomeScreenPostProfileDetails homeScreenPostProfileDetails;
+  final DateTime postedAt;
 
   HomeScreenPostData({
     required this.homeScreenPostType,
     required this.content,
     required this.postId,
     required this.actionsData,
+    required this.homeScreenPostProfileDetails,
+    required this.postedAt,
   });
 
   String fetchActionsData({

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
+import 'package:link_win_mob_app/core/models/home_screen_post_profile_details.dart';
 import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
 import 'package:link_win_mob_app/features/home/main_screen/post_widgets/home_screen_post.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
@@ -30,6 +31,12 @@ class HomeScreenBody extends StatelessWidget {
                     HomeScreenPostActions.like: '100 k',
                     HomeScreenPostActions.recommend: '20 k',
                   },
+                  homeScreenPostProfileDetails: HomeScreenPostProfileDetails(
+                    profileName: 'Mohammad Abid',
+                    profileImgUrl:
+                        'https://pbs.twimg.com/media/FjU2lkcWYAgNG6d.jpg',
+                  ),
+                  postedAt: DateTime.parse("2024-08-29 12:34:56"),
                 ),
               ),
             ),
@@ -49,6 +56,12 @@ class HomeScreenBody extends StatelessWidget {
                     HomeScreenPostActions.like: '40 k',
                     HomeScreenPostActions.recommend: '',
                   },
+                  homeScreenPostProfileDetails: HomeScreenPostProfileDetails(
+                    profileName: 'Haneen Sabar',
+                    profileImgUrl:
+                        'https://images.ctfassets.net/hrltx12pl8hq/28ECAQiPJZ78hxatLTa7Ts/2f695d869736ae3b0de3e56ceaca3958/free-nature-images.jpg?fit=fill&w=1200&h=630',
+                  ),
+                  postedAt: DateTime.parse("2024-08-22 12:34:56"),
                 ),
               ),
             ),
@@ -73,6 +86,12 @@ class HomeScreenBody extends StatelessWidget {
                     HomeScreenPostActions.like: '50 k',
                     HomeScreenPostActions.recommend: '107',
                   },
+                  homeScreenPostProfileDetails: HomeScreenPostProfileDetails(
+                    profileName: 'Sam Krosba',
+                    profileImgUrl:
+                        'https://img.freepik.com/free-photo/abstract-autumn-beauty-multi-colored-leaf-vein-pattern-generated-by-ai_188544-9871.jpg',
+                  ),
+                  postedAt: DateTime.parse("2024-08-27 00:34:56"),
                 ),
               ),
             ),
@@ -95,6 +114,12 @@ class HomeScreenBody extends StatelessWidget {
                     HomeScreenPostActions.like: '10 k',
                     HomeScreenPostActions.recommend: '3',
                   },
+                  homeScreenPostProfileDetails: HomeScreenPostProfileDetails(
+                    profileName: 'Namop Gran',
+                    profileImgUrl:
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQO8AAxAr9ZNr9JCwn2QZ35rSWWuiayhh0ayQ&s',
+                  ),
+                  postedAt: DateTime.parse("2024-08-30 00:38:56"),
                 ),
               ),
             ),
