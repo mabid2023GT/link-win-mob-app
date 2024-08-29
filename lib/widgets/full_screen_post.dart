@@ -7,12 +7,12 @@ import 'package:link_win_mob_app/widgets/post_actions_buttons.dart';
 import 'package:link_win_mob_app/widgets/post_profile_details.dart';
 import 'package:photo_view/photo_view.dart';
 
-class FullScreenMedia extends StatelessWidget {
+class FullScreenPost extends StatelessWidget {
   final FullScreenMediaType fullScreenMediaType;
   final List<String> urls;
   final HomeScreenPostData homeScreenPostData;
 
-  const FullScreenMedia({
+  const FullScreenPost({
     super.key,
     required this.fullScreenMediaType,
     required this.urls,

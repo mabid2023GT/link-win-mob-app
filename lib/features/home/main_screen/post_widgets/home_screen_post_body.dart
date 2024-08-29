@@ -4,7 +4,7 @@ import 'package:link_win_mob_app/core/utils/enums/full_screen_media_type.dart';
 import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
 import 'package:link_win_mob_app/features/home/main_screen/post_widgets/video_content_viewer.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
-import 'package:link_win_mob_app/widgets/full_screen_media.dart';
+import 'package:link_win_mob_app/widgets/full_screen_post.dart';
 
 class HomeScreenPostBody extends StatelessWidget {
   final double borderRadiusPercentage;
@@ -76,7 +76,7 @@ class HomeScreenPostBody extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => FullScreenMedia(
+            builder: (context) => FullScreenPost(
               fullScreenMediaType: FullScreenMediaType.image,
               urls: [homeScreenPostData.content[0]],
               homeScreenPostData: homeScreenPostData,
