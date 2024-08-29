@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
@@ -7,7 +8,11 @@ import 'package:link_win_mob_app/features/home/homepage.dart';
 import 'package:link_win_mob_app/features/on_boarding/on_boarding_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 final GoRouter _router = GoRouter(

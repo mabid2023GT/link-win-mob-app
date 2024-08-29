@@ -4,6 +4,7 @@ const kBlack = Color(0xFF000000);
 const kBlue = Colors.blue;
 const kRed = Colors.red;
 const kWhite = Color(0xFFFFFFFF);
+const kAmber = Color.fromARGB(255, 217, 163, 0);
 
 const k1Gray = Color(0xFF4E4E4E);
 const k1LightGray = Color(0xFFC4C4C4);

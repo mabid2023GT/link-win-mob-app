@@ -5,7 +5,7 @@ import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
 import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
 import 'package:link_win_mob_app/core/utils/extensions/size_extensions.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
-import 'package:link_win_mob_app/features/home/main_screen/home_screen_post_body.dart';
+import 'package:link_win_mob_app/features/home/main_screen/post_widgets/home_screen_post_body.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/responsive_percentage_layout.dart';
@@ -192,8 +192,12 @@ class HomeScreenPost extends StatelessWidget {
         const SizedBox(),
         _actionButton(
           context: context,
-          svgPath: 'assets/icons/message.svg',
-          isClicked: false,
+          svgPath: 'assets/icons/recommend.svg',
+          actionLabel: homeScreenPostData.fetchActionsData(
+            action: HomeScreenPostActions.recommend,
+          ),
+          color: kAmber,
+          isClicked: true,
         ),
         const SizedBox(),
         _actionButton(
@@ -221,13 +225,17 @@ class HomeScreenPost extends StatelessWidget {
           actionLabel: homeScreenPostData.fetchActionsData(
             action: HomeScreenPostActions.like,
           ),
-          isClicked: false,
+          isClicked: true,
         ),
         const SizedBox(),
         _actionButton(
           context: context,
-          svgPath: 'assets/icons/share.svg',
-          isClicked: false,
+          svgPath: 'assets/icons/comment.svg',
+          actionLabel: homeScreenPostData.fetchActionsData(
+            action: HomeScreenPostActions.comment,
+          ),
+          color: kAmber,
+          isClicked: true,
         ),
         const SizedBox(),
       ],

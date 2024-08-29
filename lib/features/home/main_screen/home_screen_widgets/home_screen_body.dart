@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
 import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
-import 'package:link_win_mob_app/features/home/main_screen/home_screen_post.dart';
+import 'package:link_win_mob_app/features/home/main_screen/post_widgets/home_screen_post.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 
 class HomeScreenBody extends StatelessWidget {
@@ -24,11 +24,11 @@ class HomeScreenBody extends StatelessWidget {
                   ],
                   postId: '1234DfbdRE85',
                   actionsData: {
-                    HomeScreenPostActions.message: '',
+                    HomeScreenPostActions.comment: '40',
                     HomeScreenPostActions.support: '30 k',
                     HomeScreenPostActions.favorite: '100',
                     HomeScreenPostActions.like: '100 k',
-                    HomeScreenPostActions.share: '',
+                    HomeScreenPostActions.recommend: '20 k',
                   },
                 ),
               ),
@@ -43,11 +43,11 @@ class HomeScreenBody extends StatelessWidget {
                   ],
                   postId: '1234DfbdRE85',
                   actionsData: {
-                    HomeScreenPostActions.message: '',
+                    HomeScreenPostActions.comment: '50',
                     HomeScreenPostActions.support: '10 k',
                     HomeScreenPostActions.favorite: '50',
                     HomeScreenPostActions.like: '40 k',
-                    HomeScreenPostActions.share: '',
+                    HomeScreenPostActions.recommend: '',
                   },
                 ),
               ),
@@ -67,11 +67,11 @@ class HomeScreenBody extends StatelessWidget {
                   ],
                   postId: '1234DfbdRE85',
                   actionsData: {
-                    HomeScreenPostActions.message: '',
+                    HomeScreenPostActions.comment: '',
                     HomeScreenPostActions.support: '80 k',
                     HomeScreenPostActions.favorite: '500',
                     HomeScreenPostActions.like: '50 k',
-                    HomeScreenPostActions.share: '',
+                    HomeScreenPostActions.recommend: '107',
                   },
                 ),
               ),
@@ -89,11 +89,11 @@ class HomeScreenBody extends StatelessWidget {
                   ],
                   postId: '1234DfbdRE85',
                   actionsData: {
-                    HomeScreenPostActions.message: '',
+                    HomeScreenPostActions.comment: '10',
                     HomeScreenPostActions.support: '5 k',
                     HomeScreenPostActions.favorite: '750',
                     HomeScreenPostActions.like: '10 k',
-                    HomeScreenPostActions.share: '',
+                    HomeScreenPostActions.recommend: '3',
                   },
                 ),
               ),

@@ -7,9 +7,9 @@ enum HomeScreenPostType {
 }
 
 enum HomeScreenPostActions {
-  message,
+  comment,
   support,
   favorite,
   like,
-  share,
+  recommend,
 }
