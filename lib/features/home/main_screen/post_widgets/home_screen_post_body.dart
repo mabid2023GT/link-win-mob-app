@@ -6,8 +6,6 @@ import 'package:link_win_mob_app/features/home/main_screen/post_widgets/gallery_
 import 'package:link_win_mob_app/features/home/main_screen/post_widgets/video_content_viewer.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/full_screen_post.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 
 class HomeScreenPostBody extends StatelessWidget {
   final double borderRadiusPercentage;
@@ -57,12 +55,10 @@ class HomeScreenPostBody extends StatelessWidget {
           contentBorderRadius: contentBorderRadius,
           homeScreenPostData: homeScreenPostData,
         );
-      // return _buildGalleryContentViewer(
-      //     context, maxSize, contentBorderRadius);
       case HomeScreenPostType.video:
         return VideoContentViewer(
           contentBorderRadius: contentBorderRadius,
-          videoUrl: homeScreenPostData.content[0],
+          homeScreenPostData: homeScreenPostData,
         );
       case HomeScreenPostType.videoCollection:
         return Container(
@@ -84,7 +80,6 @@ class HomeScreenPostBody extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => FullScreenPost(
               fullScreenMediaType: FullScreenMediaType.image,
-              urls: [homeScreenPostData.content[0]],
               homeScreenPostData: homeScreenPostData,
             ),
           ),
@@ -97,39 +92,6 @@ class HomeScreenPostBody extends StatelessWidget {
           width: maxSize.width,
           height: maxSize.height,
           fit: BoxFit.fill,
-        ),
-      ),
-    );
-  }
-
-  _buildGalleryContentViewer(
-      BuildContext context, Size maxSize, BorderRadius contentBorderRadius) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FullScreenPost(
-              fullScreenMediaType: FullScreenMediaType.imageGallery,
-              urls: homeScreenPostData.content,
-              homeScreenPostData: homeScreenPostData,
-            ),
-          ),
-        );
-      },
-      child: ClipRRect(
-        borderRadius: contentBorderRadius,
-        child: PhotoViewGallery.builder(
-          itemCount: homeScreenPostData.content.length,
-          builder: (context, index) {
-            return PhotoViewGalleryPageOptions(
-              imageProvider: NetworkImage(
-                homeScreenPostData.content[index],
-              ),
-              minScale: PhotoViewComputedScale.contained,
-              maxScale: PhotoViewComputedScale.covered * 2,
-            );
-          },
         ),
       ),
     );

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
+import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
+import 'package:link_win_mob_app/core/utils/enums/full_screen_media_type.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
+import 'package:link_win_mob_app/widgets/full_screen_post.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoContentViewer extends StatefulWidget {
   final BorderRadius contentBorderRadius;
-  final String videoUrl;
+  final HomeScreenPostData homeScreenPostData;
 
   const VideoContentViewer({
     super.key,
     required this.contentBorderRadius,
-    required this.videoUrl,
+    required this.homeScreenPostData,
   });
 
   @override
@@ -26,7 +29,7 @@ class _VideoContentViewerState extends State<VideoContentViewer> {
   void initState() {
     super.initState();
     controller = VideoPlayerController.networkUrl(
-      Uri.parse(widget.videoUrl),
+      Uri.parse(widget.homeScreenPostData.content[0]),
     )..initialize().then(
         (value) {
           setState(() {
@@ -56,6 +59,18 @@ class _VideoContentViewerState extends State<VideoContentViewer> {
     }
   }
 
+  void _handleVideoDoubleTap() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FullScreenPost(
+          fullScreenMediaType: FullScreenMediaType.video,
+          homeScreenPostData: widget.homeScreenPostData,
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     controller.dispose();
@@ -80,6 +95,7 @@ class _VideoContentViewerState extends State<VideoContentViewer> {
   Widget _videoViewerWidget(Size maxSize) {
     return GestureDetector(
       onTap: _handleVideoTap,
+      onDoubleTap: _handleVideoDoubleTap,
       child: SizedBox(
         width: maxSize.width,
         height: maxSize.height,

@@ -99,7 +99,6 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
       MaterialPageRoute(
         builder: (context) => FullScreenPost(
           fullScreenMediaType: FullScreenMediaType.imageGallery,
-          urls: widget.homeScreenPostData.content,
           homeScreenPostData: widget.homeScreenPostData,
         ),
       ),

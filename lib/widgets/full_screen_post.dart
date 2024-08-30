@@ -10,13 +10,11 @@ import 'package:photo_view/photo_view.dart';
 
 class FullScreenPost extends StatelessWidget {
   final FullScreenMediaType fullScreenMediaType;
-  final List<String> urls;
   final HomeScreenPostData homeScreenPostData;
 
   const FullScreenPost({
     super.key,
     required this.fullScreenMediaType,
-    required this.urls,
     required this.homeScreenPostData,
   });
 
@@ -42,7 +40,7 @@ class FullScreenPost extends StatelessWidget {
           iconSize: iconSize,
           actionButtonsSize: actionButtonsSize,
           profileDetailsSize: profileDetailsSize,
-          url: urls[0],
+          url: homeScreenPostData.content[0],
           homeScreenPostData: homeScreenPostData,
           profileDetails: _profileDetails,
           actionButtons: _actionButtons,
@@ -54,7 +52,7 @@ class FullScreenPost extends StatelessWidget {
           iconSize: iconSize,
           actionButtonsSize: actionButtonsSize,
           profileDetailsSize: profileDetailsSize,
-          urls: urls,
+          urls: homeScreenPostData.content,
           homeScreenPostData: homeScreenPostData,
           profileDetails: _profileDetails,
           actionButtons: _actionButtons,
@@ -66,7 +64,7 @@ class FullScreenPost extends StatelessWidget {
           iconSize: iconSize,
           actionButtonsSize: actionButtonsSize,
           profileDetailsSize: profileDetailsSize,
-          url: urls[0],
+          url: homeScreenPostData.content[0],
           homeScreenPostData: homeScreenPostData,
           profileDetails: _profileDetails,
           actionButtons: _actionButtons,
@@ -78,7 +76,7 @@ class FullScreenPost extends StatelessWidget {
           iconSize: iconSize,
           actionButtonsSize: actionButtonsSize,
           profileDetailsSize: profileDetailsSize,
-          urls: urls,
+          urls: homeScreenPostData.content,
           homeScreenPostData: homeScreenPostData,
           profileDetails: _profileDetails,
           actionButtons: _actionButtons,
