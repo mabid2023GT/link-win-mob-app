@@ -10,11 +10,19 @@ import 'package:photo_view/photo_view_gallery.dart';
 class GalleryContentViewer extends StatefulWidget {
   final BorderRadius contentBorderRadius;
   final HomeScreenPostData homeScreenPostData;
+  final double bottomPosRatio;
+  final double indecatorWidthRatio;
+  final double indecatorHeightRatio;
+  final int largeGalleryThreshold;
 
   const GalleryContentViewer({
     super.key,
     required this.contentBorderRadius,
     required this.homeScreenPostData,
+    this.bottomPosRatio = 0.012,
+    this.indecatorWidthRatio = 0.5,
+    this.indecatorHeightRatio = 0.15,
+    this.largeGalleryThreshold = 5,
   });
 
   @override
@@ -63,16 +71,21 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
   Widget build(BuildContext context) {
     return LayoutBuilderChild(
       child: (minSize, maxSize) {
-        double bottomPos = maxSize.height * 0.025;
+        double bottomPos = maxSize.height * widget.bottomPosRatio;
+        Size indicatorSize = Size(
+          maxSize.width * widget.indecatorWidthRatio,
+          maxSize.height * widget.indecatorHeightRatio,
+        );
+        double leftRightPos = (maxSize.width - indicatorSize.width) * 0.5;
         return Stack(
           children: [
             _buildGalleryContentViewer(
                 context, maxSize, widget.contentBorderRadius),
             Positioned(
               bottom: bottomPos,
-              left: 0,
-              right: 0,
-              child: _buildPageIndicator(maxSize),
+              left: leftRightPos,
+              right: leftRightPos,
+              child: _buildPageIndicator(indicatorSize),
             ),
           ],
         );
@@ -120,40 +133,35 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
     );
   }
 
-  _buildPageIndicator(Size maxSize) {
+  _buildPageIndicator(Size indicatorSize) {
     int contentLength = widget.homeScreenPostData.content.length;
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          maxSize.height * 0.05,
-        ),
-        color: transparent,
-      ),
-      padding: const EdgeInsets.symmetric(
-        vertical: 8.0,
-      ),
-      child: contentLength <= 5
+    return SizedBox(
+      width: indicatorSize.width,
+      height: indicatorSize.height,
+      child: contentLength <= widget.largeGalleryThreshold
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 contentLength,
-                (index) => _buildIndicator(index),
+                (index) => _buildIndicator(indicatorSize, index),
               ),
             )
           : _pageIndicatorForLargeGallery(
-              maxSize,
+              indicatorSize,
               contentLength,
             ),
     );
   }
 
-  _buildIndicator(int index) {
+  _buildIndicator(Size indicatorSize, int index) {
+    double indicatorCircleSize =
+        indicatorSize.width * (_currentPage == index ? 0.07 : 0.05);
     return Container(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 4.0,
+      margin: EdgeInsets.symmetric(
+        horizontal: indicatorSize.width * 0.03,
       ),
-      width: _currentPage == index ? 12.0 : 8.0,
-      height: _currentPage == index ? 12.0 : 8.0,
+      width: indicatorCircleSize,
+      height: indicatorCircleSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: _currentPage == index ? kWhite : k1Gray,
