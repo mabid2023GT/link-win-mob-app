@@ -6,6 +6,7 @@ import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/widgets/post_actions_buttons.dart';
 import 'package:link_win_mob_app/widgets/post_profile_details.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class FullScreenPost extends StatelessWidget {
   final FullScreenMediaType fullScreenMediaType;
@@ -16,6 +17,45 @@ class FullScreenPost extends StatelessWidget {
     super.key,
     required this.fullScreenMediaType,
     required this.urls,
+    required this.homeScreenPostData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    switch (fullScreenMediaType) {
+      case FullScreenMediaType.image:
+        return SingleImagePost(
+          url: urls[0],
+          homeScreenPostData: homeScreenPostData,
+        );
+      case FullScreenMediaType.imageGallery:
+        return GalleryImagePost(
+          urls: urls,
+          homeScreenPostData: homeScreenPostData,
+        );
+      case FullScreenMediaType.video:
+        return SingleVideoPost(
+          url: urls[0],
+          homeScreenPostData: homeScreenPostData,
+        );
+      case FullScreenMediaType.videos:
+        return VideosPost(
+          urls: urls,
+          homeScreenPostData: homeScreenPostData,
+        );
+      default:
+        return Container();
+    }
+  }
+}
+
+class SingleImagePost extends StatelessWidget {
+  final String url;
+  final HomeScreenPostData homeScreenPostData;
+
+  const SingleImagePost({
+    super.key,
+    required this.url,
     required this.homeScreenPostData,
   });
 
@@ -40,7 +80,7 @@ class FullScreenPost extends StatelessWidget {
           children: [
             PhotoView(
               imageProvider: NetworkImage(
-                urls[0],
+                url[0],
               ),
             ),
             Positioned(
@@ -95,5 +135,69 @@ class FullScreenPost extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class SingleVideoPost extends StatelessWidget {
+  final String url;
+  final HomeScreenPostData homeScreenPostData;
+  const SingleVideoPost({
+    super.key,
+    required this.url,
+    required this.homeScreenPostData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class GalleryImagePost extends StatelessWidget {
+  final HomeScreenPostData homeScreenPostData;
+  final List<String> urls;
+  const GalleryImagePost({
+    super.key,
+    required this.homeScreenPostData,
+    required this.urls,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            PhotoViewGallery.builder(
+              itemCount: urls.length,
+              builder: (context, index) {
+                return PhotoViewGalleryPageOptions(
+                  imageProvider: NetworkImage(
+                    urls[index],
+                  ),
+                  minScale: PhotoViewComputedScale.contained,
+                  maxScale: PhotoViewComputedScale.covered * 2,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class VideosPost extends StatelessWidget {
+  final HomeScreenPostData homeScreenPostData;
+  final List<String> urls;
+  const VideosPost({
+    super.key,
+    required this.homeScreenPostData,
+    required this.urls,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
