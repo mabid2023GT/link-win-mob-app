@@ -7,6 +7,7 @@ import 'package:link_win_mob_app/features/home/main_screen/post_widgets/gallery_
 import 'package:link_win_mob_app/widgets/post_actions_buttons.dart';
 import 'package:link_win_mob_app/widgets/post_profile_details.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:video_player/video_player.dart';
 
 class FullScreenPost extends StatelessWidget {
   final FullScreenMediaType fullScreenMediaType;
@@ -33,10 +34,47 @@ class FullScreenPost extends StatelessWidget {
       screenUtil.screenHeight * 0.08,
     );
 
+    return Scaffold(
+      appBar: AppBar(),
+      backgroundColor: kBlack,
+      body: Stack(
+        children: [
+          _fetchRelevantWidget(
+            screenUtil.size,
+            iconSize,
+            actionButtonsSize,
+            profileDetailsSize,
+          ),
+          Positioned(
+            top: 0,
+            right: screenUtil.screenWidth * 0.02,
+            child: _closeButton(context, iconSize),
+          ),
+          Positioned(
+            bottom: screenUtil.screenHeight * 0.1,
+            right: 0,
+            child: _actionButtons(actionButtonsSize),
+          ),
+          Positioned(
+            bottom: screenUtil.screenHeight * 0.075,
+            left: screenUtil.screenWidth * 0.05,
+            child: _profileDetails(profileDetailsSize),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _fetchRelevantWidget(
+    Size screenSize,
+    double iconSize,
+    Size actionButtonsSize,
+    Size profileDetailsSize,
+  ) {
     switch (fullScreenMediaType) {
       case FullScreenMediaType.image:
         return _SingleImagePost(
-          screenSize: screenUtil.size,
+          screenSize: screenSize,
           iconSize: iconSize,
           actionButtonsSize: actionButtonsSize,
           profileDetailsSize: profileDetailsSize,
@@ -48,7 +86,7 @@ class FullScreenPost extends StatelessWidget {
         );
       case FullScreenMediaType.imageGallery:
         return _GalleryImagePost(
-          screenSize: screenUtil.size,
+          screenSize: screenSize,
           iconSize: iconSize,
           actionButtonsSize: actionButtonsSize,
           profileDetailsSize: profileDetailsSize,
@@ -60,7 +98,7 @@ class FullScreenPost extends StatelessWidget {
         );
       case FullScreenMediaType.video:
         return _SingleVideoPost(
-          screenSize: screenUtil.size,
+          screenSize: screenSize,
           iconSize: iconSize,
           actionButtonsSize: actionButtonsSize,
           profileDetailsSize: profileDetailsSize,
@@ -72,7 +110,7 @@ class FullScreenPost extends StatelessWidget {
         );
       case FullScreenMediaType.videos:
         return _VideosPost(
-          screenSize: screenUtil.size,
+          screenSize: screenSize,
           iconSize: iconSize,
           actionButtonsSize: actionButtonsSize,
           profileDetailsSize: profileDetailsSize,
@@ -158,32 +196,9 @@ class _SingleImagePost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
-          children: [
-            PhotoView(
-              imageProvider: NetworkImage(
-                url,
-              ),
-            ),
-            Positioned(
-              top: screenSize.height * 0.05,
-              right: screenSize.width * 0.05,
-              child: closeButton(context, iconSize),
-            ),
-            Positioned(
-              bottom: screenSize.height * 0.05,
-              right: screenSize.width * 0.025,
-              child: actionButtons(actionButtonsSize),
-            ),
-            Positioned(
-              bottom: screenSize.height * 0.05,
-              left: screenSize.width * 0.05,
-              child: profileDetails(profileDetailsSize),
-            ),
-          ],
-        ),
+    return PhotoView(
+      imageProvider: NetworkImage(
+        url,
       ),
     );
   }
@@ -214,39 +229,18 @@ class _GalleryImagePost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
-          children: [
-            GalleryContentViewer(
-              contentBorderRadius: const BorderRadius.all(Radius.zero),
-              homeScreenPostData: homeScreenPostData,
-              bottomPosRatio: 0.15,
-              indecatorWidthRatio: 0.4,
-            ),
-            Positioned(
-              top: screenSize.height * 0.05,
-              right: screenSize.width * 0.05,
-              child: closeButton(context, iconSize),
-            ),
-            Positioned(
-              bottom: screenSize.height * 0.05,
-              right: screenSize.width * 0.025,
-              child: actionButtons(actionButtonsSize),
-            ),
-            Positioned(
-              bottom: screenSize.height * 0.05,
-              left: screenSize.width * 0.05,
-              child: profileDetails(profileDetailsSize),
-            ),
-          ],
-        ),
+    return SizedBox(
+      child: GalleryContentViewer(
+        contentBorderRadius: const BorderRadius.all(Radius.zero),
+        homeScreenPostData: homeScreenPostData,
+        bottomPosRatio: 0.15,
+        indecatorWidthRatio: 0.4,
       ),
     );
   }
 }
 
-class _SingleVideoPost extends StatelessWidget {
+class _SingleVideoPost extends StatefulWidget {
   final double iconSize;
   final Size screenSize;
   final Size actionButtonsSize;
@@ -270,8 +264,190 @@ class _SingleVideoPost extends StatelessWidget {
   });
 
   @override
+  State<_SingleVideoPost> createState() => __SingleVideoPostState();
+}
+
+class __SingleVideoPostState extends State<_SingleVideoPost> {
+  late VideoPlayerController _controller;
+  bool _isPlaying = false;
+  bool _isMuted = true; // Add this state
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse(
+        widget.homeScreenPostData.content[0],
+      ),
+    )
+      ..initialize().then(
+        (val) {
+          setState(
+            () {
+              _controller.setVolume(_isMuted ? 0.0 : 1.0);
+              _controller.play();
+              _isPlaying = true;
+            },
+          );
+        },
+      )
+      ..setLooping(true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _togglePlayPause() {
+    setState(
+      () {
+        if (_controller.value.isPlaying) {
+          _controller.pause();
+          _isPlaying = false;
+        } else {
+          _controller.play();
+          _isPlaying = true;
+        }
+      },
+    );
+  }
+
+  void _toggleMute() {
+    setState(() {
+      _isMuted = !_isMuted;
+      _controller.setVolume(_isMuted ? 0.0 : 1.0);
+    });
+  }
+
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    final newPosition = _controller.value.position +
+        Duration(
+          milliseconds: (details.primaryDelta! * 100).toInt(),
+        );
+    _controller.seekTo(newPosition);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    ScreenUtil screenUtil = ScreenUtil(context);
+
+    return Scaffold(
+      backgroundColor: kBlack,
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: _togglePlayPause,
+          onHorizontalDragUpdate: _onHorizontalDragUpdate,
+          child: Stack(
+            children: [
+              _videoPlayer(screenUtil),
+              Visibility(
+                visible: !_isPlaying,
+                child: _playPauseButtons(
+                  context,
+                  screenUtil,
+                ),
+              ),
+              _videoProgressIndicator(screenUtil),
+              _muteButton(context, screenUtil),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _videoPlayer(ScreenUtil screenUtil) {
+    return Center(
+      child: _controller.value.isInitialized
+          ? AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: VideoPlayer(
+                _controller,
+              ),
+            )
+          : const CircularProgressIndicator(),
+    );
+  }
+
+  Widget _videoProgressIndicator(ScreenUtil screenUtil) {
+    double bottomPos = screenUtil.screenHeight * 0.02;
+    double leftRightPos = screenUtil.screenWidth * 0.025;
+    double indicatorHeight = screenUtil.screenHeight * 0.015;
+
+    return Positioned(
+      bottom: bottomPos,
+      left: leftRightPos,
+      right: leftRightPos,
+      child: SizedBox(
+        height: indicatorHeight,
+        child: VideoProgressIndicator(
+          _controller,
+          allowScrubbing: true,
+          colors: VideoProgressColors(
+            backgroundColor: transparent,
+            playedColor: kWhite,
+            bufferedColor: kWhite.withOpacity(0.25),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _playPauseButtons(BuildContext context, ScreenUtil screenUtil) {
+    double iconSize = screenUtil.screenWidth * 0.18;
+    double leftRightPos = (screenUtil.screenWidth - iconSize) * 0.5;
+    double bottomPos = (screenUtil.screenHeight - iconSize) * 0.5;
+    return Positioned(
+      bottom: bottomPos,
+      left: leftRightPos,
+      right: leftRightPos,
+      child: Container(
+        width: iconSize,
+        height: iconSize,
+        decoration: const BoxDecoration(
+          color: k1Gray, // Background color of the button
+          shape: BoxShape.circle, // Makes the container circular
+        ),
+        child: InkWell(
+          onTap: _togglePlayPause,
+          splashColor: k1Gray,
+          child: Icon(
+            _isPlaying ? Icons.pause : Icons.play_arrow,
+            color: kWhite,
+            size: iconSize * 0.6,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _muteButton(BuildContext context, ScreenUtil screenUtil) {
+    double iconSize = screenUtil.screenWidth * 0.1;
+    double bottomPos = screenUtil.screenHeight * 0.05;
+    double rightPos = screenUtil.screenWidth * 0.075;
+    return Positioned(
+      bottom: bottomPos,
+      right: rightPos,
+      child: Container(
+        width: iconSize,
+        height: iconSize,
+        decoration: const BoxDecoration(
+          color: k1Gray, // Background color of the button
+          shape: BoxShape.circle, // Makes the container circular
+        ),
+        child: InkWell(
+          onTap: _toggleMute,
+          splashColor: k1Gray,
+          child: Icon(
+            _isMuted ? Icons.volume_off : Icons.volume_up,
+            color: kWhite,
+            size: iconSize * 0.6,
+          ),
+        ),
+      ),
+    );
   }
 }
 
