@@ -4,6 +4,7 @@ import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
 import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/action_button.dart';
+import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 
 class PostActionsButtons extends StatelessWidget {
   /// Indicates whether the layout is a row (horizontal) or a column (vertical).
@@ -101,32 +102,22 @@ class PostActionsButtons extends StatelessWidget {
     required VoidCallback onTap,
     HomeScreenPostActions? action,
   }) {
-    return Material(
-      color: transparent,
-      child: InkWell(
-        onTap: onTap,
-        splashColor: activeColor.withOpacity(0.5),
-        customBorder: const CircleBorder(), // Ensure the splash is circular
-        child: SizedBox(
-          width: iconSize.width,
-          height: iconSize.height,
-          child: ClipOval(
-            // Clip content to a circular shape
-            child: ActionButton(
-              context: context,
-              svgPath: svgPath,
-              actionLabel: action != null
-                  ? homeScreenPostData.fetchActionsData(
-                      action: action,
-                    )
-                  : null,
-              activeColor: activeColor,
-              inactiveColor: kWhite,
-              isClicked: false,
-              isFullScreenChild: true,
-            ),
-          ),
-        ),
+    return LinkWinIcon(
+      iconSize: iconSize,
+      splashColor: activeColor.withOpacity(0.5),
+      onTap: onTap,
+      child: ActionButton(
+        context: context,
+        svgPath: svgPath,
+        actionLabel: action != null
+            ? homeScreenPostData.fetchActionsData(
+                action: action,
+              )
+            : null,
+        activeColor: activeColor,
+        inactiveColor: kWhite,
+        isClicked: false,
+        isFullScreenChild: true,
       ),
     );
   }

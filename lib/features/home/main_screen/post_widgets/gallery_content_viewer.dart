@@ -4,6 +4,7 @@ import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
 import 'package:link_win_mob_app/core/utils/enums/full_screen_media_type.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/full_screen_post.dart';
+import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -112,7 +113,7 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
       child: ClipRRect(
         borderRadius: contentBorderRadius,
         child: PhotoViewGallery.builder(
-          itemCount: widget.homeScreenPostData.content.length,
+          itemCount: widget.homeScreenPostData.length,
           builder: (context, index) {
             return PhotoViewGalleryPageOptions(
               imageProvider: NetworkImage(
@@ -133,7 +134,7 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
   }
 
   _buildPageIndicator(Size indicatorSize) {
-    int contentLength = widget.homeScreenPostData.content.length;
+    int contentLength = widget.homeScreenPostData.length;
     return SizedBox(
       width: indicatorSize.width,
       height: indicatorSize.height,
@@ -175,20 +176,15 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Material(
-          color: transparent,
-          child: InkWell(
-            onTap: isBackButtonDisabled
-                ? null
-                : () => _jumpToPage(
-                    isNextPage: false, galleryLength: contentLength),
-            splashColor: isBackButtonDisabled ? transparent : k1Gray,
-            customBorder: const CircleBorder(),
-            child: Icon(
-              Icons.arrow_back_ios_new_outlined,
-              color: isBackButtonDisabled ? k1Gray : kWhite,
-            ),
-          ),
+        LinkWinIcon(
+          iconSize: Size(maxSize.width * 0.25, maxSize.height),
+          splashColor: isBackButtonDisabled ? transparent : k1Gray,
+          iconData: Icons.arrow_back_ios_new_outlined,
+          iconColor: isBackButtonDisabled ? k1Gray : kWhite,
+          onTap: isBackButtonDisabled
+              ? null
+              : () =>
+                  _jumpToPage(isNextPage: false, galleryLength: contentLength),
         ),
         Text(
           '${_currentPage + 1} / $contentLength',
@@ -196,20 +192,15 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
                 color: kWhite,
               ),
         ),
-        Material(
-          color: transparent,
-          child: InkWell(
-            onTap: isNextButtonDisabled
-                ? null
-                : () =>
-                    _jumpToPage(isNextPage: true, galleryLength: contentLength),
-            splashColor: isNextButtonDisabled ? transparent : k1Gray,
-            customBorder: const CircleBorder(),
-            child: Icon(
-              Icons.arrow_forward_ios_outlined,
-              color: isNextButtonDisabled ? k1Gray : kWhite,
-            ),
-          ),
+        LinkWinIcon(
+          iconSize: Size(maxSize.width * 0.25, maxSize.height),
+          splashColor: isNextButtonDisabled ? transparent : k1Gray,
+          iconData: Icons.arrow_forward_ios_outlined,
+          iconColor: isNextButtonDisabled ? k1Gray : kWhite,
+          onTap: isNextButtonDisabled
+              ? null
+              : () =>
+                  _jumpToPage(isNextPage: true, galleryLength: contentLength),
         ),
       ],
     );

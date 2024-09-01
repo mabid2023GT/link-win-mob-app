@@ -5,6 +5,7 @@ import 'package:link_win_mob_app/core/utils/extensions/datetime_extensions.dart'
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
+import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 
 class PostProfileDetails extends StatelessWidget {
   final bool withMoreVertIcon;
@@ -25,36 +26,50 @@ class PostProfileDetails extends StatelessWidget {
     ScreenUtil screenUtil = ScreenUtil(context);
     return withMoreVertIcon
         ? _postHeader(screenUtil, context)
-        : _postHeaderWithoutMoreVertIcon(screenUtil, context);
+        : _postHeader(
+            screenUtil,
+            context,
+            withMoreVertIcon: false,
+          );
   }
 
-  _postHeader(ScreenUtil screenUtil, BuildContext context) {
+  _postHeader(
+    ScreenUtil screenUtil,
+    BuildContext context, {
+    bool withMoreVertIcon = true,
+  }) {
     return AutoResponsivePercentageLayout(
       screenUtil: screenUtil,
       isRow: true,
-      percentages: const [2, 75, 11, 10, 2],
+      percentages: withMoreVertIcon ? const [2, 75, 11, 10, 2] : [2, 75, 23],
       children: [
         const SizedBox(),
         _headerDetails(context),
         const SizedBox(),
-        _headerMoreVert(context),
-        const SizedBox(),
+        if (withMoreVertIcon) ...[_headerMoreVert(context), const SizedBox()],
       ],
     );
   }
 
   _headerDetails(BuildContext context) {
-    return LayoutBuilderChild(
-      child: (minSize, maxSize) => Row(
+    return LayoutBuilderChild(child: (minSize, maxSize) {
+      Size imageSize = Size(maxSize.width * 0.25, maxSize.height);
+      double space = maxSize.width * 0.05;
+      Size detailsSize =
+          Size(maxSize.width - imageSize.width - space, maxSize.height);
+      return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _headerDetailsImage(maxSize),
+          _headerDetailsImage(imageSize),
+          SizedBox(
+            width: space,
+          ),
           Container(
             alignment: AlignmentDirectional.centerStart,
-            width: maxSize.width * 0.75,
-            height: maxSize.height,
+            width: detailsSize.width,
+            height: detailsSize.height,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -75,15 +90,11 @@ class PostProfileDetails extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
+      );
+    });
   }
 
-  _headerDetailsImage(Size maxSize) {
-    Size size = Size(
-      maxSize.width * 0.25,
-      maxSize.height,
-    );
+  _headerDetailsImage(Size size) {
     double imgSize = size.height < size.width ? size.height : size.width;
     return Container(
       width: imgSize,
@@ -105,53 +116,13 @@ class PostProfileDetails extends StatelessWidget {
 
   _headerMoreVert(BuildContext context) {
     return LayoutBuilderChild(
-      child: (minSize, maxSize) => Material(
-        color: transparent,
-        child: InkWell(
-          onTap: onTap,
-          splashColor: kSelectedTabColor,
-          child: Icon(
-            Icons.more_vert,
-            size: maxSize.height * 0.75,
-            color: kWhite,
-          ),
-        ),
-      ),
-    );
-  }
-
-  _postHeaderWithoutMoreVertIcon(ScreenUtil screenUtil, BuildContext context) {
-    return LayoutBuilderChild(
-      child: (minSize, maxSize) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _headerDetailsImage(maxSize),
-          Container(
-            alignment: AlignmentDirectional.centerStart,
-            width: maxSize.width * 0.7,
-            height: maxSize.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  homeScreenPostData.homeScreenPostProfileDetails.profileName,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        color: kWhite,
-                      ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  homeScreenPostData.postedAt.timeAgo(),
-                  style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: kWhite,
-                      ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        ],
+      child: (minSize, maxSize) => LinkWinIcon(
+        iconSize: Size(maxSize.height * 0.75, maxSize.height * 0.75),
+        splashColor: kSelectedTabColor,
+        iconData: Icons.more_vert,
+        iconSizeRatio: 0.8,
+        iconColor: kWhite,
+        onTap: onTap,
       ),
     );
   }

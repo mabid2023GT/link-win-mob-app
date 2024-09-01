@@ -8,6 +8,7 @@ class HomeScreenPostData {
   final Map<HomeScreenPostActions, String> actionsData;
   final HomeScreenPostProfileDetails homeScreenPostProfileDetails;
   final DateTime postedAt;
+  late final int length;
 
   HomeScreenPostData({
     required this.homeScreenPostType,
@@ -16,7 +17,9 @@ class HomeScreenPostData {
     required this.actionsData,
     required this.homeScreenPostProfileDetails,
     required this.postedAt,
-  });
+  }) {
+    length = content.length;
+  }
 
   String fetchActionsData({
     required HomeScreenPostActions action,

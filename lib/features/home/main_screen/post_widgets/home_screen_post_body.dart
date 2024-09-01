@@ -59,10 +59,12 @@ class HomeScreenPostBody extends StatelessWidget {
         return VideoContentViewer(
           contentBorderRadius: contentBorderRadius,
           homeScreenPostData: homeScreenPostData,
+          url: homeScreenPostData.content[0],
         );
       case HomeScreenPostType.videoCollection:
-        return Container(
-          color: Colors.pink,
+        return VideosContentViewer(
+          contentBorderRadius: contentBorderRadius,
+          homeScreenPostData: homeScreenPostData,
         );
       case HomeScreenPostType.text:
         return Container(

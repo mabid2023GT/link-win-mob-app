@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
+import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 
 class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeScreenAppBar({super.key});
@@ -60,16 +61,13 @@ class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
     required String iconPath,
     required VoidCallback onTap,
   }) {
-    return InkWell(
+    Size iconSize = const Size(kToolbarHeight * 0.5, kToolbarHeight * 0.5);
+    return LinkWinIcon(
+      iconSize: iconSize,
+      splashColor: k1Gray,
       onTap: onTap,
-      splashColor: kSelectedTabColor,
-      borderRadius: BorderRadius.circular(
-        screenUtil.screenWidth,
-      ),
       child: SvgPicture.asset(
         iconPath,
-        width: kToolbarHeight * 0.5,
-        height: kToolbarHeight * 0.5,
       ),
     );
   }

@@ -4,16 +4,45 @@ import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
 import 'package:link_win_mob_app/core/utils/enums/full_screen_media_type.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/full_screen_post.dart';
+import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:video_player/video_player.dart';
+
+class VideosContentViewer extends StatelessWidget {
+  final BorderRadius contentBorderRadius;
+  final HomeScreenPostData homeScreenPostData;
+  const VideosContentViewer({
+    super.key,
+    required this.contentBorderRadius,
+    required this.homeScreenPostData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> content = homeScreenPostData.content;
+    return PageView.builder(
+      itemCount: content.length,
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index) {
+        return VideoContentViewer(
+          contentBorderRadius: contentBorderRadius,
+          homeScreenPostData: homeScreenPostData,
+          url: content[index],
+        );
+      },
+    );
+  }
+}
 
 class VideoContentViewer extends StatefulWidget {
   final BorderRadius contentBorderRadius;
   final HomeScreenPostData homeScreenPostData;
+  final String url;
 
   const VideoContentViewer({
     super.key,
     required this.contentBorderRadius,
     required this.homeScreenPostData,
+    required this.url,
   });
 
   @override
@@ -29,7 +58,7 @@ class _VideoContentViewerState extends State<VideoContentViewer> {
   void initState() {
     super.initState();
     controller = VideoPlayerController.networkUrl(
-      Uri.parse(widget.homeScreenPostData.content[0]),
+      Uri.parse(widget.url),
     )..initialize().then(
         (value) {
           setState(() {
@@ -120,41 +149,30 @@ class _VideoContentViewerState extends State<VideoContentViewer> {
     return Positioned(
       bottom: minDimension * 0.05,
       right: minDimension * 0.05,
-      child: InkWell(
-        onTap: _toggleMute,
+      child: LinkWinIcon(
+        iconSize: Size(buttonSize, buttonSize),
         splashColor: transparent,
-        child: Container(
-          width: buttonSize,
-          height: buttonSize,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: k1Gray.withOpacity(0.75),
-          ),
-          child: Icon(
-            _isMuted ? Icons.volume_off : Icons.volume_up,
-            color: kWhite,
-            size: buttonSize * 0.7,
-          ),
-        ),
+        backgroundColor: k1Gray.withOpacity(0.75),
+        iconColor: kWhite,
+        iconSizeRatio: 0.7,
+        iconData: _isMuted ? Icons.volume_off : Icons.volume_up,
+        onTap: _toggleMute,
       ),
     );
   }
 
   _playModeIcon(Size maxSize) {
-    double iconSize = maxSize.width * 0.1;
-    return GestureDetector(
-      onTap: _handleVideoTap,
-      child: Center(
-        child: CircleAvatar(
-          backgroundColor: k1Gray.withOpacity(0.75),
-          radius: iconSize * 1.1,
-          child: Icon(
-            Icons.play_arrow,
-            size: iconSize,
-            color: Colors.white,
-          ),
-        ),
+    double iconSize = maxSize.width * 0.15;
+    double iconContainerSize = iconSize * 1.1;
+    return Center(
+      child: LinkWinIcon(
+        iconSize: Size(iconContainerSize, iconContainerSize),
+        splashColor: transparent,
+        backgroundColor: k1Gray.withOpacity(0.75),
+        iconColor: kWhite,
+        iconSizeRatio: iconSize / iconContainerSize,
+        iconData: Icons.play_arrow,
+        onTap: _handleVideoTap,
       ),
     );
   }
