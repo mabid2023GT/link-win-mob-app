@@ -9,7 +9,9 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerControlsBar extends StatelessWidget {
   final WidgetRef ref;
-  final StateProvider<VideoPlayerController?> videoControllerProvider;
+  // final StateProvider<VideoPlayerController?> videoControllerProvider;
+  final AutoDisposeStateProvider<VideoPlayerController?>
+      videoControllerProvider;
   final StateProvider<bool> muteProvider;
   const VideoPlayerControlsBar({
     super.key,
@@ -254,17 +256,14 @@ class VideoPlayerControlsBar extends StatelessWidget {
 
   Widget _buttonWrapper(Size size, IconData iconData, VoidCallback onTap,
       {double iconSizeRatio = 0.6}) {
-    double bottomPos = size.height * 0.05;
-    double rightPos = size.width * 0.075;
     double leftRightPad = size.width * 0.15;
     double topBottomPad = size.height * 0.15;
     Size iconSize = Size(
       size.width - 2 * leftRightPad,
       size.height - 2 * topBottomPad,
     );
-    return Positioned(
-      bottom: bottomPos,
-      right: rightPos,
+    return Align(
+      alignment: Alignment.center,
       child: Padding(
         padding: EdgeInsets.only(
           left: leftRightPad,

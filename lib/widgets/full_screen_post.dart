@@ -14,8 +14,11 @@ import 'package:video_player/video_player.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final muteProvider = StateProvider<bool>((ref) => true);
-final videoControllerProvider =
-    StateProvider<VideoPlayerController?>((ref) => null);
+// final videoControllerProvider =
+//     StateProvider<VideoPlayerController?>((ref) => null);
+
+final videoControllerProvider = StateProvider.autoDispose
+    .family<VideoPlayerController?, String>((ref, postId) => null);
 
 class FullScreenPost extends ConsumerWidget {
   final FullScreenMediaType fullScreenMediaType;
@@ -38,6 +41,15 @@ class FullScreenPost extends ConsumerWidget {
     Size bodySize = Size(screenUtil.screenWidth,
         screenUtil.screenHeight - appbarSize.height - footerSize.height);
 
+    // Watch the videoControllerProvider to determine if it's initialized
+    // final videoController = ref.watch(videoControllerProvider);
+    // Use the unique post ID to watch the corresponding video controller
+    final videoController = ref.watch(
+      videoControllerProvider(
+        homeScreenPostData.postId,
+      ),
+    );
+
     return Scaffold(
       backgroundColor: kBlack,
       appBar: FullScreenPostAppBar(
@@ -53,10 +65,15 @@ class FullScreenPost extends ConsumerWidget {
       bottomNavigationBar: SizedBox(
         width: footerSize.width,
         height: footerSize.height,
-        child: VideoPlayerControlsBar(
-            ref: ref,
-            videoControllerProvider: videoControllerProvider,
-            muteProvider: muteProvider),
+        child: videoController != null && videoController.value.isInitialized
+            ? VideoPlayerControlsBar(
+                ref: ref,
+                videoControllerProvider: videoControllerProvider(
+                  homeScreenPostData.postId,
+                ),
+                muteProvider: muteProvider,
+              )
+            : Container(),
       ),
     );
   }
@@ -99,11 +116,18 @@ class FullScreenPost extends ConsumerWidget {
       case FullScreenMediaType.video:
         return _SingleVideoPost(
           url: homeScreenPostData.content[0],
+          postId: homeScreenPostData.postId,
+          videoControllerProvider: videoControllerProvider(
+            homeScreenPostData.postId,
+          ),
         );
       case FullScreenMediaType.videos:
         return _VideosPost(
           urls: homeScreenPostData.content,
           homeScreenPostData: homeScreenPostData,
+          videoControllerProvider: videoControllerProvider(
+            homeScreenPostData.postId,
+          ),
         );
       default:
         return Container();
@@ -179,9 +203,14 @@ class _GalleryImagePost extends StatelessWidget {
 
 class _SingleVideoPost extends ConsumerStatefulWidget {
   final String url;
+  final String postId;
+  final AutoDisposeStateProvider<VideoPlayerController?>
+      videoControllerProvider;
 
   const _SingleVideoPost({
     required this.url,
+    required this.postId,
+    required this.videoControllerProvider,
   });
 
   @override
@@ -210,7 +239,8 @@ class __SingleVideoPostState extends ConsumerState<_SingleVideoPost> {
             },
           );
           // Update provider with the video controller
-          ref.read(videoControllerProvider.notifier).state = _controller;
+          ref.read(videoControllerProvider(widget.postId).notifier).state =
+              _controller;
         },
       )
       ..setLooping(true);
@@ -236,14 +266,6 @@ class __SingleVideoPostState extends ConsumerState<_SingleVideoPost> {
     );
   }
 
-  void _onHorizontalDragUpdate(DragUpdateDetails details) {
-    final newPosition = _controller.value.position +
-        Duration(
-          milliseconds: (details.primaryDelta! * 100).toInt(),
-        );
-    _controller.seekTo(newPosition);
-  }
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil(context);
@@ -258,17 +280,14 @@ class __SingleVideoPostState extends ConsumerState<_SingleVideoPost> {
       body: SafeArea(
         child: GestureDetector(
           onTap: _togglePlayPause,
-          onHorizontalDragUpdate: _onHorizontalDragUpdate,
           child: Stack(
             children: [
               _videoPlayer(screenUtil),
-              Visibility(
-                visible: !_isPlaying,
-                child: _playPauseButtons(
+              if (!_isPlaying)
+                _playPauseButtons(
                   context,
                   screenUtil,
                 ),
-              ),
             ],
           ),
         ),
@@ -312,10 +331,14 @@ class __SingleVideoPostState extends ConsumerState<_SingleVideoPost> {
 
 class _VideosPost extends StatelessWidget {
   final HomeScreenPostData homeScreenPostData;
+  final AutoDisposeStateProvider<VideoPlayerController?>
+      videoControllerProvider;
+
   final List<String> urls;
 
   const _VideosPost({
     required this.homeScreenPostData,
+    required this.videoControllerProvider,
     required this.urls,
   });
 
@@ -324,10 +347,12 @@ class _VideosPost extends StatelessWidget {
     List<String> content = homeScreenPostData.content;
     return PageView.builder(
       itemCount: content.length,
-      scrollDirection: Axis.vertical,
+      scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
         return _SingleVideoPost(
           url: content[index],
+          postId: homeScreenPostData.postId,
+          videoControllerProvider: videoControllerProvider,
         );
       },
     );
