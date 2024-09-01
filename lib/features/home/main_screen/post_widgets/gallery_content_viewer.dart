@@ -180,6 +180,7 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
           iconSize: Size(maxSize.width * 0.25, maxSize.height),
           splashColor: isBackButtonDisabled ? transparent : k1Gray,
           iconData: Icons.arrow_back_ios_new_outlined,
+          iconSizeRatio: 0.8,
           iconColor: isBackButtonDisabled ? k1Gray : kWhite,
           onTap: isBackButtonDisabled
               ? null
@@ -196,6 +197,7 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
           iconSize: Size(maxSize.width * 0.25, maxSize.height),
           splashColor: isNextButtonDisabled ? transparent : k1Gray,
           iconData: Icons.arrow_forward_ios_outlined,
+          iconSizeRatio: 0.8,
           iconColor: isNextButtonDisabled ? k1Gray : kWhite,
           onTap: isNextButtonDisabled
               ? null
