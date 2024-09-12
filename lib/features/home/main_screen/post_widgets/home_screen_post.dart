@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
+import 'package:link_win_mob_app/core/models/home_screen_post_state.dart';
 import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
 import 'package:link_win_mob_app/core/utils/extensions/size_extensions.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
@@ -12,10 +12,10 @@ import 'package:link_win_mob_app/widgets/action_button.dart';
 import 'package:link_win_mob_app/widgets/post_profile_details.dart';
 
 class HomeScreenPost extends StatelessWidget {
-  final HomeScreenPostData homeScreenPostData;
+  final HomeScreenPostState postState;
   const HomeScreenPost({
     super.key,
-    required this.homeScreenPostData,
+    required this.postState,
   });
   final double borderRadiusPercentage = 0.05;
 
@@ -71,7 +71,7 @@ class HomeScreenPost extends StatelessWidget {
               height: maxSize.height,
               child: HomeScreenPostBody(
                 borderRadiusPercentage: borderRadiusPercentage,
-                homeScreenPostData: homeScreenPostData,
+                postState: postState,
               ),
             ),
             Positioned(
@@ -83,7 +83,7 @@ class HomeScreenPost extends StatelessWidget {
                 height: headerSize.height,
                 child: PostProfileDetails(
                   withMoreVertIcon: true,
-                  homeScreenPostData: homeScreenPostData,
+                  homeScreenPostData: postState.homeScreenPostData,
                 ),
               ),
             ),
@@ -103,7 +103,7 @@ class HomeScreenPost extends StatelessWidget {
         ActionButton(
           context: context,
           svgPath: 'assets/icons/recommend.svg',
-          actionLabel: homeScreenPostData.fetchActionsData(
+          actionLabel: postState.homeScreenPostData.fetchActionsData(
             action: HomeScreenPostActions.recommend,
           ),
           activeColor: kAmber,
@@ -114,7 +114,7 @@ class HomeScreenPost extends StatelessWidget {
         ActionButton(
           context: context,
           svgPath: 'assets/icons/hands_clapping.svg',
-          actionLabel: homeScreenPostData.fetchActionsData(
+          actionLabel: postState.homeScreenPostData.fetchActionsData(
             action: HomeScreenPostActions.support,
           ),
           isClicked: true,
@@ -124,7 +124,7 @@ class HomeScreenPost extends StatelessWidget {
         ActionButton(
           context: context,
           svgPath: 'assets/icons/heart.svg',
-          actionLabel: homeScreenPostData.fetchActionsData(
+          actionLabel: postState.homeScreenPostData.fetchActionsData(
             action: HomeScreenPostActions.favorite,
           ),
           isClicked: true,
@@ -135,7 +135,7 @@ class HomeScreenPost extends StatelessWidget {
         ActionButton(
           context: context,
           svgPath: 'assets/icons/like.svg',
-          actionLabel: homeScreenPostData.fetchActionsData(
+          actionLabel: postState.homeScreenPostData.fetchActionsData(
             action: HomeScreenPostActions.like,
           ),
           isClicked: true,
@@ -145,7 +145,7 @@ class HomeScreenPost extends StatelessWidget {
         ActionButton(
           context: context,
           svgPath: 'assets/icons/comment.svg',
-          actionLabel: homeScreenPostData.fetchActionsData(
+          actionLabel: postState.homeScreenPostData.fetchActionsData(
             action: HomeScreenPostActions.comment,
           ),
           activeColor: kAmber,

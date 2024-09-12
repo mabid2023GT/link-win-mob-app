@@ -10,14 +10,13 @@ import 'package:video_player/video_player.dart';
 class VideoPlayerControlsBar extends StatelessWidget {
   final WidgetRef ref;
   // final StateProvider<VideoPlayerController?> videoControllerProvider;
-  final AutoDisposeStateProvider<VideoPlayerController?>
-      videoControllerProvider;
-  final StateProvider<bool> muteProvider;
+  // final StateProvider<VideoPlayerController?> videoControllerProvider;
+  final VideoPlayerController? videoController;
   const VideoPlayerControlsBar({
     super.key,
     required this.ref,
-    required this.videoControllerProvider,
-    required this.muteProvider,
+    required this.videoController,
+    // required this.videoControllerProvider,
   });
 
   @override
@@ -29,7 +28,6 @@ class VideoPlayerControlsBar extends StatelessWidget {
             Size(maxSize.width - 2 * sideSize.width, sideSize.height);
 
         return _body(
-          ref,
           maxSize,
           sideSize,
           videoControllerSize,
@@ -39,7 +37,6 @@ class VideoPlayerControlsBar extends StatelessWidget {
   }
 
   Widget _body(
-    WidgetRef ref,
     Size size,
     Size sideSize,
     Size videoControllerSize,
@@ -51,36 +48,36 @@ class VideoPlayerControlsBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _leftSide(sideSize, ref),
-          _videoController(videoControllerSize, ref),
-          _rightSide(sideSize, ref),
+          _leftSide(sideSize),
+          _videoController(videoControllerSize),
+          _rightSide(sideSize),
         ],
       ),
     );
   }
 
-  _leftSide(Size size, WidgetRef ref) {
+  _leftSide(Size size) {
     Size positionTimeSize = Size(size.width, size.height * 0.4);
     Size muteIconSize =
         Size(positionTimeSize.width, size.height - positionTimeSize.height);
-    bool isMuted = ref.watch(muteProvider);
+    // bool isMuted = ref.watch(muteStateProvider);
 
     return Column(
       children: [
         _positionTimeWidget(positionTimeSize),
         _buttonWrapper(
           muteIconSize,
-          isMuted ? Icons.volume_off : Icons.volume_up,
+          true ? Icons.volume_off : Icons.volume_up,
           iconSizeRatio: 0.7,
           () {
-            ref.read(muteProvider.notifier).state = !isMuted;
+            // ref.read(muteStateProvider.notifier).state = !isMuted;
           },
         ),
       ],
     );
   }
 
-  _rightSide(Size size, WidgetRef ref) {
+  _rightSide(Size size) {
     Size durationTimeSize = Size(size.width, size.height * 0.4);
     Size fullscreenIconSize =
         Size(durationTimeSize.width, size.height - durationTimeSize.height);
@@ -98,11 +95,10 @@ class VideoPlayerControlsBar extends StatelessWidget {
   }
 
   Widget _positionTimeWidget(Size size) {
-    final videoController = ref.watch(videoControllerProvider);
     return videoController == null
         ? const SizedBox()
         : ValueListenableBuilder(
-            valueListenable: videoController,
+            valueListenable: videoController!,
             builder: (context, VideoPlayerValue value, child) {
               final position = value.position;
               return Container(
@@ -119,11 +115,10 @@ class VideoPlayerControlsBar extends StatelessWidget {
   }
 
   Widget _durationTimeWidget(Size size) {
-    final videoController = ref.watch(videoControllerProvider);
     return videoController == null
         ? const SizedBox()
         : ValueListenableBuilder(
-            valueListenable: videoController,
+            valueListenable: videoController!,
             builder: (context, VideoPlayerValue value, child) {
               final duration = value.duration;
               return Container(
@@ -139,8 +134,7 @@ class VideoPlayerControlsBar extends StatelessWidget {
           );
   }
 
-  Widget _videoController(Size videoControllerSize, WidgetRef ref) {
-    final videoController = ref.watch(videoControllerProvider);
+  Widget _videoController(Size videoControllerSize) {
     Size videoProgressIndicatorSize =
         Size(videoControllerSize.width, videoControllerSize.height * 0.4);
     Size videoTimeSize =
@@ -155,12 +149,12 @@ class VideoPlayerControlsBar extends StatelessWidget {
             child: Column(
               children: [
                 CircularVideoProgressIndicator(
-                  videoController: videoController,
+                  videoController: videoController!,
                   videoProgressIndicatorSize: videoProgressIndicatorSize,
                   topBottomPadd: topBottomPadd,
                   leftRightPadd: leftRightPadd,
                 ),
-                _videoActionBar(videoTimeSize, videoController),
+                _videoActionBar(videoTimeSize, videoController!),
                 SizedBox(
                   height: videoControllerSize.height -
                       videoProgressIndicatorSize.height -

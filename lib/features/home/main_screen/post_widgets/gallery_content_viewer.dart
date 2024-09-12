@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
-import 'package:link_win_mob_app/core/utils/enums/full_screen_media_type.dart';
+import 'package:link_win_mob_app/core/models/home_screen_post_state.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
-import 'package:link_win_mob_app/widgets/full_screen_post.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class GalleryContentViewer extends StatefulWidget {
   final BorderRadius contentBorderRadius;
-  final HomeScreenPostData homeScreenPostData;
   final double bottomPosRatio;
   final double indecatorWidthRatio;
   final double indecatorHeightRatio;
   final int largeGalleryThreshold;
+  final HomeScreenPostState postState;
 
   const GalleryContentViewer({
     super.key,
     required this.contentBorderRadius,
-    required this.homeScreenPostData,
+    required this.postState,
     this.bottomPosRatio = 0.012,
     this.indecatorWidthRatio = 0.5,
     this.indecatorHeightRatio = 0.15,
@@ -95,15 +93,15 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
   }
 
   _openFullScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => FullScreenPost(
-          fullScreenMediaType: FullScreenMediaType.imageGallery,
-          homeScreenPostData: widget.homeScreenPostData,
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => FullScreenPost(
+    //       fullScreenMediaType: FullScreenMediaType.imageGallery,
+    //       homeScreenPostData: widget.homeScreenPostData,
+    //     ),
+    //   ),
+    // );
   }
 
   _buildGalleryContentViewer(
@@ -113,11 +111,11 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
       child: ClipRRect(
         borderRadius: contentBorderRadius,
         child: PhotoViewGallery.builder(
-          itemCount: widget.homeScreenPostData.length,
+          itemCount: widget.postState.homeScreenPostData.length,
           builder: (context, index) {
             return PhotoViewGalleryPageOptions(
               imageProvider: NetworkImage(
-                widget.homeScreenPostData.content[index],
+                widget.postState.homeScreenPostData.content[index],
               ),
               minScale: PhotoViewComputedScale.contained,
               maxScale: PhotoViewComputedScale.covered * 2,
@@ -134,7 +132,7 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
   }
 
   _buildPageIndicator(Size indicatorSize) {
-    int contentLength = widget.homeScreenPostData.length;
+    int contentLength = widget.postState.homeScreenPostData.length;
     return SizedBox(
       width: indicatorSize.width,
       height: indicatorSize.height,
