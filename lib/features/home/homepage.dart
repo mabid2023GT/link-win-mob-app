@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
+import 'package:link_win_mob_app/features/home/profile/profile_screen.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen.dart';
 import 'package:link_win_mob_app/features/home/nav/nav.dart';
 import 'package:link_win_mob_app/features/home/nav/nav_floating_action_button.dart';
@@ -27,10 +28,7 @@ class _HomePageState extends State<HomePage> {
       alignment: Alignment.center,
       child: const Text('Fav List'),
     ),
-    Container(
-      alignment: Alignment.center,
-      child: const Text('Profile'),
-    ),
+    Container(alignment: Alignment.center, child: const ProfileScreen()),
   ];
 
   _changePageTo(int index) {
