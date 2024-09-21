@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
       alignment: Alignment.center,
       child: const Text('Fav List'),
     ),
-    Container(alignment: Alignment.center, child: const ProfileScreen()),
+    const ProfileScreen(),
   ];
 
   _changePageTo(int index) {

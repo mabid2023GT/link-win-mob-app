@@ -8,10 +8,10 @@ import 'package:link_win_mob_app/widgets/text_field_widget.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfile extends StatefulWidget {
-  UserInformation user;
+  final UserInformation user;
   final Function(UserInformation) onSave;
 
-  static String CreateShortenedName(UserInformation user) {
+  static String createShortenedName(UserInformation user) {
     String res = "";
     if (user.firstName.isNotEmpty) {
       res = res + user.firstName[0];
@@ -34,14 +34,14 @@ class EditProfile extends StatefulWidget {
               user.imgUrl.isNotEmpty ? NetworkImage(user.imgUrl) : null,
           child: user.imgUrl.isEmpty
               ? Text(
-                  EditProfile.CreateShortenedName(user),
-                  style: TextStyle(
+                  EditProfile.createShortenedName(user),
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 24, color: kWhite),
                   textAlign: TextAlign.center,
                 )
               : null);
 
-  EditProfile({Key? key, required this.user, required this.onSave})
+  const EditProfile({Key? key, required this.user, required this.onSave})
       : super(key: key);
 
   @override
@@ -56,9 +56,7 @@ class _EditProfileState extends State<EditProfile> {
     ScreenUtil screenUtil = ScreenUtil(context);
     return Scaffold(
         backgroundColor: transparent,
-        appBar: const HomeScreenAppBar(
-          imply_leading: true,
-        ),
+        appBar: const HomeScreenAppBar(),
         body: AutoResponsivePercentageLayout(
             screenUtil: screenUtil,
             isRow: false,
@@ -99,7 +97,7 @@ class _EditProfileState extends State<EditProfile> {
                           widget.user.firstName = firstName;
                         });
                       },
-                      validateValue: ValidateName,
+                      validateValue: validateName,
                     ),
                     const SizedBox(height: 24),
                     TextFieldWidget(
@@ -110,7 +108,7 @@ class _EditProfileState extends State<EditProfile> {
                           widget.user.lastName = lastName;
                         });
                       },
-                      validateValue: ValidateName,
+                      validateValue: validateName,
                     ),
                     const SizedBox(height: 24),
                     TextFieldWidget(
@@ -121,7 +119,7 @@ class _EditProfileState extends State<EditProfile> {
                           widget.user.phoneNumber = phoneNumber;
                         });
                       },
-                      validateValue: ValidatePhoneNumber,
+                      validateValue: validatePhoneNumber,
                     ),
                     const SizedBox(height: 24),
                     Row(
@@ -216,14 +214,15 @@ class _EditProfileState extends State<EditProfile> {
                 leading: const Icon(Icons.photo_library),
                 title: const Text('Choose from Gallery'),
                 onTap: () async {
-                  _PickImage(ImageSource.gallery);
+                  _pickImage(ImageSource.gallery);
+                  Navigator.pop(context);
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.camera_alt),
                 title: const Text('Take a Photo'),
                 onTap: () {
-                  _PickImage(ImageSource.camera);
+                  _pickImage(ImageSource.camera);
                 },
               ),
               if (true) // Only show remove option if image exists
@@ -244,7 +243,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Future<void> _PickImage(ImageSource source) async {
+  Future<void> _pickImage(ImageSource source) async {
     final picker = ImagePicker();
     final returnImage = await picker.pickImage(source: source);
     if (returnImage == null) return;
@@ -252,12 +251,10 @@ class _EditProfileState extends State<EditProfile> {
     setState(() {
       widget.user.imgUrl = returnImage.path;
     });
-
-    Navigator.pop(context);
   }
 
-  String? ValidateName(String value) {
-    String? errorText = null;
+  String? validateName(String value) {
+    String? errorText;
     if (value.isEmpty) {
       errorText = 'name is required';
     }
@@ -269,8 +266,8 @@ class _EditProfileState extends State<EditProfile> {
     return errorText;
   }
 
-  String? ValidatePhoneNumber(String value) {
-    String? errorText = null;
+  String? validatePhoneNumber(String value) {
+    String? errorText;
     RegExp phoneRegex = RegExp(r'^\+?[0-9]*$');
 
     if (value.isNotEmpty &&

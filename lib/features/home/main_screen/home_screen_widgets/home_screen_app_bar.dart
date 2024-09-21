@@ -5,15 +5,14 @@ import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 
 class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final bool imply_leading;
-  const HomeScreenAppBar({super.key, this.imply_leading = false});
+  const HomeScreenAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     ScreenUtil screenUtil = ScreenUtil(context);
 
     return AppBar(
-      automaticallyImplyLeading: imply_leading,
+      automaticallyImplyLeading: false,
       centerTitle: false,
       backgroundColor: kWhite,
       title: Padding(
