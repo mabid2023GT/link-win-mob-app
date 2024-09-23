@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/models/feed_post_data.dart';
-import 'package:link_win_mob_app/core/utils/enums/full_screen_media_type.dart';
 import 'package:link_win_mob_app/providers/home/feed_provider.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/full_screen_post.dart';
@@ -113,7 +112,6 @@ class _VideoContentViewerState extends ConsumerState<VideoContentViewer> {
       context,
       MaterialPageRoute(
         builder: (context) => FullScreenPost(
-          fullScreenMediaType: FullScreenMediaType.video,
           feedPostData: widget.feedPostData,
         ),
       ),

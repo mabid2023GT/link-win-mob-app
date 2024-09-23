@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
+import 'package:link_win_mob_app/core/models/feed_post_data.dart';
 import 'package:link_win_mob_app/core/utils/extensions/duration_extensions.dart';
+import 'package:link_win_mob_app/providers/home/feed_provider.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/circular_video_progress_indicator.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:video_player/video_player.dart';
 
-class VideoPlayerControlsBar extends StatelessWidget {
-  final VideoPlayerController? videoController;
+class VideoPlayerControlsBar extends StatefulWidget {
+  final VideoPlayerController videoController;
+  final WidgetRef ref;
+  final FeedPostData feedPostData;
   const VideoPlayerControlsBar({
     super.key,
     required this.videoController,
+    required this.ref,
+    required this.feedPostData,
   });
 
+  @override
+  State<VideoPlayerControlsBar> createState() => _VideoPlayerControlsBarState();
+}
+
+class _VideoPlayerControlsBarState extends State<VideoPlayerControlsBar> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilderChild(
@@ -35,10 +47,9 @@ class VideoPlayerControlsBar extends StatelessWidget {
     Size sideSize,
     Size videoControllerSize,
   ) {
-    return Container(
+    return SizedBox(
       width: size.width,
       height: size.height,
-      color: kBlack,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -50,22 +61,39 @@ class VideoPlayerControlsBar extends StatelessWidget {
     );
   }
 
+  // Toggling the mute state
+  void _toggleMute() {
+    setState(() {
+      // Toggle mute when the video is tapped
+      widget.ref
+          .read(feedProvider.notifier)
+          .toggleMuteForPage(widget.feedPostData.pageIndex);
+      // Update volume based on the new mute state
+      final isMuted = widget.ref
+          .read(feedProvider.notifier)
+          .isMutedForPage(widget.feedPostData.pageIndex);
+      widget.videoController.setVolume(isMuted ? 0.0 : 1.0);
+    });
+  }
+
   _leftSide(Size size) {
     Size positionTimeSize = Size(size.width, size.height * 0.4);
     Size muteIconSize =
         Size(positionTimeSize.width, size.height - positionTimeSize.height);
-    // bool isMuted = ref.watch(muteStateProvider);
+
+    final isMuted = widget.ref
+        .read(feedProvider.notifier)
+        .isMutedForPage(widget.feedPostData.pageIndex);
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _positionTimeWidget(positionTimeSize),
         _buttonWrapper(
           muteIconSize,
-          true ? Icons.volume_off : Icons.volume_up,
+          isMuted ? Icons.volume_off : Icons.volume_up,
           iconSizeRatio: 0.7,
-          () {
-            // ref.read(muteStateProvider.notifier).state = !isMuted;
-          },
+          _toggleMute,
         ),
       ],
     );
@@ -76,6 +104,7 @@ class VideoPlayerControlsBar extends StatelessWidget {
     Size fullscreenIconSize =
         Size(durationTimeSize.width, size.height - durationTimeSize.height);
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _durationTimeWidget(durationTimeSize),
         _buttonWrapper(
@@ -89,10 +118,10 @@ class VideoPlayerControlsBar extends StatelessWidget {
   }
 
   Widget _positionTimeWidget(Size size) {
-    return videoController == null
+    return !widget.videoController.value.isInitialized
         ? const SizedBox()
         : ValueListenableBuilder(
-            valueListenable: videoController!,
+            valueListenable: widget.videoController,
             builder: (context, VideoPlayerValue value, child) {
               final position = value.position;
               return Container(
@@ -109,10 +138,10 @@ class VideoPlayerControlsBar extends StatelessWidget {
   }
 
   Widget _durationTimeWidget(Size size) {
-    return videoController == null
+    return !widget.videoController.value.isInitialized
         ? const SizedBox()
         : ValueListenableBuilder(
-            valueListenable: videoController!,
+            valueListenable: widget.videoController,
             builder: (context, VideoPlayerValue value, child) {
               final duration = value.duration;
               return Container(
@@ -135,20 +164,24 @@ class VideoPlayerControlsBar extends StatelessWidget {
         Size(videoControllerSize.width, videoControllerSize.height * 0.4);
     double topBottomPadd = videoProgressIndicatorSize.height * 0.3;
     double leftRightPadd = videoProgressIndicatorSize.width * 0.05;
-    return videoController == null
-        ? const SizedBox()
+    return !widget.videoController.value.isInitialized
+        ? SizedBox(
+            width: videoControllerSize.width,
+            height: videoControllerSize.height,
+          )
         : SizedBox(
             width: videoControllerSize.width,
             height: videoControllerSize.height,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircularVideoProgressIndicator(
-                  videoController: videoController!,
+                  videoController: widget.videoController,
                   videoProgressIndicatorSize: videoProgressIndicatorSize,
                   topBottomPadd: topBottomPadd,
                   leftRightPadd: leftRightPadd,
                 ),
-                _videoActionBar(videoTimeSize, videoController!),
+                _videoActionBar(videoTimeSize, widget.videoController),
                 SizedBox(
                   height: videoControllerSize.height -
                       videoProgressIndicatorSize.height -
