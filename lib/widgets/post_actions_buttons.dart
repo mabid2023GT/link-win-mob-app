@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
-import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
+import 'package:link_win_mob_app/core/models/feed_post_data.dart';
+import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/action_button.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
@@ -14,12 +14,12 @@ class PostActionsButtons extends StatelessWidget {
   /// are laid out vertically.
   final bool isRow;
 
-  final HomeScreenPostData homeScreenPostData;
+  final FeedPostData feedPostData;
 
   const PostActionsButtons({
     super.key,
     required this.isRow,
-    required this.homeScreenPostData,
+    required this.feedPostData,
   });
 
   @override
@@ -37,7 +37,7 @@ class PostActionsButtons extends StatelessWidget {
                 context: context,
                 iconSize: iconSize,
                 svgPath: 'assets/icons/recommend.svg',
-                action: HomeScreenPostActions.recommend,
+                action: FeedPostActions.recommend,
                 isClicked: false,
                 activeColor: kAmber,
                 onTap: () {},
@@ -46,7 +46,7 @@ class PostActionsButtons extends StatelessWidget {
                 context: context,
                 iconSize: iconSize,
                 svgPath: 'assets/icons/hands_clapping.svg',
-                action: HomeScreenPostActions.support,
+                action: FeedPostActions.support,
                 isClicked: false,
                 activeColor: kAmber,
                 onTap: () {},
@@ -55,7 +55,7 @@ class PostActionsButtons extends StatelessWidget {
                 context: context,
                 iconSize: iconSize,
                 svgPath: 'assets/icons/favorite.svg',
-                action: HomeScreenPostActions.favorite,
+                action: FeedPostActions.favorite,
                 isClicked: false,
                 activeColor: kAmber,
                 onTap: () {},
@@ -64,7 +64,7 @@ class PostActionsButtons extends StatelessWidget {
                 context: context,
                 iconSize: iconSize,
                 svgPath: 'assets/icons/like.svg',
-                action: HomeScreenPostActions.like,
+                action: FeedPostActions.like,
                 isClicked: false,
                 activeColor: kAmber,
                 onTap: () {},
@@ -73,7 +73,7 @@ class PostActionsButtons extends StatelessWidget {
                 context: context,
                 iconSize: iconSize,
                 svgPath: 'assets/icons/comment.svg',
-                action: HomeScreenPostActions.comment,
+                action: FeedPostActions.comment,
                 isClicked: false,
                 activeColor: kAmber,
                 onTap: () {},
@@ -100,7 +100,7 @@ class PostActionsButtons extends StatelessWidget {
     required bool isClicked,
     required Color activeColor,
     required VoidCallback onTap,
-    HomeScreenPostActions? action,
+    FeedPostActions? action,
   }) {
     return LinkWinIcon(
       iconSize: iconSize,
@@ -110,7 +110,7 @@ class PostActionsButtons extends StatelessWidget {
         context: context,
         svgPath: svgPath,
         actionLabel: action != null
-            ? homeScreenPostData.fetchActionsData(
+            ? feedPostData.fetchActionsData(
                 action: action,
               )
             : null,

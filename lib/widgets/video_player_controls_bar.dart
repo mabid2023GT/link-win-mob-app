@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/extensions/duration_extensions.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
@@ -8,15 +7,10 @@ import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerControlsBar extends StatelessWidget {
-  final WidgetRef ref;
-  // final StateProvider<VideoPlayerController?> videoControllerProvider;
-  // final StateProvider<VideoPlayerController?> videoControllerProvider;
   final VideoPlayerController? videoController;
   const VideoPlayerControlsBar({
     super.key,
-    required this.ref,
     required this.videoController,
-    // required this.videoControllerProvider,
   });
 
   @override

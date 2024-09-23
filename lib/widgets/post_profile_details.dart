@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/core/models/home_screen_post_data.dart';
+import 'package:link_win_mob_app/core/models/feed_post_data.dart';
 import 'package:link_win_mob_app/core/utils/extensions/datetime_extensions.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
@@ -10,11 +10,11 @@ import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 class PostProfileDetails extends StatelessWidget {
   final bool withMoreVertIcon;
   final VoidCallback onTap;
-  final HomeScreenPostData homeScreenPostData;
+  final FeedPostData feedPostData;
   const PostProfileDetails({
     super.key,
     required this.withMoreVertIcon,
-    required this.homeScreenPostData,
+    required this.feedPostData,
     VoidCallback? onVertIconTap,
   }) : onTap = onVertIconTap ?? _defaultOnTap;
 
@@ -73,14 +73,14 @@ class PostProfileDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  homeScreenPostData.homeScreenPostProfileDetails.profileName,
+                  feedPostData.feedPostProfileDetails.profileName,
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         color: kWhite,
                       ),
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  homeScreenPostData.postedAt.timeAgo(),
+                  feedPostData.postedAt.timeAgo(),
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         color: kWhite,
                       ),
@@ -107,7 +107,7 @@ class PostProfileDetails extends StatelessWidget {
           )),
       child: ClipOval(
         child: Image.network(
-          homeScreenPostData.homeScreenPostProfileDetails.profileImgUrl,
+          feedPostData.feedPostProfileDetails.profileImgUrl,
           fit: BoxFit.fill,
         ),
       ),

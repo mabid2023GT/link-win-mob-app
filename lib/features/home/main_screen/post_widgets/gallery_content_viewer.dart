@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/core/models/home_screen_post_state.dart';
+import 'package:link_win_mob_app/core/models/feed_post_data.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:photo_view/photo_view.dart';
@@ -12,12 +12,12 @@ class GalleryContentViewer extends StatefulWidget {
   final double indecatorWidthRatio;
   final double indecatorHeightRatio;
   final int largeGalleryThreshold;
-  final HomeScreenPostState postState;
+  final FeedPostData feedPostData;
 
   const GalleryContentViewer({
     super.key,
     required this.contentBorderRadius,
-    required this.postState,
+    required this.feedPostData,
     this.bottomPosRatio = 0.012,
     this.indecatorWidthRatio = 0.5,
     this.indecatorHeightRatio = 0.15,
@@ -111,11 +111,11 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
       child: ClipRRect(
         borderRadius: contentBorderRadius,
         child: PhotoViewGallery.builder(
-          itemCount: widget.postState.homeScreenPostData.length,
+          itemCount: widget.feedPostData.length,
           builder: (context, index) {
             return PhotoViewGalleryPageOptions(
               imageProvider: NetworkImage(
-                widget.postState.homeScreenPostData.content[index],
+                widget.feedPostData.content[index],
               ),
               minScale: PhotoViewComputedScale.contained,
               maxScale: PhotoViewComputedScale.covered * 2,
@@ -132,7 +132,7 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
   }
 
   _buildPageIndicator(Size indicatorSize) {
-    int contentLength = widget.postState.homeScreenPostData.length;
+    int contentLength = widget.feedPostData.length;
     return SizedBox(
       width: indicatorSize.width,
       height: indicatorSize.height,

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:link_win_mob_app/core/models/home_screen_post_state.dart';
-import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
+import 'package:link_win_mob_app/core/models/feed_post_data.dart';
+import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
 import 'package:link_win_mob_app/features/home/main_screen/post_widgets/gallery_content_viewer.dart';
 import 'package:link_win_mob_app/features/home/main_screen/post_widgets/video_content_viewer.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 
-class HomeScreenPostBody extends StatelessWidget {
+class FeedPostBody extends StatelessWidget {
+  final FeedPostData feedPostData;
   final double borderRadiusPercentage;
-  final HomeScreenPostState postState;
 
-  const HomeScreenPostBody({
+  const FeedPostBody({
     super.key,
     required this.borderRadiusPercentage,
-    required this.postState,
+    required this.feedPostData,
   });
 
   @override
@@ -46,26 +46,26 @@ class HomeScreenPostBody extends StatelessWidget {
 
   _buildContentViewer(
       BuildContext context, Size maxSize, BorderRadius contentBorderRadius) {
-    switch (postState.homeScreenPostData.homeScreenPostType) {
-      case HomeScreenPostType.image:
+    switch (feedPostData.feedPostType) {
+      case FeedPostType.image:
         return _buildImageContentViewer(context, maxSize, contentBorderRadius);
-      case HomeScreenPostType.imageCollection:
+      case FeedPostType.imageCollection:
         return GalleryContentViewer(
           contentBorderRadius: contentBorderRadius,
-          postState: postState,
+          feedPostData: feedPostData,
         );
-      case HomeScreenPostType.video:
+      case FeedPostType.video:
         return VideoContentViewer(
           contentBorderRadius: contentBorderRadius,
-          postState: postState,
-          url: postState.homeScreenPostData.content[0],
+          feedPostData: feedPostData,
+          url: feedPostData.content[0],
         );
-      case HomeScreenPostType.videoCollection:
+      case FeedPostType.videoCollection:
         return VideosContentViewer(
           contentBorderRadius: contentBorderRadius,
-          postState: postState,
+          feedPostData: feedPostData,
         );
-      case HomeScreenPostType.text:
+      case FeedPostType.text:
         return Container(
           color: Colors.purple,
         );
@@ -89,7 +89,7 @@ class HomeScreenPostBody extends StatelessWidget {
       child: ClipRRect(
         borderRadius: contentBorderRadius,
         child: Image.network(
-          postState.homeScreenPostData.content[0],
+          feedPostData.content[0],
           width: maxSize.width,
           height: maxSize.height,
           fit: BoxFit.fill,

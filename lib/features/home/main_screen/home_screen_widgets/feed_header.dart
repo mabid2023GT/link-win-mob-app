@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HomeScreenHeader extends StatelessWidget {
-  const HomeScreenHeader({super.key});
+class FeedHeader extends StatelessWidget {
+  const FeedHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

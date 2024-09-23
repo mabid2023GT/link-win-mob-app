@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/core/models/home_screen_post_state.dart';
-import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
+import 'package:link_win_mob_app/core/models/feed_post_data.dart';
+import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
 import 'package:link_win_mob_app/core/utils/extensions/size_extensions.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
-import 'package:link_win_mob_app/features/home/main_screen/post_widgets/home_screen_post_body.dart';
+import 'package:link_win_mob_app/features/home/main_screen/post_widgets/feed_post_body.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/widgets/action_button.dart';
 import 'package:link_win_mob_app/widgets/post_profile_details.dart';
 
-class HomeScreenPost extends StatelessWidget {
-  final HomeScreenPostState postState;
-  const HomeScreenPost({
+class FeedPost extends StatelessWidget {
+  final FeedPostData feedPostData;
+  const FeedPost({
     super.key,
-    required this.postState,
+    required this.feedPostData,
   });
   final double borderRadiusPercentage = 0.05;
 
@@ -69,9 +69,9 @@ class HomeScreenPost extends StatelessWidget {
             SizedBox(
               width: maxSize.width,
               height: maxSize.height,
-              child: HomeScreenPostBody(
+              child: FeedPostBody(
                 borderRadiusPercentage: borderRadiusPercentage,
-                postState: postState,
+                feedPostData: feedPostData,
               ),
             ),
             Positioned(
@@ -83,7 +83,7 @@ class HomeScreenPost extends StatelessWidget {
                 height: headerSize.height,
                 child: PostProfileDetails(
                   withMoreVertIcon: true,
-                  homeScreenPostData: postState.homeScreenPostData,
+                  feedPostData: feedPostData,
                 ),
               ),
             ),
@@ -103,8 +103,8 @@ class HomeScreenPost extends StatelessWidget {
         ActionButton(
           context: context,
           svgPath: 'assets/icons/recommend.svg',
-          actionLabel: postState.homeScreenPostData.fetchActionsData(
-            action: HomeScreenPostActions.recommend,
+          actionLabel: feedPostData.fetchActionsData(
+            action: FeedPostActions.recommend,
           ),
           activeColor: kAmber,
           isClicked: true,
@@ -114,8 +114,8 @@ class HomeScreenPost extends StatelessWidget {
         ActionButton(
           context: context,
           svgPath: 'assets/icons/hands_clapping.svg',
-          actionLabel: postState.homeScreenPostData.fetchActionsData(
-            action: HomeScreenPostActions.support,
+          actionLabel: feedPostData.fetchActionsData(
+            action: FeedPostActions.support,
           ),
           isClicked: true,
           labelColor: kBlack,
@@ -124,8 +124,8 @@ class HomeScreenPost extends StatelessWidget {
         ActionButton(
           context: context,
           svgPath: 'assets/icons/heart.svg',
-          actionLabel: postState.homeScreenPostData.fetchActionsData(
-            action: HomeScreenPostActions.favorite,
+          actionLabel: feedPostData.fetchActionsData(
+            action: FeedPostActions.favorite,
           ),
           isClicked: true,
           activeColor: kRed,
@@ -135,8 +135,8 @@ class HomeScreenPost extends StatelessWidget {
         ActionButton(
           context: context,
           svgPath: 'assets/icons/like.svg',
-          actionLabel: postState.homeScreenPostData.fetchActionsData(
-            action: HomeScreenPostActions.like,
+          actionLabel: feedPostData.fetchActionsData(
+            action: FeedPostActions.like,
           ),
           isClicked: true,
           labelColor: kBlack,
@@ -145,8 +145,8 @@ class HomeScreenPost extends StatelessWidget {
         ActionButton(
           context: context,
           svgPath: 'assets/icons/comment.svg',
-          actionLabel: postState.homeScreenPostData.fetchActionsData(
-            action: HomeScreenPostActions.comment,
+          actionLabel: feedPostData.fetchActionsData(
+            action: FeedPostActions.comment,
           ),
           activeColor: kAmber,
           isClicked: true,

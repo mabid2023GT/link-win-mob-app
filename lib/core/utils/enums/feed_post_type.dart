@@ -1,4 +1,4 @@
-enum HomeScreenPostType {
+enum FeedPostType {
   image,
   video,
   text,
@@ -6,7 +6,7 @@ enum HomeScreenPostType {
   videoCollection,
 }
 
-enum HomeScreenPostActions {
+enum FeedPostActions {
   comment,
   support,
   favorite,
