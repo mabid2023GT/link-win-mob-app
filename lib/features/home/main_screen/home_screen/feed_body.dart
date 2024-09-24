@@ -29,7 +29,8 @@ class FeedBody extends ConsumerWidget {
                   return _postContainer(
                     size: maxSize,
                     child: FeedPost(
-                      feedPostData: post,
+                      pageIndex: post.pageIndex,
+                      postId: post.postId,
                     ),
                   );
                 },

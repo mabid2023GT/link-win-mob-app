@@ -6,7 +6,7 @@ class FeedPostData {
   final List<String> content;
   final String postId;
   final int pageIndex;
-  final Map<FeedPostActions, String> actionsData;
+  final Map<FeedPostActions, FeedPostActionData> actionsData;
   final FeedPostProfileDetails feedPostProfileDetails;
   final DateTime postedAt;
   late final int length;
@@ -28,7 +28,7 @@ class FeedPostData {
     List<String>? content,
     String? postId,
     int? pageIndex,
-    Map<FeedPostActions, String>? actionsData,
+    Map<FeedPostActions, FeedPostActionData>? actionsData,
     FeedPostProfileDetails? feedPostProfileDetails,
     DateTime? postedAt,
   }) {
@@ -44,16 +44,64 @@ class FeedPostData {
     );
   }
 
-  String fetchActionsData({
+  FeedPostActionData? fetchActionsData({
     required FeedPostActions action,
   }) {
-    return actionsData[action] ?? '';
+    return actionsData[action];
   }
 
   void updateActionsData({
     required FeedPostActions action,
-    required String value,
+    required int value,
   }) {
-    actionsData[action] = value;
+    FeedPostActionData? temp = actionsData[action];
+    if (temp != null) {
+      temp.copyWith(value: value);
+    }
+  }
+}
+
+class FeedPostActionData {
+  final FeedPostActions action;
+  final String value;
+  final bool isClicked;
+
+  FeedPostActionData({
+    required this.action,
+    required int value,
+    required this.isClicked,
+  }) : value = valueAsString(value);
+
+  FeedPostActionData copyWith({
+    FeedPostActions? action,
+    int? value,
+    bool? isClicked,
+  }) {
+    return FeedPostActionData(
+      action: action ?? this.action,
+      value: value ?? valueAsInt(),
+      isClicked: isClicked ?? this.isClicked,
+    );
+  }
+
+  // Method to convert an integer to a formatted string
+  static String valueAsString(int val) {
+    if (val < 1000) {
+      return val.toString(); // Less than 1000, return as is
+    } else if (val < 100000) {
+      return '${(val / 1000).toStringAsFixed(1)} k'; // Thousands
+    } else {
+      return '${(val / 1000).toStringAsFixed(0)} k'; // Hundreds of thousands
+    }
+  }
+
+  // Method to convert formatted string back to an integer
+  int valueAsInt() {
+    if (value.endsWith('k')) {
+      String numberPart = value.substring(0, value.length - 1).trim();
+      return ((double.tryParse(numberPart) ?? 0) * 1000)
+          .toInt(); // Convert k to integer
+    }
+    return int.tryParse(value) ?? 0; // Convert regular number to integer
   }
 }

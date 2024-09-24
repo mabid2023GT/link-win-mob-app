@@ -42,7 +42,6 @@ class PostActionsButtons extends ConsumerWidget {
                 iconSize: iconSize,
                 svgPath: 'assets/icons/recommend.svg',
                 action: FeedPostActions.recommend,
-                isClicked: false,
                 activeColor: kAmber,
                 ref: ref,
                 feedPostData: feedPostData,
@@ -52,8 +51,7 @@ class PostActionsButtons extends ConsumerWidget {
                 iconSize: iconSize,
                 svgPath: 'assets/icons/hands_clapping.svg',
                 action: FeedPostActions.support,
-                isClicked: false,
-                activeColor: kAmber,
+                activeColor: kBlue,
                 ref: ref,
                 feedPostData: feedPostData,
               ),
@@ -62,8 +60,7 @@ class PostActionsButtons extends ConsumerWidget {
                 iconSize: iconSize,
                 svgPath: 'assets/icons/favorite.svg',
                 action: FeedPostActions.favorite,
-                isClicked: false,
-                activeColor: kAmber,
+                activeColor: kRed,
                 ref: ref,
                 feedPostData: feedPostData,
               ),
@@ -72,8 +69,7 @@ class PostActionsButtons extends ConsumerWidget {
                 iconSize: iconSize,
                 svgPath: 'assets/icons/like.svg',
                 action: FeedPostActions.like,
-                isClicked: false,
-                activeColor: kAmber,
+                activeColor: kBlue,
                 ref: ref,
                 feedPostData: feedPostData,
               ),
@@ -82,7 +78,6 @@ class PostActionsButtons extends ConsumerWidget {
                 iconSize: iconSize,
                 svgPath: 'assets/icons/comment.svg',
                 action: FeedPostActions.comment,
-                isClicked: false,
                 activeColor: kAmber,
                 ref: ref,
                 feedPostData: feedPostData,
@@ -91,7 +86,6 @@ class PostActionsButtons extends ConsumerWidget {
                 context: context,
                 iconSize: iconSize,
                 svgPath: 'assets/icons/more_hori.svg',
-                isClicked: false,
                 activeColor: kAmber,
                 ref: ref,
                 feedPostData: feedPostData,
@@ -107,28 +101,32 @@ class PostActionsButtons extends ConsumerWidget {
     required BuildContext context,
     required Size iconSize,
     required String svgPath,
-    required bool isClicked,
     required Color activeColor,
     required FeedPostData? feedPostData,
     // Add ref to access provider
     required WidgetRef ref,
     FeedPostActions? action,
   }) {
+    FeedPostActionData? feedPostActionData;
+    if (action != null && feedPostData != null) {
+      feedPostActionData = feedPostData.fetchActionsData(
+        action: action,
+      );
+    }
     return LinkWinIcon(
       iconSize: iconSize,
       splashColor: activeColor.withOpacity(0.5),
-      onTap: () => _onActionButtonTapped(ref, action, feedPostData),
+      onTap: action != null
+          ? () => _onActionButtonTapped(ref, action, feedPostData)
+          : () {},
       child: ActionButton(
         context: context,
         svgPath: svgPath,
-        actionLabel: action != null && feedPostData != null
-            ? feedPostData.fetchActionsData(
-                action: action,
-              )
-            : null,
+        actionLabel: feedPostActionData?.value,
         activeColor: activeColor,
         inactiveColor: kWhite,
-        isClicked: false,
+        isClicked:
+            feedPostActionData != null ? feedPostActionData.isClicked : false,
         isFullScreenChild: true,
       ),
     );
@@ -136,21 +134,28 @@ class PostActionsButtons extends ConsumerWidget {
 
   void _onActionButtonTapped(
     WidgetRef ref,
-    FeedPostActions? action,
+    FeedPostActions action,
     FeedPostData? feedPostData,
   ) {
-    if (action != null && feedPostData != null) {
+    if (feedPostData != null) {
       // Fetch current action data (optional: based on button type)
-      String currentValue = feedPostData.fetchActionsData(action: action);
-      // Increment by 1
-      int updatedValue = int.parse(currentValue) + 1;
-      // Update action data via the provider when button is tapped
-      ref.read(feedProvider.notifier).updatePostAction(
-            pageIndex: feedPostData.pageIndex,
-            postId: feedPostData.postId,
-            action: action,
-            value: '$updatedValue',
-          );
+      FeedPostActionData? feedPostActionData =
+          feedPostData.fetchActionsData(action: action);
+      if (feedPostActionData != null) {
+        int currentValue = feedPostActionData.valueAsInt();
+        // Increment by 1
+        int updatedValue =
+            currentValue + (feedPostActionData.isClicked ? -1 : 1);
+        // Update action data via the provider when button is tapped
+        ref.read(feedProvider.notifier).updatePostAction(
+              pageIndex: feedPostData.pageIndex,
+              postId: feedPostData.postId,
+              feedPostActionData: feedPostActionData.copyWith(
+                value: updatedValue,
+                isClicked: !feedPostActionData.isClicked,
+              ),
+            );
+      }
     }
   }
 }

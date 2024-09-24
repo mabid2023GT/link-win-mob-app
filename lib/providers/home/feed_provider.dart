@@ -65,8 +65,7 @@ class FeedNotifier extends StateNotifier<List<FeedState?>> {
   void updatePostAction({
     required int pageIndex,
     required String postId,
-    required FeedPostActions action,
-    required String value,
+    required FeedPostActionData feedPostActionData,
   }) {
     // Create a new state list
     state = state.map((page) {
@@ -79,7 +78,7 @@ class FeedNotifier extends StateNotifier<List<FeedState?>> {
               return post.copyWith(
                 actionsData: {
                   ...post.actionsData,
-                  action: value,
+                  feedPostActionData.action: feedPostActionData,
                 },
               );
             }
@@ -103,11 +102,16 @@ List<FeedState> _initialFeedData() {
         ],
         postId: '1234DfbdRE85',
         actionsData: {
-          FeedPostActions.comment: '40',
-          FeedPostActions.support: '30 k',
-          FeedPostActions.favorite: '100',
-          FeedPostActions.like: '100 k',
-          FeedPostActions.recommend: '20 k',
+          FeedPostActions.comment: FeedPostActionData(
+              action: FeedPostActions.comment, value: 40, isClicked: true),
+          FeedPostActions.support: FeedPostActionData(
+              action: FeedPostActions.support, value: 69014, isClicked: false),
+          FeedPostActions.favorite: FeedPostActionData(
+              action: FeedPostActions.favorite, value: 100, isClicked: true),
+          FeedPostActions.like: FeedPostActionData(
+              action: FeedPostActions.like, value: 100004, isClicked: false),
+          FeedPostActions.recommend: FeedPostActionData(
+              action: FeedPostActions.recommend, value: 30, isClicked: false),
         },
         feedPostProfileDetails: FeedPostProfileDetails(
           profileName: 'Mohammad Abid',
@@ -121,13 +125,18 @@ List<FeedState> _initialFeedData() {
         content: [
           'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/African%20Lion%20-%20One%20Minute%20Wildlife%20Documentary%20%23shorts.mp4?alt=media&token=4d7cd043-e484-4b46-a14b-48f9f8290e28'
         ],
-        postId: '1234DfbdRE85',
+        postId: '1534DfMnRE85',
         actionsData: {
-          FeedPostActions.comment: '50',
-          FeedPostActions.support: '10 k',
-          FeedPostActions.favorite: '50',
-          FeedPostActions.like: '40 k',
-          FeedPostActions.recommend: '',
+          FeedPostActions.comment: FeedPostActionData(
+              action: FeedPostActions.comment, value: 50, isClicked: true),
+          FeedPostActions.support: FeedPostActionData(
+              action: FeedPostActions.support, value: 10412, isClicked: false),
+          FeedPostActions.favorite: FeedPostActionData(
+              action: FeedPostActions.favorite, value: 50, isClicked: true),
+          FeedPostActions.like: FeedPostActionData(
+              action: FeedPostActions.like, value: 40101, isClicked: true),
+          FeedPostActions.recommend: FeedPostActionData(
+              action: FeedPostActions.recommend, value: 0, isClicked: false),
         },
         feedPostProfileDetails: FeedPostProfileDetails(
           profileName: 'Haneen Sabar',
@@ -147,13 +156,18 @@ List<FeedState> _initialFeedData() {
           'https://images.tripadeal.com.au/cdn-cgi/image/format=auto,width=800/https://cstad.s3.ap-southeast-2.amazonaws.com/5205_All-Inclusive_Maldives_Fly_and_Stay_WEB_HERO_1.jpg',
           'https://cdn.pixabay.com/photo/2015/03/09/18/34/beach-666122_1280.jpg',
         ],
-        postId: '1234DfbdRE85',
+        postId: '7434mnTbdRE5',
         actionsData: {
-          FeedPostActions.comment: '',
-          FeedPostActions.support: '80 k',
-          FeedPostActions.favorite: '500',
-          FeedPostActions.like: '50 k',
-          FeedPostActions.recommend: '107',
+          FeedPostActions.comment: FeedPostActionData(
+              action: FeedPostActions.comment, value: 0, isClicked: false),
+          FeedPostActions.support: FeedPostActionData(
+              action: FeedPostActions.support, value: 80024, isClicked: false),
+          FeedPostActions.favorite: FeedPostActionData(
+              action: FeedPostActions.favorite, value: 500, isClicked: true),
+          FeedPostActions.like: FeedPostActionData(
+              action: FeedPostActions.like, value: 50999, isClicked: false),
+          FeedPostActions.recommend: FeedPostActionData(
+              action: FeedPostActions.recommend, value: 107, isClicked: false),
         },
         feedPostProfileDetails: FeedPostProfileDetails(
           profileName: 'Sam Krosba',
@@ -171,13 +185,18 @@ List<FeedState> _initialFeedData() {
           'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/videoplayback%20(2).mp4?alt=media&token=66e3ee54-9a0d-4dd3-b881-776db3f1f759',
           'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/videoplayback.mp4?alt=media&token=697c11dd-cda8-4caf-bd5f-8d18d18fb646',
         ],
-        postId: '1234DfbdRE85',
+        postId: '18RtnMfbdRE63',
         actionsData: {
-          FeedPostActions.comment: '10',
-          FeedPostActions.support: '5 k',
-          FeedPostActions.favorite: '750',
-          FeedPostActions.like: '10 k',
-          FeedPostActions.recommend: '3',
+          FeedPostActions.comment: FeedPostActionData(
+              action: FeedPostActions.comment, value: 10, isClicked: false),
+          FeedPostActions.support: FeedPostActionData(
+              action: FeedPostActions.support, value: 5020, isClicked: true),
+          FeedPostActions.favorite: FeedPostActionData(
+              action: FeedPostActions.favorite, value: 750, isClicked: false),
+          FeedPostActions.like: FeedPostActionData(
+              action: FeedPostActions.like, value: 10001, isClicked: true),
+          FeedPostActions.recommend: FeedPostActionData(
+              action: FeedPostActions.recommend, value: 3, isClicked: true),
         },
         feedPostProfileDetails: FeedPostProfileDetails(
           profileName: 'Namop Gran',
@@ -194,13 +213,20 @@ List<FeedState> _initialFeedData() {
         content: [
           'https://img.freepik.com/free-photo/view-wild-lion-nature_23-2150460851.jpg'
         ],
-        postId: '1234DfbdRE85',
+        postId: '8723DDfbdEnM',
         actionsData: {
-          FeedPostActions.comment: '40',
-          FeedPostActions.support: '30 k',
-          FeedPostActions.favorite: '100',
-          FeedPostActions.like: '100 k',
-          FeedPostActions.recommend: '20 k',
+          FeedPostActions.comment: FeedPostActionData(
+              action: FeedPostActions.comment, value: 75, isClicked: false),
+          FeedPostActions.support: FeedPostActionData(
+              action: FeedPostActions.support, value: 30201, isClicked: false),
+          FeedPostActions.favorite: FeedPostActionData(
+              action: FeedPostActions.favorite,
+              value: 780456,
+              isClicked: false),
+          FeedPostActions.like: FeedPostActionData(
+              action: FeedPostActions.like, value: 170014, isClicked: true),
+          FeedPostActions.recommend: FeedPostActionData(
+              action: FeedPostActions.recommend, value: 10, isClicked: false),
         },
         feedPostProfileDetails: FeedPostProfileDetails(
           profileName: 'Mohammad Abid',
@@ -214,13 +240,18 @@ List<FeedState> _initialFeedData() {
         content: [
           'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/African%20Lion%20-%20One%20Minute%20Wildlife%20Documentary%20%23shorts.mp4?alt=media&token=4d7cd043-e484-4b46-a14b-48f9f8290e28'
         ],
-        postId: '1234DfbdRE85',
+        postId: '3846Dfbdnm8S',
         actionsData: {
-          FeedPostActions.comment: '50',
-          FeedPostActions.support: '10 k',
-          FeedPostActions.favorite: '50',
-          FeedPostActions.like: '40 k',
-          FeedPostActions.recommend: '',
+          FeedPostActions.comment: FeedPostActionData(
+              action: FeedPostActions.comment, value: 91, isClicked: false),
+          FeedPostActions.support: FeedPostActionData(
+              action: FeedPostActions.support, value: 37001, isClicked: true),
+          FeedPostActions.favorite: FeedPostActionData(
+              action: FeedPostActions.favorite, value: 83558, isClicked: false),
+          FeedPostActions.like: FeedPostActionData(
+              action: FeedPostActions.like, value: 177000, isClicked: true),
+          FeedPostActions.recommend: FeedPostActionData(
+              action: FeedPostActions.recommend, value: 0, isClicked: false),
         },
         feedPostProfileDetails: FeedPostProfileDetails(
           profileName: 'Haneen Sabar',
