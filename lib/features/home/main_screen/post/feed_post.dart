@@ -4,7 +4,7 @@ import 'package:link_win_mob_app/core/models/feed_post_data.dart';
 import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
 import 'package:link_win_mob_app/core/utils/extensions/size_extensions.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
-import 'package:link_win_mob_app/features/home/main_screen/post_widgets/feed_post_body.dart';
+import 'package:link_win_mob_app/features/home/main_screen/post/feed_post_body.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/responsive_percentage_layout.dart';

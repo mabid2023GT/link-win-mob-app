@@ -49,4 +49,11 @@ class FeedPostData {
   }) {
     return actionsData[action] ?? '';
   }
+
+  void updateActionsData({
+    required FeedPostActions action,
+    required String value,
+  }) {
+    actionsData[action] = value;
+  }
 }

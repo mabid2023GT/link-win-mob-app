@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:link_win_mob_app/features/home/main_screen/post_widgets/feed_post.dart';
+import 'package:link_win_mob_app/features/home/main_screen/post/feed_post.dart';
 import 'package:link_win_mob_app/providers/home/feed_provider.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 

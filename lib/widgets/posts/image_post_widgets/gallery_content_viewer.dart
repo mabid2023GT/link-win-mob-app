@@ -3,6 +3,7 @@ import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/models/feed_post_data.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
+import 'package:link_win_mob_app/widgets/posts/full_screen_post/full_screen_post.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -13,11 +14,13 @@ class GalleryContentViewer extends StatefulWidget {
   final double indecatorHeightRatio;
   final int largeGalleryThreshold;
   final FeedPostData feedPostData;
+  final ValueNotifier<int>? currentIndexNotifier;
 
   const GalleryContentViewer({
     super.key,
     required this.contentBorderRadius,
     required this.feedPostData,
+    this.currentIndexNotifier,
     this.bottomPosRatio = 0.012,
     this.indecatorWidthRatio = 0.5,
     this.indecatorHeightRatio = 0.15,
@@ -41,6 +44,9 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
       if (newPage != _currentPage) {
         setState(() {
           _currentPage = newPage;
+          if (widget.currentIndexNotifier != null) {
+            widget.currentIndexNotifier!.value = _currentPage;
+          }
         });
       }
     });
@@ -55,6 +61,9 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
         _currentPage++;
       } else {
         _currentPage--;
+      }
+      if (widget.currentIndexNotifier != null) {
+        widget.currentIndexNotifier!.value = _currentPage;
       }
       _controller.jumpToPage(_currentPage);
     });
@@ -76,32 +85,34 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
           maxSize.height * widget.indecatorHeightRatio,
         );
         double leftRightPos = (maxSize.width - indicatorSize.width) * 0.5;
-        return Stack(
-          children: [
-            _buildGalleryContentViewer(
-                context, maxSize, widget.contentBorderRadius),
-            Positioned(
-              bottom: bottomPos,
-              left: leftRightPos,
-              right: leftRightPos,
-              child: _buildPageIndicator(indicatorSize),
-            ),
-          ],
-        );
+        return widget.currentIndexNotifier != null
+            ? _buildGalleryContentViewer(
+                context, maxSize, widget.contentBorderRadius)
+            : Stack(
+                children: [
+                  _buildGalleryContentViewer(
+                      context, maxSize, widget.contentBorderRadius),
+                  Positioned(
+                    bottom: bottomPos,
+                    left: leftRightPos,
+                    right: leftRightPos,
+                    child: _buildPageIndicator(indicatorSize),
+                  ),
+                ],
+              );
       },
     );
   }
 
   _openFullScreen() {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => FullScreenPost(
-    //       fullScreenMediaType: FullScreenMediaType.imageGallery,
-    //       homeScreenPostData: widget.homeScreenPostData,
-    //     ),
-    //   ),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FullScreenPost(
+          feedPostData: widget.feedPostData,
+        ),
+      ),
+    );
   }
 
   _buildGalleryContentViewer(

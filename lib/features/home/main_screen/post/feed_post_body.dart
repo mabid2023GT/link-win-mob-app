@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/models/feed_post_data.dart';
 import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
-import 'package:link_win_mob_app/features/home/main_screen/post_widgets/gallery_content_viewer.dart';
-import 'package:link_win_mob_app/features/home/main_screen/post_widgets/video_content_viewer.dart';
+import 'package:link_win_mob_app/widgets/posts/full_screen_post/full_screen_post.dart';
+import 'package:link_win_mob_app/widgets/posts/image_post_widgets/gallery_content_viewer.dart';
+import 'package:link_win_mob_app/widgets/posts/video_post_widgets/video_content_viewer.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 
 class FeedPostBody extends StatelessWidget {
@@ -76,15 +77,14 @@ class FeedPostBody extends StatelessWidget {
       BuildContext context, Size maxSize, BorderRadius contentBorderRadius) {
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => FullScreenPost(
-        //       fullScreenMediaType: FullScreenMediaType.image,
-        //       homeScreenPostData: homeScreenPostData,
-        //     ),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FullScreenPost(
+              feedPostData: feedPostData,
+            ),
+          ),
+        );
       },
       child: ClipRRect(
         borderRadius: contentBorderRadius,

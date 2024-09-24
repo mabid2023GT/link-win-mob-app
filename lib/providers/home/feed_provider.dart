@@ -31,6 +31,19 @@ class FeedNotifier extends StateNotifier<List<FeedState?>> {
     }).toList();
   }
 
+  // Method to fetch a post's data using pageIndex and postId
+  FeedPostData? fetchPost(int pageIndex, String postId) {
+    final page = state[pageIndex];
+    if (page != null) {
+      try {
+        return page.posts.firstWhere((post) => post.postId == postId);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  }
+
   // Function to update post data (e.g., loading from firestore)
   void updatePost(int pageIndex, String postId, FeedPostData updatedPost) {
     state = state.map((page) {
@@ -45,6 +58,36 @@ class FeedNotifier extends StateNotifier<List<FeedState?>> {
         );
       }
       return page;
+    }).toList();
+  }
+
+  // to update actions data for a post
+  void updatePostAction({
+    required int pageIndex,
+    required String postId,
+    required FeedPostActions action,
+    required String value,
+  }) {
+    // Create a new state list
+    state = state.map((page) {
+      if (page != null && state.indexOf(page) == pageIndex) {
+        // Create a new instance of the page with updated posts
+        return page.copyWith(
+          posts: page.posts.map((post) {
+            if (post.postId == postId) {
+              // Create a new instance of the post with updated actions data
+              return post.copyWith(
+                actionsData: {
+                  ...post.actionsData,
+                  action: value,
+                },
+              );
+            }
+            return post; // Return original post if not updated
+          }).toList(),
+        );
+      }
+      return page; // Return the original page if not the one being updated
     }).toList();
   }
 }

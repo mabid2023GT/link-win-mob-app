@@ -172,12 +172,14 @@ class VideosPost extends ConsumerWidget {
   final FeedPostData feedPostData;
   final List<String> urls;
   final Size footerSize;
+  final ValueNotifier<int> currentIndexNotifier;
 
   const VideosPost({
     super.key,
     required this.feedPostData,
     required this.urls,
     required this.footerSize,
+    required this.currentIndexNotifier,
   });
 
   @override
@@ -186,6 +188,7 @@ class VideosPost extends ConsumerWidget {
     return PageView.builder(
       itemCount: content.length,
       scrollDirection: Axis.horizontal,
+      onPageChanged: (int index) => currentIndexNotifier.value = index,
       itemBuilder: (context, index) {
         return SingleVideoPost(
           url: content[index],

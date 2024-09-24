@@ -3,12 +3,11 @@ import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/models/feed_post_data.dart';
 import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
-import 'package:link_win_mob_app/features/home/main_screen/post_widgets/gallery_content_viewer.dart';
-import 'package:link_win_mob_app/widgets/full_screen_post_app_bar.dart';
+import 'package:link_win_mob_app/widgets/posts/full_screen_post/full_screen_post_app_bar.dart';
 import 'package:link_win_mob_app/widgets/post_actions_buttons.dart';
 import 'package:link_win_mob_app/widgets/post_profile_details.dart';
+import 'package:link_win_mob_app/widgets/posts/image_post_widgets/image_posts.dart';
 import 'package:link_win_mob_app/widgets/posts/video_post_widgets/video_post.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FullScreenPost extends ConsumerWidget {
@@ -19,7 +18,7 @@ class FullScreenPost extends ConsumerWidget {
     required this.feedPostData,
   });
 
-  final ValueNotifier<int> currentIndexNotifier = ValueNotifier(1);
+  final ValueNotifier<int> currentIndexNotifier = ValueNotifier(0);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,12 +45,12 @@ class FullScreenPost extends ConsumerWidget {
       body: SizedBox(
         width: bodySize.width,
         height: bodySize.height,
-        child: _bodyWrapper(bodySize, footerSize),
+        child: _bodyWrapper(bodySize, footerSize, isImageContent),
       ),
     );
   }
 
-  Widget _bodyWrapper(Size size, Size footerSize) {
+  Widget _bodyWrapper(Size size, Size footerSize, bool isImageContent) {
     Size actionButtonsSize = Size(size.width * 0.2, size.height * 0.65);
     Size profileDetailsSize =
         Size(size.width - actionButtonsSize.width, size.height * 0.1);
@@ -62,14 +61,14 @@ class FullScreenPost extends ConsumerWidget {
             height: size.height,
             child: _fetchRelevantWidget(footerSize)),
         Positioned(
-          bottom: footerSize.height,
+          bottom: isImageContent ? 0 : footerSize.height,
           right: 0,
           child: _actionButtons(
             actionButtonsSize,
           ),
         ),
         Positioned(
-          bottom: footerSize.height,
+          bottom: isImageContent ? 0 : footerSize.height,
           left: 0,
           child: _profileDetails(profileDetailsSize),
         ),
@@ -80,14 +79,15 @@ class FullScreenPost extends ConsumerWidget {
   Widget _fetchRelevantWidget(Size footerSize) {
     switch (feedPostData.feedPostType) {
       case FeedPostType.image:
-        return _SingleImagePost(
+        return SingleImagePost(
           url: feedPostData.content[0],
           feedPostData: feedPostData,
         );
       case FeedPostType.imageCollection:
-        return _GalleryImagePost(
+        return GalleryImagePost(
           urls: feedPostData.content,
           feedPostData: feedPostData,
+          currentIndexNotifier: currentIndexNotifier,
         );
       case FeedPostType.video:
         return SingleVideoPost(
@@ -101,6 +101,7 @@ class FullScreenPost extends ConsumerWidget {
           urls: feedPostData.content,
           feedPostData: feedPostData,
           footerSize: footerSize,
+          currentIndexNotifier: currentIndexNotifier,
         );
       default:
         return Container();
@@ -116,7 +117,8 @@ class FullScreenPost extends ConsumerWidget {
       ),
       child: PostActionsButtons(
         isRow: false,
-        feedPostData: feedPostData,
+        pageIndex: feedPostData.pageIndex,
+        postId: feedPostData.postId,
       ),
     );
   }
@@ -128,47 +130,6 @@ class FullScreenPost extends ConsumerWidget {
       child: PostProfileDetails(
         withMoreVertIcon: false,
         feedPostData: feedPostData,
-      ),
-    );
-  }
-}
-
-class _SingleImagePost extends StatelessWidget {
-  final String url;
-  final FeedPostData feedPostData;
-
-  const _SingleImagePost({
-    required this.url,
-    required this.feedPostData,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return PhotoView(
-      imageProvider: NetworkImage(
-        url,
-      ),
-    );
-  }
-}
-
-class _GalleryImagePost extends StatelessWidget {
-  final FeedPostData feedPostData;
-  final List<String> urls;
-
-  const _GalleryImagePost({
-    required this.feedPostData,
-    required this.urls,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      child: GalleryContentViewer(
-        contentBorderRadius: const BorderRadius.all(Radius.zero),
-        feedPostData: feedPostData,
-        bottomPosRatio: 0.15,
-        indecatorWidthRatio: 0.4,
       ),
     );
   }
