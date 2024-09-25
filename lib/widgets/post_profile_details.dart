@@ -38,16 +38,26 @@ class PostProfileDetails extends StatelessWidget {
     BuildContext context, {
     bool withMoreVertIcon = true,
   }) {
-    return AutoResponsivePercentageLayout(
-      screenUtil: screenUtil,
-      isRow: true,
-      percentages: withMoreVertIcon ? const [2, 75, 11, 10, 2] : [2, 75, 23],
-      children: [
-        const SizedBox(),
-        _headerDetails(context),
-        const SizedBox(),
-        if (withMoreVertIcon) ...[_headerMoreVert(context), const SizedBox()],
-      ],
+    double borderRad = screenUtil.screenWidth * 0.04;
+    return Container(
+      decoration: BoxDecoration(
+        color: kBlack.withOpacity(0.2),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(borderRad),
+          topRight: Radius.circular(borderRad),
+        ),
+      ),
+      child: AutoResponsivePercentageLayout(
+        screenUtil: screenUtil,
+        isRow: true,
+        percentages: withMoreVertIcon ? const [2, 75, 11, 10, 2] : [2, 75, 23],
+        children: [
+          const SizedBox(),
+          _headerDetails(context),
+          const SizedBox(),
+          if (withMoreVertIcon) ...[_headerMoreVert(context), const SizedBox()],
+        ],
+      ),
     );
   }
 

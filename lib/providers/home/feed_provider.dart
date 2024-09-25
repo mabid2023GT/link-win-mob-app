@@ -98,7 +98,7 @@ List<FeedState> _initialFeedData() {
       FeedPostData(
         feedPostType: FeedPostType.image,
         content: [
-          'https://img.freepik.com/free-photo/view-wild-lion-nature_23-2150460851.jpg'
+          'https://img.freepik.com/premium-photo/property-construction-beautiful-landscape-home-design-forest-residential-modern-architecture-wood-villa-dwelling-wooden-housing-grass-night-outdoor-building-exterior-summer-sky_163305-242316.jpg'
         ],
         postId: '1234DfbdRE85',
         actionsData: {
@@ -123,7 +123,7 @@ List<FeedState> _initialFeedData() {
       FeedPostData(
         feedPostType: FeedPostType.video,
         content: [
-          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/African%20Lion%20-%20One%20Minute%20Wildlife%20Documentary%20%23shorts.mp4?alt=media&token=4d7cd043-e484-4b46-a14b-48f9f8290e28'
+          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/2%20MINUTE%20FRONT%20YARD%20URBAN%20GARDEN%20TOUR_%20Homestead%20Dreaming.mp4?alt=media&token=d926666c-d15d-419c-9a56-bb2ec8580d57',
         ],
         postId: '1534DfMnRE85',
         actionsData: {
@@ -149,12 +149,13 @@ List<FeedState> _initialFeedData() {
       FeedPostData(
         feedPostType: FeedPostType.imageCollection,
         content: [
-          'https://img.freepik.com/free-photo/view-wild-lion-nature_23-2150460851.jpg',
-          'https://media.cntraveler.com/photos/64c284fe004404ce44203352/16:9/w_1280%2Cc_limit/baros-maldives_aerial-view-july20-pr.jpg',
-          'https://static.toiimg.com/thumb/90651703/90651703.jpg?height=746&width=420&resizemode=76&imgsize=67920',
-          'https://afar.brightspotcdn.com/dims4/default/dd4ced2/2147483647/strip/true/crop/3000x1592+0+323/resize/1440x764!/quality/90/?url=https%3A%2F%2Fk3-prod-afar-media.s3.us-west-2.amazonaws.com%2Fbrightspot%2Fb2%2Ff4%2F9a1ebe3f427f8e5eb937f8df8998%2Ftravelguides-maldives-videomediastudioeurope-shutterstock.jpg',
-          'https://images.tripadeal.com.au/cdn-cgi/image/format=auto,width=800/https://cstad.s3.ap-southeast-2.amazonaws.com/5205_All-Inclusive_Maldives_Fly_and_Stay_WEB_HERO_1.jpg',
-          'https://cdn.pixabay.com/photo/2015/03/09/18/34/beach-666122_1280.jpg',
+          'https://previews.123rf.com/images/tieury/tieury1201/tieury120100009/11853532-a-carpenter-working-in-his-house.jpg',
+          'https://cdnassets.hw.net/dims4/GG/838b124/2147483647/resize/300x%3E/quality/90/?url=https%3A%2F%2Fcdnassets.hw.net%2Fde%2F31%2F7193a5de4d5e93ec14407570a36f%2Fhome-builder-marking-wood-adobestock-88564788.jpg',
+          'https://www.shutterstock.com/shutterstock/videos/1094003367/thumb/1.jpg?ip=x480',
+          'https://media.istockphoto.com/id/1164461192/photo/carpenter-making-a-piece-of-furniture-using-a-router.jpg?s=612x612&w=0&k=20&c=SIHb3f8wRmn1AwaHLx5zL2N2w5UbS9f0Td_6tZSVL8w=',
+          'https://www.shutterstock.com/shutterstock/videos/1089170041/thumb/1.jpg?ip=x480',
+          'https://www.shutterstock.com/shutterstock/videos/1103325035/thumb/12.jpg?ip=x480',
+          'https://i.ebayimg.com/images/g/4Q0AAOSw1yBk3DPD/s-l400.jpg',
         ],
         postId: '7434mnTbdRE5',
         actionsData: {
@@ -182,10 +183,11 @@ List<FeedState> _initialFeedData() {
       FeedPostData(
         feedPostType: FeedPostType.videoCollection,
         content: [
-          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/African%20Lion%20-%20One%20Minute%20Wildlife%20Documentary%20%23shorts.mp4?alt=media&token=4d7cd043-e484-4b46-a14b-48f9f8290e28',
-          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/videoplayback%20(1).mp4?alt=media&token=9feaf6e2-9cde-4bd1-95ef-0aac4c9942fc',
-          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/videoplayback%20(2).mp4?alt=media&token=66e3ee54-9a0d-4dd3-b881-776db3f1f759',
-          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/videoplayback.mp4?alt=media&token=697c11dd-cda8-4caf-bd5f-8d18d18fb646',
+          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/Cinematic%20Real%20estate%20video%20tour%20example%204K%20_%20Laowa%2012mm%20%26%20Sony%20A7III.mp4?alt=media&token=0ace7452-e746-43ee-b9b7-bb89d73cfb65',
+          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/Crown%20Towers%20build%20up%203D%20animation.mp4?alt=media&token=0468fd11-1004-49cf-91cb-002ecf4f0db0',
+          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/DESIGNER%20RESIDENCE%20_%20CINEMATIC%20REAL%20ESTATE%20VIDEO%20IN%204K%20_%20SONY%20FX6.mp4?alt=media&token=2ab56343-c127-4463-88d9-902aebd69b1d',
+          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/Living%20Room%20Interior%20Design.mp4?alt=media&token=4457015b-8697-4201-bc21-27e57dab9a9f',
+          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/The%20WORLD%20S%20SMOOTHEST%20cinematic%20PROPERTY%20VIDEO%20_%20SONY%20FX6.mp4?alt=media&token=fc9c77be-bd2c-4173-bad6-cb90bbd3343d',
         ],
         postId: '18RtnMfbdRE63',
         actionsData: {
@@ -211,9 +213,11 @@ List<FeedState> _initialFeedData() {
     ], isMuted: true),
     FeedState(posts: [
       FeedPostData(
-        feedPostType: FeedPostType.image,
+        feedPostType: FeedPostType.imageCollection,
         content: [
-          'https://img.freepik.com/free-photo/view-wild-lion-nature_23-2150460851.jpg'
+          'https://thinkwood-wordpress.s3.amazonaws.com/wp-content/uploads/2023/05/08142334/Think-Wood-Mass-Timber-Tools-Header-%E2%80%93-1-1024x678.png',
+          'https://www.shutterstock.com/shutterstock/videos/1089170041/thumb/1.jpg?ip=x480',
+          'https://static.vecteezy.com/system/resources/previews/022/886/379/non_2x/modern-wood-and-concrete-kitchen-interior-with-empty-mock-up-place-on-wall-island-appliances-and-window-with-city-view-and-daylight-ai-generated-photo.jpeg',
         ],
         postId: '8723DDfbdEnM',
         actionsData: {
@@ -240,7 +244,7 @@ List<FeedState> _initialFeedData() {
       FeedPostData(
         feedPostType: FeedPostType.video,
         content: [
-          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/African%20Lion%20-%20One%20Minute%20Wildlife%20Documentary%20%23shorts.mp4?alt=media&token=4d7cd043-e484-4b46-a14b-48f9f8290e28'
+          'https://firebasestorage.googleapis.com/v0/b/link-win-daf7d.appspot.com/o/Construction%20Commercial%20Cinematic%20Video.mp4?alt=media&token=196f30b1-a337-40d1-aeb1-de295c62a3bf',
         ],
         postId: '3846Dfbdnm8S',
         actionsData: {
