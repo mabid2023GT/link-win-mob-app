@@ -21,9 +21,8 @@ class HomeScreen extends StatelessWidget {
         body: AutoResponsivePercentageLayout(
           screenUtil: screenUtil,
           isRow: false,
-          percentages: const [1, 20, 1, 78],
+          percentages: const [26, 1, 73],
           children: const [
-            SizedBox(),
             FeedHeader(),
             SizedBox(),
             FeedBody(),

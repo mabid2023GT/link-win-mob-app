@@ -79,10 +79,7 @@ class SyncFeedPostActionButton extends ConsumerWidget {
       FeedPostActionData? feedPostActionData =
           feedPostData.fetchActionsData(action: action);
       if (feedPostActionData != null) {
-        int currentValue = feedPostActionData.valueAsInt();
-        // Increment by 1
-        int updatedValue =
-            currentValue + (feedPostActionData.isClicked ? -1 : 1);
+        int updatedValue = feedPostActionData.updateValue();
         // Update action data via the provider when button is tapped
         ref.read(feedProvider.notifier).updatePostAction(
               pageIndex: feedPostData.pageIndex,

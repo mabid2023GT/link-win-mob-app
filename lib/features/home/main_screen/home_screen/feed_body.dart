@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:link_win_mob_app/core/models/states/feed_state.dart';
 import 'package:link_win_mob_app/features/home/main_screen/post/feed_post.dart';
 import 'package:link_win_mob_app/providers/home/feed_provider.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
@@ -21,28 +22,46 @@ class FeedBody extends ConsumerWidget {
             itemCount: feed.length,
             itemBuilder: (context, pageIndex) {
               final page = feed[pageIndex];
-              return ListView.separated(
-                itemCount: page!.posts.length,
-                itemBuilder: (context, postIndex) {
-                  final post = page.posts[postIndex];
-                  post.copyWith(pageIndex: pageIndex);
-                  return _postContainer(
-                    size: maxSize,
-                    child: FeedPost(
-                      pageIndex: post.pageIndex,
-                      postId: post.postId,
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) => SizedBox(
-                  width: seperatorSize.width,
-                  height: seperatorSize.height,
-                ),
-              );
+              int length = page!.posts.length;
+              return _buildPostsList(
+                  length, page, pageIndex, maxSize, seperatorSize);
             },
           ),
         );
       },
+    );
+  }
+
+  Widget _buildPostsList(int length, FeedState page, int pageIndex,
+      Size maxSize, Size seperatorSize) {
+    return ListView.separated(
+      itemCount: length,
+      itemBuilder: (context, postIndex) {
+        final post = page.posts[postIndex];
+        post.copyWith(pageIndex: pageIndex);
+        Widget res = _postContainer(
+          size: maxSize,
+          child: FeedPost(
+            pageIndex: post.pageIndex,
+            postId: post.postId,
+          ),
+        );
+        if (postIndex == length - 1) {
+          return Column(
+            children: [
+              res,
+              SizedBox(
+                height: maxSize.height * 0.05,
+              ),
+            ],
+          );
+        }
+        return res;
+      },
+      separatorBuilder: (context, index) => SizedBox(
+        width: seperatorSize.width,
+        height: seperatorSize.height,
+      ),
     );
   }
 

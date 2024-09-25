@@ -161,7 +161,9 @@ List<FeedState> _initialFeedData() {
           FeedPostActions.comment: FeedPostActionData(
               action: FeedPostActions.comment, value: 0, isClicked: false),
           FeedPostActions.support: FeedPostActionData(
-              action: FeedPostActions.support, value: 80024, isClicked: false),
+              action: FeedPostActions.support,
+              value: 80024000,
+              isClicked: false),
           FeedPostActions.favorite: FeedPostActionData(
               action: FeedPostActions.favorite, value: 500, isClicked: true),
           FeedPostActions.like: FeedPostActionData(

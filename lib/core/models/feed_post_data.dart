@@ -79,7 +79,7 @@ class FeedPostActionData {
   }) {
     return FeedPostActionData(
       action: action ?? this.action,
-      value: value ?? valueAsInt(),
+      value: value ?? _valueAsInt(),
       isClicked: isClicked ?? this.isClicked,
     );
   }
@@ -88,20 +88,37 @@ class FeedPostActionData {
   static String valueAsString(int val) {
     if (val < 1000) {
       return val.toString(); // Less than 1000, return as is
-    } else if (val < 100000) {
-      return '${(val / 1000).toStringAsFixed(1)} k'; // Thousands
+    } else if (val < 1000000) {
+      return '${(val / 1000).toStringAsFixed(0)}k'; // Thousands
+    } else if (val < 1000000000) {
+      return '${(val / 1000000).toStringAsFixed(0)}M'; // Millions
     } else {
-      return '${(val / 1000).toStringAsFixed(0)} k'; // Hundreds of thousands
+      return '${(val / 1000000000).toStringAsFixed(0)}B'; // Billions
     }
   }
+  // static String valueAsString(int val) {
+  //   if (val < 1000) {
+  //     return val.toString(); // Less than 1000, return as is
+  //   } else if (val < 100000) {
+  //     return '${(val / 1000).toStringAsFixed(0)} k'; // Thousands
+  //   } else {
+  //     return '${(val / 1000).toStringAsFixed(0)} k'; // Hundreds of thousands
+  //   }
+  // }
 
   // Method to convert formatted string back to an integer
-  int valueAsInt() {
+  int _valueAsInt() {
     if (value.endsWith('k')) {
       String numberPart = value.substring(0, value.length - 1).trim();
       return ((double.tryParse(numberPart) ?? 0) * 1000)
           .toInt(); // Convert k to integer
     }
     return int.tryParse(value) ?? 0; // Convert regular number to integer
+  }
+
+  int updateValue() {
+    int currentValue = _valueAsInt();
+    int updatedValue = currentValue + (isClicked ? -1 : 1);
+    return updatedValue;
   }
 }

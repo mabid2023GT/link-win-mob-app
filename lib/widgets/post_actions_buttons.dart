@@ -118,7 +118,7 @@ class PostActionsButtons extends ConsumerWidget {
       splashColor: activeColor.withOpacity(0.5),
       onTap: action != null
           ? () => _onActionButtonTapped(ref, action, feedPostData)
-          : () {},
+          : () => _openMenu,
       child: ActionButton(
         context: context,
         svgPath: svgPath,
@@ -142,10 +142,7 @@ class PostActionsButtons extends ConsumerWidget {
       FeedPostActionData? feedPostActionData =
           feedPostData.fetchActionsData(action: action);
       if (feedPostActionData != null) {
-        int currentValue = feedPostActionData.valueAsInt();
-        // Increment by 1
-        int updatedValue =
-            currentValue + (feedPostActionData.isClicked ? -1 : 1);
+        int updatedValue = feedPostActionData.updateValue();
         // Update action data via the provider when button is tapped
         ref.read(feedProvider.notifier).updatePostAction(
               pageIndex: feedPostData.pageIndex,
@@ -158,4 +155,6 @@ class PostActionsButtons extends ConsumerWidget {
       }
     }
   }
+
+  _openMenu() {}
 }
