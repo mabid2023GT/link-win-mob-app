@@ -41,6 +41,7 @@ dependencies:
   video_player: ^2.9.1
   flutter_riverpod: ^2.5.1
   photo_view: ^0.15.0
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:

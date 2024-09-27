@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/models/feed_post_data.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
-import 'package:link_win_mob_app/widgets/link_win_icon.dart';
+import 'package:link_win_mob_app/widgets/indecators/circle_indecator.dart';
 import 'package:link_win_mob_app/widgets/posts/full_screen_post/full_screen_post.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -21,9 +21,9 @@ class GalleryContentViewer extends StatefulWidget {
     required this.contentBorderRadius,
     required this.feedPostData,
     this.currentIndexNotifier,
-    this.bottomPosRatio = 0.012,
+    this.bottomPosRatio = 0.05,
     this.indecatorWidthRatio = 0.5,
-    this.indecatorHeightRatio = 0.15,
+    this.indecatorHeightRatio = 0.075,
     this.largeGalleryThreshold = 5,
   });
 
@@ -34,39 +34,26 @@ class GalleryContentViewer extends StatefulWidget {
 class _GalleryContentViewerState extends State<GalleryContentViewer> {
   late PageController _controller;
   int _currentPage = 0;
+  final ValueNotifier<int> _currentPageNotifier = ValueNotifier(0);
 
   @override
   void initState() {
     super.initState();
     _controller = PageController();
-    _controller.addListener(() {
-      final newPage = _controller.page?.round() ?? 0;
-      if (newPage != _currentPage) {
-        setState(() {
-          _currentPage = newPage;
-          if (widget.currentIndexNotifier != null) {
-            widget.currentIndexNotifier!.value = _currentPage;
-          }
-        });
-      }
-    });
-  }
-
-  void _jumpToPage({
-    required bool isNextPage,
-    required int galleryLength,
-  }) {
-    setState(() {
-      if (isNextPage) {
-        _currentPage++;
-      } else {
-        _currentPage--;
-      }
-      if (widget.currentIndexNotifier != null) {
-        widget.currentIndexNotifier!.value = _currentPage;
-      }
-      _controller.jumpToPage(_currentPage);
-    });
+    _controller.addListener(
+      () {
+        final newPage = _controller.page?.round() ?? 0;
+        if (newPage != _currentPage) {
+          setState(() {
+            _currentPage = newPage;
+            _currentPageNotifier.value = _currentPage;
+            if (widget.currentIndexNotifier != null) {
+              widget.currentIndexNotifier!.value = _currentPage;
+            }
+          });
+        }
+      },
+    );
   }
 
   @override
@@ -96,7 +83,11 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
                     bottom: bottomPos,
                     left: leftRightPos,
                     right: leftRightPos,
-                    child: _buildPageIndicator(indicatorSize),
+                    child: CircleIndicator(
+                      currentPageNotifier: _currentPageNotifier,
+                      indicatorLength: widget.feedPostData.length,
+                      indicatorSize: indicatorSize,
+                    ),
                   ),
                 ],
               );
@@ -139,81 +130,6 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
           pageController: _controller,
         ),
       ),
-    );
-  }
-
-  _buildPageIndicator(Size indicatorSize) {
-    int contentLength = widget.feedPostData.length;
-    return SizedBox(
-      width: indicatorSize.width,
-      height: indicatorSize.height,
-      child: contentLength <= widget.largeGalleryThreshold
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                contentLength,
-                (index) => _buildIndicator(indicatorSize, index),
-              ),
-            )
-          : _pageIndicatorForLargeGallery(
-              indicatorSize,
-              contentLength,
-            ),
-    );
-  }
-
-  _buildIndicator(Size indicatorSize, int index) {
-    double indicatorCircleSize =
-        indicatorSize.width * (_currentPage == index ? 0.07 : 0.05);
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: indicatorSize.width * 0.03,
-      ),
-      width: indicatorCircleSize,
-      height: indicatorCircleSize,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: _currentPage == index ? kWhite : k1Gray,
-      ),
-    );
-  }
-
-  _pageIndicatorForLargeGallery(Size maxSize, int contentLength) {
-    bool isNextButtonDisabled = _currentPage >= contentLength - 1;
-    bool isBackButtonDisabled = _currentPage <= 0;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        LinkWinIcon(
-          iconSize: Size(maxSize.width * 0.25, maxSize.height),
-          splashColor: isBackButtonDisabled ? transparent : k1Gray,
-          iconData: Icons.arrow_back_ios_new_outlined,
-          iconSizeRatio: 0.8,
-          iconColor: isBackButtonDisabled ? k1Gray : kWhite,
-          onTap: isBackButtonDisabled
-              ? null
-              : () =>
-                  _jumpToPage(isNextPage: false, galleryLength: contentLength),
-        ),
-        Text(
-          '${_currentPage + 1} / $contentLength',
-          style: Theme.of(context).textTheme.displaySmall!.copyWith(
-                color: kWhite,
-              ),
-        ),
-        LinkWinIcon(
-          iconSize: Size(maxSize.width * 0.25, maxSize.height),
-          splashColor: isNextButtonDisabled ? transparent : k1Gray,
-          iconData: Icons.arrow_forward_ios_outlined,
-          iconSizeRatio: 0.8,
-          iconColor: isNextButtonDisabled ? k1Gray : kWhite,
-          onTap: isNextButtonDisabled
-              ? null
-              : () =>
-                  _jumpToPage(isNextPage: true, galleryLength: contentLength),
-        ),
-      ],
     );
   }
 }

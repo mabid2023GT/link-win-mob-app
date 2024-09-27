@@ -25,7 +25,7 @@ const kCaption = Color(0xFF656565);
 
 const kSelectedTabColor = Color(0xFF7DB9B3);
 
-final kHeaderColor = kSelectedTabColor.withOpacity(0.5);
+const kHeaderColor = Color(0x807DB9B3);
 
 const transparent = Colors.transparent;
 
