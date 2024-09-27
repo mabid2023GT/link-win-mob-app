@@ -50,10 +50,10 @@ class ThreeIconBackground extends StatelessWidget {
             color: lightColor,
           ),
         ),
-        child,
         _iconBuilder(maxSize, circularIconSize, 0.1, 0.5, false, 0),
         _iconBuilder(maxSize, circularIconSize, 0.4, 0.1, false, 1),
         _iconBuilder(maxSize, circularIconSize, 0.7, 0.5, true, 2),
+        child,
       ],
     );
   }
