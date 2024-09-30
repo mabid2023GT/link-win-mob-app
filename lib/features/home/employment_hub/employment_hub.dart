@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/widgets/headers/centered_title_header.dart';
@@ -39,12 +40,15 @@ class _EmploymentHubState extends State<EmploymentHub> {
 
   _body() {
     return ThreeTabsLayout(
-      leftTabLabel: 'Offers',
+      leftTabLabel: 'Hits',
       midTabLabel: 'Active',
       rightTabLabel: 'History',
-      leftTabIcon: FontAwesomeIcons.handshake,
+      leftTabIcon: FontAwesomeIcons.fireFlameCurved,
+      leftTabColor: fireFlameIconColor,
       midTabIcon: FontAwesomeIcons.question,
+      midTabColor: activeIconColor,
       rightTabIcon: FontAwesomeIcons.clipboardCheck,
+      rightTabColor: historyIconColor,
       selectedTab: _selectedTabNotifier,
       leftTabView: Container(
         color: Colors.red.withOpacity(0.5),

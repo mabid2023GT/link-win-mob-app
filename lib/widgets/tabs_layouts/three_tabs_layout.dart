@@ -10,6 +10,9 @@ class ThreeTabsLayout extends StatelessWidget {
   final IconData leftTabIcon;
   final IconData midTabIcon;
   final IconData rightTabIcon;
+  final Color? leftTabColor;
+  final Color? midTabColor;
+  final Color? rightTabColor;
   final Widget leftTabView;
   final Widget midTabView;
   final Widget rightTabView;
@@ -27,6 +30,9 @@ class ThreeTabsLayout extends StatelessWidget {
     required this.leftTabView,
     required this.midTabView,
     required this.rightTabView,
+    this.leftTabColor,
+    this.midTabColor,
+    this.rightTabColor,
     this.tabsNavigationHeightRatio = 0.13,
   });
 
@@ -138,6 +144,11 @@ class ThreeTabsLayout extends StatelessWidget {
               : index == 1
                   ? midTabIcon
                   : rightTabIcon,
+          color: index == 0
+              ? leftTabColor
+              : index == 1
+                  ? midTabColor
+                  : rightTabColor,
         ),
       ],
     );
@@ -154,7 +165,7 @@ class ThreeTabsLayout extends StatelessWidget {
                   : rightTabView,
           maxSize,
           0.05,
-          0.05,
+          0.025,
         );
       },
     );
