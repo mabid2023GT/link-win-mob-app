@@ -32,7 +32,7 @@ class LayoutBuilderChild extends StatelessWidget {
         maxSize.height.isInfinite ||
         maxSize.height > screenUtil.screenHeight) {
       throw ResponsiveUIError(
-        "The given width (maxSize.height) is invalid. The valid value should be greater than 0 and no more than the screen height. The screen height is ${screenUtil.screenHeight}, but maxSize.height is ${maxSize.height}.",
+        "The given height (maxSize.height) is invalid. The valid value should be greater than 0 and no more than the screen height. The screen height is ${screenUtil.screenHeight}, but maxSize.height is ${maxSize.height}.",
       );
     }
   }

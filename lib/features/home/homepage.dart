@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
+import 'package:link_win_mob_app/features/home/profile/profile_screen.dart';
 import 'package:link_win_mob_app/features/home/employment_hub/employment_hub.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen.dart';
 import 'package:link_win_mob_app/features/home/nav/nav.dart';
@@ -21,10 +22,7 @@ class _HomePageState extends State<HomePage> {
     const HomeScreen(),
     const ServiceProviders(),
     const EmploymentHub(),
-    Container(
-      alignment: Alignment.center,
-      child: const Text('Profile'),
-    ),
+    const ProfileScreen(),
   ];
 
   _changePageTo(int index) {
