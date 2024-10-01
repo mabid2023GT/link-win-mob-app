@@ -1,8 +1,8 @@
-class HomeScreenPostProfileDetails {
+class FeedPostProfileDetails {
   final String profileName;
   final String profileImgUrl;
 
-  HomeScreenPostProfileDetails({
+  FeedPostProfileDetails({
     required this.profileName,
     required this.profileImgUrl,
   });

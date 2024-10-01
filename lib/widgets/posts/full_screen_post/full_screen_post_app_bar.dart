@@ -26,7 +26,7 @@ class FullScreenPostAppBar extends StatelessWidget
       title: ValueListenableBuilder(
         valueListenable: currentIndexNotifier,
         builder: (context, value, child) => Text(
-          '$value of $totalItems',
+          '${value + 1} of $totalItems',
           style: Theme.of(context).textTheme.displaySmall!.copyWith(
                 fontSize: 14.0,
                 color: kWhite,

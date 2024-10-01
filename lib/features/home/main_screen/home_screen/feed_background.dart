@@ -4,9 +4,9 @@ import 'dart:math' as math;
 
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 
-class HomeScreenBackground extends StatelessWidget {
+class FeedBackground extends StatelessWidget {
   final Widget child;
-  const HomeScreenBackground({
+  const FeedBackground({
     super.key,
     required this.child,
   });

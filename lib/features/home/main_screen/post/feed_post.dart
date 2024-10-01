@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/core/models/home_screen_post_state.dart';
-import 'package:link_win_mob_app/core/utils/enums/home_screen_post_type.dart';
+import 'package:link_win_mob_app/core/models/feed_post_data.dart';
+import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
 import 'package:link_win_mob_app/core/utils/extensions/size_extensions.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
-import 'package:link_win_mob_app/features/home/main_screen/post_widgets/home_screen_post_body.dart';
+import 'package:link_win_mob_app/features/home/main_screen/post/feed_post_body.dart';
+import 'package:link_win_mob_app/features/home/main_screen/post/sync_feed_post_action_button.dart';
+import 'package:link_win_mob_app/providers/home/feed_provider.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/responsive_percentage_layout.dart';
-import 'package:link_win_mob_app/widgets/action_button.dart';
 import 'package:link_win_mob_app/widgets/post_profile_details.dart';
 
-class HomeScreenPost extends StatelessWidget {
-  final HomeScreenPostState postState;
-  const HomeScreenPost({
+class FeedPost extends ConsumerWidget {
+  final int pageIndex;
+  final String postId;
+  const FeedPost({
     super.key,
-    required this.postState,
+    required this.pageIndex,
+    required this.postId,
   });
   final double borderRadiusPercentage = 0.05;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Fetch the entire feed state from the provider
+    ref.watch(feedProvider);
+    // Fetching the post data directly from the provider
+    final feedPostData =
+        ref.watch(feedProvider.notifier).fetchPost(pageIndex, postId);
+
     ScreenUtil screenUtil = ScreenUtil(context);
     double bordeWidth = 2;
 
@@ -45,9 +55,9 @@ class HomeScreenPost extends StatelessWidget {
           isRow: false,
           percentages: const [87, 1, 12],
           children: [
-            _postBody(screenUtil, context),
+            _postBody(screenUtil, context, feedPostData),
             const SizedBox(),
-            _postActionButtons(screenUtil, context),
+            _postActionButtons(screenUtil, context, feedPostData, ref),
           ],
         ),
       ),
@@ -57,6 +67,7 @@ class HomeScreenPost extends StatelessWidget {
   _postBody(
     ScreenUtil screenUtil,
     BuildContext context,
+    FeedPostData? feedPostData,
   ) {
     return LayoutBuilderChild(
       child: (minSize, maxSize) {
@@ -69,10 +80,12 @@ class HomeScreenPost extends StatelessWidget {
             SizedBox(
               width: maxSize.width,
               height: maxSize.height,
-              child: HomeScreenPostBody(
-                borderRadiusPercentage: borderRadiusPercentage,
-                postState: postState,
-              ),
+              child: feedPostData != null
+                  ? FeedPostBody(
+                      borderRadiusPercentage: borderRadiusPercentage,
+                      feedPostData: feedPostData,
+                    )
+                  : null,
             ),
             Positioned(
               top: 0,
@@ -81,10 +94,12 @@ class HomeScreenPost extends StatelessWidget {
               child: SizedBox(
                 width: headerSize.width,
                 height: headerSize.height,
-                child: PostProfileDetails(
-                  withMoreVertIcon: true,
-                  homeScreenPostData: postState.homeScreenPostData,
-                ),
+                child: feedPostData != null
+                    ? PostProfileDetails(
+                        withMoreVertIcon: true,
+                        feedPostData: feedPostData,
+                      )
+                    : null,
               ),
             ),
           ],
@@ -93,64 +108,54 @@ class HomeScreenPost extends StatelessWidget {
     );
   }
 
-  _postActionButtons(ScreenUtil screenUtil, BuildContext context) {
+  _postActionButtons(
+    ScreenUtil screenUtil,
+    BuildContext context,
+    FeedPostData? feedPostData,
+    WidgetRef ref,
+  ) {
     return AutoResponsivePercentageLayout(
       screenUtil: screenUtil,
       isRow: true,
       percentages: const [5, 14, 5, 14, 5, 14, 5, 14, 5, 14, 5],
       children: [
         const SizedBox(),
-        ActionButton(
-          context: context,
+        SyncFeedPostActionButton(
           svgPath: 'assets/icons/recommend.svg',
-          actionLabel: postState.homeScreenPostData.fetchActionsData(
-            action: HomeScreenPostActions.recommend,
-          ),
+          feedPostAction: FeedPostActions.recommend,
+          pageIndex: pageIndex,
+          postId: postId,
           activeColor: kAmber,
-          isClicked: true,
-          labelColor: kBlack,
         ),
         const SizedBox(),
-        ActionButton(
-          context: context,
+        SyncFeedPostActionButton(
           svgPath: 'assets/icons/hands_clapping.svg',
-          actionLabel: postState.homeScreenPostData.fetchActionsData(
-            action: HomeScreenPostActions.support,
-          ),
-          isClicked: true,
-          labelColor: kBlack,
+          feedPostAction: FeedPostActions.support,
+          pageIndex: pageIndex,
+          postId: postId,
         ),
         const SizedBox(),
-        ActionButton(
-          context: context,
+        SyncFeedPostActionButton(
           svgPath: 'assets/icons/heart.svg',
-          actionLabel: postState.homeScreenPostData.fetchActionsData(
-            action: HomeScreenPostActions.favorite,
-          ),
-          isClicked: true,
+          feedPostAction: FeedPostActions.favorite,
+          pageIndex: pageIndex,
+          postId: postId,
           activeColor: kRed,
-          labelColor: kBlack,
         ),
         const SizedBox(),
-        ActionButton(
-          context: context,
+        SyncFeedPostActionButton(
           svgPath: 'assets/icons/like.svg',
-          actionLabel: postState.homeScreenPostData.fetchActionsData(
-            action: HomeScreenPostActions.like,
-          ),
-          isClicked: true,
-          labelColor: kBlack,
+          feedPostAction: FeedPostActions.like,
+          pageIndex: pageIndex,
+          postId: postId,
         ),
         const SizedBox(),
-        ActionButton(
-          context: context,
+        SyncFeedPostActionButton(
           svgPath: 'assets/icons/comment.svg',
-          actionLabel: postState.homeScreenPostData.fetchActionsData(
-            action: HomeScreenPostActions.comment,
-          ),
+          feedPostAction: FeedPostActions.comment,
+          pageIndex: pageIndex,
+          postId: postId,
           activeColor: kAmber,
-          isClicked: true,
-          labelColor: kBlack,
         ),
         const SizedBox(),
       ],
