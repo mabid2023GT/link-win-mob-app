@@ -24,6 +24,13 @@ const k3AccentLines = Color(0xFFEEF2E2);
 const kCaption = Color(0xFF656565);
 
 const kSelectedTabColor = Color(0xFF7DB9B3);
+const kUnSelectedTabColor = Color(0xFFB0BEC5);
+
+const kHeaderColor = Color(0x807DB9B3);
+
+const fireFlameIconColor = Color.fromARGB(255, 243, 204, 49);
+const activeIconColor = Color.fromARGB(255, 0, 158, 21);
+const historyIconColor = Color.fromARGB(255, 0, 21, 253);
 
 const transparent = Colors.transparent;
 
