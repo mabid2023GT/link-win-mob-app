@@ -1,4 +1,7 @@
+import 'package:link_win_mob_app/core/services/constants/profile_constants.dart';
+
 class UserInformation {
+  String docId;
   String firstName;
   String lastName;
   String phoneNumber;
@@ -6,6 +9,7 @@ class UserInformation {
   String email;
 
   UserInformation({
+    required this.docId,
     required this.firstName,
     required this.lastName,
     required this.phoneNumber,
@@ -16,6 +20,7 @@ class UserInformation {
   String get displayName => '$firstName $lastName';
 
   UserInformation copy({
+    String? docId,
     String? firstName,
     String? lastName,
     String? phoneNumber,
@@ -23,6 +28,7 @@ class UserInformation {
     String? email,
   }) {
     return UserInformation(
+      docId: docId ?? '',
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -37,5 +43,26 @@ class UserInformation {
     email = user.email;
     phoneNumber = user.phoneNumber;
     imgUrl = user.imgUrl;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      firstNameAttr: firstName,
+      lastNameAttr: lastName,
+      emailAttr: email,
+      phoneAttr: phoneNumber,
+      imageUrlAttr: imgUrl,
+    };
+  }
+
+  factory UserInformation.fromMap(String docId, Map<String, dynamic> map) {
+    return UserInformation(
+      docId: docId,
+      firstName: map[firstNameAttr],
+      lastName: map[lastNameAttr],
+      phoneNumber: map[phoneAttr],
+      imgUrl: map[imageUrlAttr],
+      email: map[emailAttr],
+    );
   }
 }
