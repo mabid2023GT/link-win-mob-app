@@ -43,11 +43,8 @@ class _EmploymentHubState extends State<EmploymentHub> {
       leftTabLabel: 'Hits',
       midTabLabel: 'Active',
       rightTabLabel: 'History',
-      leftTabIcon: FontAwesomeIcons.fireFlameCurved,
       leftTabColor: fireFlameIconColor,
-      midTabIcon: FontAwesomeIcons.question,
       midTabColor: activeIconColor,
-      rightTabIcon: FontAwesomeIcons.clipboardCheck,
       rightTabColor: historyIconColor,
       selectedTab: _selectedTabNotifier,
       leftTabView: Container(

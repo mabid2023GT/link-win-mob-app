@@ -1,15 +1,11 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
+import 'package:link_win_mob_app/widgets/tabs_layouts/three_tabs_layout_background.dart';
 
 class ThreeTabsLayout extends StatelessWidget {
   final String leftTabLabel;
   final String midTabLabel;
   final String rightTabLabel;
-  final IconData leftTabIcon;
-  final IconData midTabIcon;
-  final IconData rightTabIcon;
   final Color? leftTabColor;
   final Color? midTabColor;
   final Color? rightTabColor;
@@ -23,9 +19,6 @@ class ThreeTabsLayout extends StatelessWidget {
     required this.leftTabLabel,
     required this.midTabLabel,
     required this.rightTabLabel,
-    required this.leftTabIcon,
-    required this.midTabIcon,
-    required this.rightTabIcon,
     required this.selectedTab,
     required this.leftTabView,
     required this.midTabView,
@@ -76,15 +69,9 @@ class ThreeTabsLayout extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _tabWidget(
-                tabSize,
-                0,
-              ),
+              _tabWidget(tabSize, 0),
               _tabWidget(tabSize, 1),
-              _tabWidget(
-                tabSize,
-                2,
-              ),
+              _tabWidget(tabSize, 2),
             ],
           ),
           maxSize,
@@ -96,61 +83,27 @@ class ThreeTabsLayout extends StatelessWidget {
   }
 
   _tabWidget(Size tabSize, int index) {
-    Radius radius = Radius.circular(
-      min(tabSize.height * 0.7, tabSize.width * 0.5),
-    );
     return InkWell(
       onTap: () => selectedTab.value = index,
-      child: Container(
-        width: tabSize.width,
-        height: tabSize.height,
-        alignment: AlignmentDirectional.center,
-        decoration: BoxDecoration(
-          color: selectedTab.value == index
-              ? kSelectedTabColor
-              : kUnSelectedTabColor,
-          borderRadius: BorderRadius.only(
-            topLeft: radius,
-            bottomRight: radius,
-          ),
-          border: Border.all(
-            color: kBlack,
-            width: 2,
-          ),
-        ),
+      child: ThreeTabsLayoutBackground(
+        isTapped: selectedTab.value == index,
         child: _tabWidgetContent(index),
+        size: tabSize,
       ),
     );
   }
 
   _tabWidgetContent(int index) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text(
-          index == 0
-              ? leftTabLabel
-              : index == 1
-                  ? midTabLabel
-                  : rightTabLabel,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-        Icon(
-          index == 0
-              ? leftTabIcon
-              : index == 1
-                  ? midTabIcon
-                  : rightTabIcon,
-          color: index == 0
-              ? leftTabColor
-              : index == 1
-                  ? midTabColor
-                  : rightTabColor,
-        ),
-      ],
+    return Text(
+      index == 0
+          ? leftTabLabel
+          : index == 1
+              ? midTabLabel
+              : rightTabLabel,
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
     );
   }
 

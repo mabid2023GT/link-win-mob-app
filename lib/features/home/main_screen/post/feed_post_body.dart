@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:link_win_mob_app/core/models/feed_post_data.dart';
+import 'package:link_win_mob_app/core/models/feed/feed_post_data.dart';
 import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
 import 'package:link_win_mob_app/widgets/posts/full_screen_post/full_screen_post.dart';
 import 'package:link_win_mob_app/widgets/posts/image_post_widgets/gallery_content_viewer.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/core/models/feed_post_data.dart';
+import 'package:link_win_mob_app/core/models/feed/feed_post_data.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/indecators/circle_indecator.dart';
 import 'package:link_win_mob_app/widgets/posts/full_screen_post/full_screen_post.dart';
