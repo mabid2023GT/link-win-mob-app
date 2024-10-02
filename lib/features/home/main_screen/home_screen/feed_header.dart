@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/core/models/feed_sponsored_ads_data.dart';
+import 'package:link_win_mob_app/core/models/feed/feed_sponsored_ads_data.dart';
 import 'package:link_win_mob_app/providers/home/feed_sponsored_ads_provider.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 

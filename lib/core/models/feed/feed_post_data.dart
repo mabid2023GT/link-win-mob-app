@@ -1,4 +1,4 @@
-import 'package:link_win_mob_app/core/models/feed_post_profile_details.dart';
+import 'package:link_win_mob_app/core/models/feed/feed_post_profile_details.dart';
 import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
 
 class FeedPostData {

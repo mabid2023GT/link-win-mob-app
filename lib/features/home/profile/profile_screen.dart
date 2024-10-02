@@ -4,7 +4,7 @@ import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen/home_screen_app_bar.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/providers/profile/user_provider.dart';
-import 'package:link_win_mob_app/core/models/profile_user_info.dart';
+import 'package:link_win_mob_app/core/models/profile/user_info.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:link_win_mob_app/widgets/link_win_text_field_widget.dart';

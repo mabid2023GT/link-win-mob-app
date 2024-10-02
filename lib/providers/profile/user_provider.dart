@@ -1,4 +1,4 @@
-import 'package:link_win_mob_app/core/models/profile_user_info.dart';
+import 'package:link_win_mob_app/core/models/profile/user_info.dart';
 
 class Users {
   static final user = UserInformation(

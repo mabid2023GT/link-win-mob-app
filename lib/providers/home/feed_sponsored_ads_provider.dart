@@ -1,6 +1,6 @@
 // Simulate fetching sponsored ads (local data for now)
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:link_win_mob_app/core/models/feed_sponsored_ads_data.dart';
+import 'package:link_win_mob_app/core/models/feed/feed_sponsored_ads_data.dart';
 
 final feedSponsoredAdsProvider = Provider<List<FeedSponsoredAdsData>>((ref) {
   return [
