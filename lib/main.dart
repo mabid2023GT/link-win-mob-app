@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,12 +9,30 @@ import 'package:link_win_mob_app/features/auth/auth_screen.dart';
 import 'package:link_win_mob_app/features/home/homepage.dart';
 import 'package:link_win_mob_app/features/on_boarding/on_boarding_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _initFirebase();
   runApp(
     const ProviderScope(
       child: MyApp(),
     ),
   );
+}
+
+_initFirebase() async {
+  // Initialize Firebase here
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: "AIzaSyCPTouOgZW1RSZedMbCC9PcDG4w7yS9S2s",
+        appId: "1:951002606:web:8d1a1012b8153106e29aff",
+        messagingSenderId: "951002606",
+        projectId: "link-win-daf7d",
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
 }
 
 final GoRouter _router = GoRouter(
