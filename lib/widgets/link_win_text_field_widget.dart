@@ -11,14 +11,14 @@ class LWTextFieldWidget extends StatefulWidget {
   final TextInputType? keyboardType;
 
   const LWTextFieldWidget({
-    Key? key,
+    super.key,
     required this.label,
     required this.text,
     required this.icon,
     required this.onChanged,
     required this.validateValue,
     this.keyboardType = TextInputType.text,
-  }) : super(key: key);
+  });
 
   @override
   State<LWTextFieldWidget> createState() => _LWTextFieldWidgetState();

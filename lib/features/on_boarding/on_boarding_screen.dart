@@ -89,8 +89,8 @@ class OnBoardingPage extends StatelessWidget {
   final Map<String, String> data;
   final ScreenUtil screenUtil;
 
-  const OnBoardingPage({required this.data, required this.screenUtil, Key? key})
-      : super(key: key);
+  const OnBoardingPage(
+      {required this.data, required this.screenUtil, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -216,11 +216,10 @@ class PageIndicator extends StatelessWidget {
   final ScreenUtil screenUtil;
 
   const PageIndicator(
-      {required this.pageIndex,
+      {super.key,
+      required this.pageIndex,
       required this.pageCount,
-      Key? key,
-      required this.screenUtil})
-      : super(key: key);
+      required this.screenUtil});
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +267,7 @@ class PageIndicator extends StatelessWidget {
 // NextButton Widget
 class NextButton extends StatelessWidget {
   final VoidCallback onTap;
-  const NextButton({Key? key, required this.onTap}) : super(key: key);
+  const NextButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,7 @@
 // Riverpod provider to manage the feed
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:link_win_mob_app/core/models/feed_post_data.dart';
-import 'package:link_win_mob_app/core/models/feed_post_profile_details.dart';
+import 'package:link_win_mob_app/core/models/feed/feed_post_data.dart';
+import 'package:link_win_mob_app/core/models/feed/feed_post_profile_details.dart';
 import 'package:link_win_mob_app/core/models/states/feed_state.dart';
 import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
 
