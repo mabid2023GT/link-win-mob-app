@@ -17,7 +17,7 @@ abstract class UsersInterface {
   ///   the addition fails.
   Future<void> addUser(
     UserInformation user,
-    void Function(DocumentReference<Object?> val) onSuccess,
+    void Function() onSuccess,
     void Function(dynamic error) onError,
   );
 

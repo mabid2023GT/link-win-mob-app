@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/features/home/profile/profile_screen.dart';
 import 'package:link_win_mob_app/features/home/employment_hub/employment_hub.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen.dart';
 import 'package:link_win_mob_app/features/home/nav/nav.dart';
 import 'package:link_win_mob_app/features/home/nav/nav_floating_action_button.dart';
+import 'package:link_win_mob_app/features/home/profile/profile_screen.dart';
 import 'package:link_win_mob_app/features/home/service_providers/service_providers.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 

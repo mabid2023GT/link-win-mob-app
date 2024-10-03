@@ -4,18 +4,23 @@ import 'package:link_win_mob_app/core/services/constants/profile_constants.dart'
 import 'package:link_win_mob_app/core/services/firestore/interfaces/users_interface.dart';
 
 class UsersApi implements UsersInterface {
-  final CollectionReference usersCol =
+  // Singleton
+  UsersApi._privateConstructor();
+  static final UsersApi _instance = UsersApi._privateConstructor();
+  static UsersApi get instance => _instance;
+
+  final CollectionReference _usersCol =
       FirebaseFirestore.instance.collection(userCollection);
 
   @override
   Future<void> addUser(
     UserInformation user,
-    void Function(DocumentReference<Object?> val) onSuccess,
+    void Function() onSuccess,
     void Function(dynamic error) onError,
   ) {
-    return usersCol
+    return _usersCol
         .add(user.toMap())
-        .then((val) => onSuccess(val))
+        .then((val) => onSuccess())
         .catchError((error) => onError(error));
   }
 
@@ -25,7 +30,7 @@ class UsersApi implements UsersInterface {
     void Function() onSuccess,
     void Function(dynamic error) onError,
   ) {
-    return usersCol
+    return _usersCol
         .doc(user.docId)
         .update(user.toMap())
         .then((val) => onSuccess())
@@ -35,7 +40,7 @@ class UsersApi implements UsersInterface {
   @override
   Future<void> deleteUser(String userId, void Function() onSuccess,
       void Function(dynamic error) onError) {
-    return usersCol
+    return _usersCol
         .doc(userId)
         .delete()
         .then((val) => onSuccess())
@@ -44,7 +49,7 @@ class UsersApi implements UsersInterface {
 
   @override
   Stream<List<UserInformation>> getUsersStream() {
-    return usersCol.snapshots().map((snapshot) {
+    return _usersCol.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         return UserInformation.fromMap(
             doc.id, doc.data() as Map<String, dynamic>);
@@ -54,7 +59,7 @@ class UsersApi implements UsersInterface {
 
   @override
   Stream<UserInformation?> getUserByIdStream(String userId) {
-    return usersCol.doc(userId).snapshots().map((snapshot) {
+    return _usersCol.doc(userId).snapshots().map((snapshot) {
       if (snapshot.exists) {
         return UserInformation.fromMap(
             snapshot.id, snapshot.data() as Map<String, dynamic>);

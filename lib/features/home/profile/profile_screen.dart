@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen/home_screen_app_bar.dart';
+import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
-import 'package:link_win_mob_app/providers/profile/user_provider.dart';
+import 'package:link_win_mob_app/providers/auth/user_provider.dart';
 import 'package:link_win_mob_app/core/models/profile/user_info.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:link_win_mob_app/widgets/link_win_text_field_widget.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   bool isEditedMode = false;
   bool isOk = true;
   UserInformation user = Users.user;
@@ -30,10 +33,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
+  void dispose() {
+    FocusScope.of(context).unfocus();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final user = ref.watch(authProvider).user;
+
+    // Check if the user is signed in
+    if (user == null) {
+      context.go('/auth');
+    }
+
     ScreenUtil screenUtil = ScreenUtil(context);
     if (!isEditedMode) {
-      editedUser.updateUserInfo(user);
+      editedUser.updateUserInfo(
+        UserInformation(
+          docId: 'user!.uid',
+          firstName: 'firstName',
+          lastName: 'lastName',
+          phoneNumber: 'phoneNumber',
+          imgUrl: 'imgUrl',
+          email: 'email',
+        ),
+      );
     }
 
     return Scaffold(
@@ -148,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               alignment: AlignmentDirectional.centerStart,
               child: LWTextFieldWidget(
                 label: label,
-                text: value,
+                hint: value,
                 icon: icon,
                 onChanged: onChanged,
                 validateValue: validateValue,
