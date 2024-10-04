@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen/home_screen_app_bar.dart';
@@ -12,6 +11,7 @@ import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_chil
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:link_win_mob_app/widgets/link_win_text_field_widget.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:link_win_mob_app/features/auth/widget/not_authenticated_widget.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -40,27 +40,32 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Listen for changes in the auth provider.
+    // If the user signs out, the NotAuthenticatedWidget will be displayed
+    // immediately; otherwise, the profile screen will be shown.
     final user = ref.watch(authProvider).user;
-
     // Check if the user is signed in
     if (user == null) {
-      context.go('/auth');
+      return NotAuthenticatedWidget();
+    } else {
+      ScreenUtil screenUtil = ScreenUtil(context);
+      if (!isEditedMode) {
+        editedUser.updateUserInfo(
+          UserInformation(
+            docId: 'user!.uid',
+            firstName: 'firstName',
+            lastName: 'lastName',
+            phoneNumber: 'phoneNumber',
+            imgUrl: 'imgUrl',
+            email: 'email',
+          ),
+        );
+      }
+      return _profilePage(screenUtil);
     }
+  }
 
-    ScreenUtil screenUtil = ScreenUtil(context);
-    if (!isEditedMode) {
-      editedUser.updateUserInfo(
-        UserInformation(
-          docId: 'user!.uid',
-          firstName: 'firstName',
-          lastName: 'lastName',
-          phoneNumber: 'phoneNumber',
-          imgUrl: 'imgUrl',
-          email: 'email',
-        ),
-      );
-    }
-
+  _profilePage(ScreenUtil screenUtil) {
     return Scaffold(
       backgroundColor: transparent,
       appBar: const HomeScreenAppBar(),

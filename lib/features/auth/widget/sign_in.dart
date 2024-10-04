@@ -13,6 +13,7 @@ class SignIn extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Size txtFieldSize = Size(size.width, size.height * 0.15);
+    Size signInSize = Size(size.width * 0.4, size.height * 0.15);
 
     return Scaffold(
       backgroundColor: transparent,
@@ -25,6 +26,14 @@ class SignIn extends ConsumerWidget {
               height: size.height * 0.05,
             ),
             _passwordField(txtFieldSize),
+            SizedBox(
+              height: size.height * 0.05,
+            ),
+            _forgotPassword(txtFieldSize),
+            SizedBox(
+              height: size.height * 0.05,
+            ),
+            _signIn(signInSize),
           ],
         ),
       ),
@@ -80,6 +89,47 @@ class SignIn extends ConsumerWidget {
       obscureText: true,
       validateValue: (val) {},
       onChanged: (val) {},
+    );
+  }
+
+  _forgotPassword(Size size) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        width: size.width,
+        height: size.height,
+        alignment: AlignmentDirectional.center,
+        child: Text(
+          'Forgot your password?',
+          style: TextStyle(
+            fontSize: 18,
+            color: Colors.blue,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Lato',
+          ),
+        ),
+      ),
+    );
+  }
+
+  _signIn(Size size) {
+    return SizedBox(
+      width: size.width,
+      height: size.height,
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: kHeaderColor,
+        ),
+        child: Text(
+          'Sign In',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: kBlack,
+          ),
+        ),
+      ),
     );
   }
 }
