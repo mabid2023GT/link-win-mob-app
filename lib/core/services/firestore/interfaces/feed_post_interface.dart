@@ -34,7 +34,7 @@ abstract class FeedPostInterface {
   /// - [onSuccess]: A callback function that is invoked upon successful update.
   /// - [onError]: A callback function that receives the error information if
   ///   the update fails.
-  Future<void> updateUser(
+  Future<void> updateFeedPost(
     FeedPostData feedPost,
     void Function() onSuccess,
     void Function(dynamic error) onError,
@@ -52,7 +52,7 @@ abstract class FeedPostInterface {
   /// - [onSuccess]: A callback function that is invoked upon successful deletion.
   /// - [onError]: A callback function that receives the error information if
   ///   the deletion fails.
-  Future<void> deleteUser(
+  Future<void> deleteFeedPost(
     String feedPostId,
     void Function() onSuccess,
     void Function(dynamic error) onError,

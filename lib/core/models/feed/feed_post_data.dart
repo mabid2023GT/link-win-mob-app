@@ -1,5 +1,7 @@
 import 'package:link_win_mob_app/core/models/feed/feed_post_profile_details.dart';
 import 'package:link_win_mob_app/core/utils/enums/feed_post_type.dart';
+import 'package:link_win_mob_app/core/services/constants/feed_post_constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FeedPostData {
   final FeedPostType feedPostType;
@@ -59,6 +61,44 @@ class FeedPostData {
       temp.copyWith(value: value);
     }
   }
+
+  Map<String, dynamic> toMap() {
+    Map<String, Map<String, dynamic>> mappedActionsData = {};
+    actionsData.forEach((key, value) {
+      mappedActionsData[key.toString().split('.').last] = value.toMap();
+    });
+
+    return {
+      postTypeAttr: feedPostType.toString().split('.').last,
+      contentAttr: content,
+      pageIndexAttr: pageIndex,
+      actionsDataAttr: mappedActionsData,
+      postProfileDetailsAttr: feedPostProfileDetails.toMap(),
+      postDateAttr: postedAt,
+    };
+  }
+
+  factory FeedPostData.fromMap(String postId, Map<String, dynamic> map) {
+    Map<FeedPostActions, FeedPostActionData> actionsData = {};
+    map[actionsDataAttr].forEach((key, value) {
+      actionsData[FeedPostActions.values.firstWhere(
+              (postAction) => postAction.toString().split('.').last == key)] =
+          FeedPostActionData.fromMap(value as Map<String, dynamic>);
+    });
+
+    return FeedPostData(
+      postId: postId,
+      feedPostType: FeedPostType.values.firstWhere(
+        (postType) => postType.toString().split('.').last == map[postTypeAttr],
+      ),
+      content: List<String>.from(map[contentAttr]),
+      pageIndex: map[pageIndexAttr],
+      actionsData: actionsData,
+      feedPostProfileDetails:
+          FeedPostProfileDetails.fromMap(map[postProfileDetailsAttr]),
+      postedAt: (map[postDateAttr] as Timestamp).toDate(),
+    );
+  }
 }
 
 class FeedPostActionData {
@@ -81,6 +121,25 @@ class FeedPostActionData {
       action: action ?? this.action,
       value: value ?? _valueAsInt(),
       isClicked: isClicked ?? this.isClicked,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      postActionsAttr: action.toString().split('.').last,
+      actionValueAttr: value,
+      isClickedAttr: isClicked,
+    };
+  }
+
+  factory FeedPostActionData.fromMap(Map<String, dynamic> map) {
+    return FeedPostActionData(
+      action: FeedPostActions.values.firstWhere(
+        (postAction) =>
+            postAction.toString().split('.').last == map[postActionsAttr],
+      ),
+      value: map[actionValueAttr],
+      isClicked: map[isClickedAttr],
     );
   }
 
