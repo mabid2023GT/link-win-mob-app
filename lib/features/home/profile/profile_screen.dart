@@ -43,6 +43,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     // Listen for changes in the auth provider.
     // If the user signs out, the NotAuthenticatedWidget will be displayed
     // immediately; otherwise, the profile screen will be shown.
+    // ref.read(authProvider).signOut();
+
     final user = ref.watch(authProvider).user;
     // Check if the user is signed in
     if (user == null) {

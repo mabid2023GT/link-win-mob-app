@@ -5,8 +5,6 @@ import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/features/auth/widget/sign_in.dart';
 import 'package:link_win_mob_app/features/auth/widget/sign_up.dart';
-import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
-import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 
 class AuthScreen extends ConsumerWidget {
@@ -17,69 +15,54 @@ class AuthScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ScreenUtil screenUtil = ScreenUtil(context);
-    final user = ref.watch(authProvider).user;
+    Size headerSize = Size(
+      screenUtil.widthPercentage(90),
+      screenUtil.heightPercentage(10),
+    );
+    Size bodySize = Size(
+      headerSize.width,
+      screenUtil.screenHeight - 2 * headerSize.height,
+    );
 
-    // Hide keyboard when the widget is disposed
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   FocusScope.of(context).unfocus();
-    // });
-
-    // Check if the user is signed in
-    if (user != null) {
-      // User is signed in, navigate to the profile page
-
-      // return ProfileScreen();
-    }
-    return _authScreen(screenUtil);
-  }
-
-  _authScreen(ScreenUtil screenUtil) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       backgroundColor: transparent,
       body: _background(
-        child: AutoResponsivePercentageLayout(
-          screenUtil: screenUtil,
-          isRow: false,
-          percentages: const [1, 15, 2, 80, 2],
-          children: [
-            const SizedBox(),
-            _header(),
-            const SizedBox(),
-            _body(),
-            const SizedBox(),
-          ],
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              _header(headerSize),
+              _body(bodySize),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  _header() {
-    return LayoutBuilderChild(
-      child: (minSize, maxSize) {
-        return Container(
-          width: maxSize.width,
-          height: maxSize.height,
-          alignment: AlignmentDirectional.center,
-          child: SizedBox(
-            width: maxSize.width * 0.4,
-            height: maxSize.height * 0.8,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Icon(FontAwesomeIcons.link),
-                Text(
-                  'LinkWin',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+  _header(Size headerSize) {
+    return Container(
+      width: headerSize.width,
+      height: headerSize.height,
+      alignment: AlignmentDirectional.center,
+      child: SizedBox(
+        width: headerSize.width * 0.5,
+        height: headerSize.height * 0.8,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(FontAwesomeIcons.link),
+            Text(
+              'LinkWin',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 
@@ -138,46 +121,45 @@ class AuthScreen extends ConsumerWidget {
     );
   }
 
-  _body() {
-    return LayoutBuilderChild(
-      child: (minSize, maxSize) {
-        Size headerSize = Size(maxSize.width, maxSize.height * 0.125);
-        Size bodySize = Size(maxSize.width, maxSize.height - headerSize.height);
-        return SizedBox(
-          width: maxSize.width,
-          height: maxSize.height,
-          child: Column(
-            children: [
-              SizedBox(
-                width: headerSize.width,
-                height: headerSize.height,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _tabWidget(headerSize, 'Sign In', 0),
-                    _tabWidget(headerSize, 'Sign Up', 1),
-                  ],
-                ),
-              ),
-              _tabViewCard(bodySize),
-            ],
+  _body(Size size) {
+    Size headerSize = Size(size.width, size.height * 0.1);
+    Size bodySize = Size(size.width, size.height - headerSize.height);
+
+    return SizedBox(
+      width: size.width,
+      height: size.height,
+      child: Column(
+        children: [
+          SizedBox(
+            width: headerSize.width,
+            height: headerSize.height,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _tabWidget(headerSize, 'Sign In', 0),
+                _tabWidget(headerSize, 'Sign Up', 1),
+              ],
+            ),
           ),
-        );
-      },
+          _tabViewCard(bodySize),
+        ],
+      ),
     );
   }
 
-  _tabViewCard(Size bodySize) {
-    Radius radius = Radius.circular(bodySize.width * 0.15);
-    double leftRightPad = bodySize.width * 0.05;
-    double topBottomPad = bodySize.height * 0.05;
+  _tabViewCard(Size size) {
+    Radius radius = Radius.circular(size.width * 0.15);
+    double leftRightPad = size.width * 0.05;
+    double topBottomPad = size.height * 0.05;
+    Size bodySize =
+        Size(size.width - 2 * leftRightPad, size.height - 2 * topBottomPad);
     return ValueListenableBuilder(
         valueListenable: _selectedTap,
         builder: (context, value, child) {
           bool isSignInSelected = value == 0;
           return Container(
-            width: bodySize.width,
-            height: bodySize.height,
+            width: size.width,
+            height: size.height,
             padding: EdgeInsets.only(
               top: topBottomPad,
               bottom: topBottomPad,

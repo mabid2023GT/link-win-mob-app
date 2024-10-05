@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
+import 'package:link_win_mob_app/core/models/profile/user_info.dart';
+import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
+import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
+import 'package:link_win_mob_app/widgets/popups/modal_bottom_sheet.dart';
 
 class SignUp extends ConsumerStatefulWidget {
   final Size size;
@@ -19,7 +23,7 @@ class SignUp extends ConsumerStatefulWidget {
 class _SignUpState extends ConsumerState<SignUp> {
   final _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _obscuredNotifier = ValueNotifier(true);
-  final ValueNotifier<bool> _isFormSubmittedNotifier = ValueNotifier(false);
+  final ValueNotifier<bool> _signUpButtonTappedNotifier = ValueNotifier(false);
   late final Map<String, dynamic> _formValues;
 
   @override
@@ -31,33 +35,42 @@ class _SignUpState extends ConsumerState<SignUp> {
   @override
   Widget build(BuildContext context) {
     Size txtFieldSize = Size(widget.size.width, widget.size.height * 0.15);
-    Size signInSize = Size(widget.size.width * 0.4, widget.size.height * 0.15);
+    Size signUpSize = Size(widget.size.width * 0.5, widget.size.height * 0.15);
 
     return Scaffold(
       backgroundColor: transparent,
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _firstNameField(txtFieldSize),
-              _space(),
-              _lastNameField(txtFieldSize),
-              _space(),
-              _phoneField(txtFieldSize),
-              _space(),
-              _emailField(txtFieldSize),
-              _space(),
-              _passwordField(txtFieldSize),
-              _space(),
-              _termsAndConditions(txtFieldSize),
-              _space(),
-              _signUp(signInSize)
-            ],
-          ),
-        ),
+      body: LayoutBuilderChild(
+        child: (minSize, maxSize) {
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Form(
+              key: _formKey,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: maxSize.height),
+                child: IntrinsicHeight(
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _firstNameField(txtFieldSize),
+                      _space(),
+                      _lastNameField(txtFieldSize),
+                      _space(),
+                      _phoneField(txtFieldSize),
+                      _space(),
+                      _emailField(txtFieldSize),
+                      _space(),
+                      _passwordField(txtFieldSize),
+                      _space(),
+                      _termsAndConditions(txtFieldSize),
+                      _space(),
+                      _signUp(signUpSize)
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -212,7 +225,7 @@ class _SignUpState extends ConsumerState<SignUp> {
     return _TermsAndConditions(
       size: size,
       onChanged: (isChecked) => _updateValuesMap('t&c', isChecked),
-      isFormSubmittedNotifier: _isFormSubmittedNotifier,
+      signUpButtonTappedNotifier: _signUpButtonTappedNotifier,
     );
   }
 
@@ -292,20 +305,27 @@ class _SignUpState extends ConsumerState<SignUp> {
     // Update the notifier to display the error message only when the checkbox
     // is unchecked; if the notifier value is false, the error message
     // will not be shown, even if the checkbox remains unchecked.
-    _isFormSubmittedNotifier.value = true;
+    _signUpButtonTappedNotifier.value = true;
     // Validate returns true if the form is valid, or false otherwise.
     if (_formKey.currentState!.validate() && _formValues['t&c']) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Valid Form'),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Invalid Form'),
-        ),
-      );
+      // show popup
+      showLoadingPopup(context);
+      // update the provider
+      ref.read(authProvider).signUp(
+            UserInformation(
+              docId: '',
+              firstName: _formValues['firstname'],
+              lastName: _formValues['lastname'],
+              phoneNumber: _formValues['phone'],
+              imgUrl: '',
+              email: _formValues['email'],
+            ),
+            _formValues['password'],
+            () {},
+            (error) {},
+          );
+      // Dismiss the loading popup if form validation fails
+      Navigator.of(context).pop(); // This closes the bottom sheet
     }
   }
 
@@ -326,11 +346,11 @@ class _SignUpState extends ConsumerState<SignUp> {
 class _TermsAndConditions extends StatefulWidget {
   final void Function(bool?) onChanged; // Callback to notify the parent
   final Size size;
-  final ValueNotifier<bool> isFormSubmittedNotifier;
+  final ValueNotifier<bool> signUpButtonTappedNotifier;
   const _TermsAndConditions({
     required this.onChanged,
     required this.size,
-    required this.isFormSubmittedNotifier,
+    required this.signUpButtonTappedNotifier,
   });
 
   @override
@@ -346,14 +366,21 @@ class _TermsAndConditionsState extends State<_TermsAndConditions> {
     double space = widget.size.width * 0.2;
     Size labelSize = Size(
         widget.size.width - checkBoxSize.width - space, widget.size.height);
-    return SizedBox(
-      width: widget.size.width,
-      height: !_isChecked ? 2 * widget.size.height : widget.size.height,
-      child: Column(
-        children: [
-          _tAndcWidget(checkBoxSize, labelSize),
-          _errorMessageWidget(space, checkBoxSize),
-        ],
+    return ValueListenableBuilder(
+      valueListenable: widget.signUpButtonTappedNotifier,
+      builder: (context, isbuttonTapped, child) => SizedBox(
+        width: widget.size.width,
+        height: !isbuttonTapped
+            ? widget.size.height
+            : !_isChecked
+                ? 2 * widget.size.height
+                : widget.size.height,
+        child: Column(
+          children: [
+            _tAndcWidget(checkBoxSize, labelSize),
+            _errorMessageWidget(space, checkBoxSize),
+          ],
+        ),
       ),
     );
   }
@@ -383,9 +410,9 @@ class _TermsAndConditionsState extends State<_TermsAndConditions> {
 
   _errorMessageWidget(double space, Size checkBoxSize) {
     return ValueListenableBuilder(
-      valueListenable: widget.isFormSubmittedNotifier,
-      builder: (context, value, child) => Visibility(
-        visible: value && !_isChecked,
+      valueListenable: widget.signUpButtonTappedNotifier,
+      builder: (context, isbuttonTapped, child) => Visibility(
+        visible: isbuttonTapped && !_isChecked,
         child: Container(
           width: widget.size.width - space - checkBoxSize.width,
           height: widget.size.height * 0.5,
@@ -418,24 +445,22 @@ class _TermsAndConditionsState extends State<_TermsAndConditions> {
   }
 
   _termsAndConditions() {
-    return Expanded(
-      child: RichText(
-        // Ensure the text wraps
-        softWrap: true,
-        text: TextSpan(
-          // Adding space between lines globally
-          style: TextStyle(
-            height: 1.5,
-            fontSize: 16,
-          ),
-          children: [
-            _blackText('I accept the '),
-            _blueText('Terms & Conditions', () {}),
-            _blackText(' and '),
-            _blueText('Privacy Policy', () {}),
-            _blackText('.'),
-          ],
+    return RichText(
+      // Ensure the text wraps
+      softWrap: true,
+      text: TextSpan(
+        // Adding space between lines globally
+        style: TextStyle(
+          height: 1.5,
+          fontSize: 16,
         ),
+        children: [
+          _blackText('I accept the '),
+          _blueText('Terms & Conditions', () {}),
+          _blackText(' and '),
+          _blueText('Privacy Policy', () {}),
+          _blackText('.'),
+        ],
       ),
     );
   }
