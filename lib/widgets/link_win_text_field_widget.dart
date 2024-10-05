@@ -37,29 +37,29 @@ class LWTextFieldWidget extends StatefulWidget {
 }
 
 class _LWTextFieldWidgetState extends State<LWTextFieldWidget> {
-  late final TextEditingController controller;
-  String? errorText;
+  late final TextEditingController _controller;
+  String? _errorText;
   // State variable for password visibility
   bool _isObscured = true;
 
   @override
   void initState() {
     super.initState();
-    errorText = null;
-    controller = TextEditingController();
+    _errorText = null;
+    _controller = TextEditingController();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
-  void validateValue(String value) {
+  void _validateValue(String value) {
     widget.onChanged(value);
     if (widget.validateValue != null) {
       setState(() {
-        errorText = widget.validateValue!(value);
+        _errorText = widget.validateValue!(value);
       });
     }
   }
@@ -92,11 +92,11 @@ class _LWTextFieldWidgetState extends State<LWTextFieldWidget> {
   _textFieldWidget(Size maxSize) {
     return TextFormField(
       style: TextStyle(fontSize: widget.fontSize),
-      controller: controller,
+      controller: _controller,
       keyboardType: widget.keyboardType,
       decoration: _inputDecoration(maxSize),
-      validator: (value) => errorText,
-      onChanged: validateValue,
+      validator: (value) => _errorText,
+      onChanged: _validateValue,
       // Disable autocorrect and suggestions
       autocorrect: false,
       enableSuggestions: false,
@@ -128,7 +128,7 @@ class _LWTextFieldWidgetState extends State<LWTextFieldWidget> {
       enabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(color: kBlack, width: 1),
       ),
-      errorText: errorText,
+      errorText: _errorText,
     );
   }
 
