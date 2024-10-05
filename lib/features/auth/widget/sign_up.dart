@@ -24,12 +24,14 @@ class _SignUpState extends ConsumerState<SignUp> {
   final _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _obscuredNotifier = ValueNotifier(true);
   final ValueNotifier<bool> _signUpButtonTappedNotifier = ValueNotifier(false);
-  late final Map<String, dynamic> _formValues;
+  final ValueNotifier<bool> _isFormSubmittedNotifier = ValueNotifier(false);
+  late final Map<_FieldsKeys, _SignUpTFFModel> _controllersMap;
+  bool _isTandCChecked = false;
 
   @override
   void initState() {
     super.initState();
-    _formValues = _initValuesMap();
+    _controllersMap = _initClearControllersMap();
   }
 
   @override
@@ -49,7 +51,6 @@ class _SignUpState extends ConsumerState<SignUp> {
                 constraints: BoxConstraints(minHeight: maxSize.height),
                 child: IntrinsicHeight(
                   child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _firstNameField(txtFieldSize),
                       _space(),
@@ -88,6 +89,8 @@ class _SignUpState extends ConsumerState<SignUp> {
     required IconData iconData,
     required void Function(String) onChanged,
     required String? Function(String?)? validator,
+    required TextEditingController controller,
+    required FocusNode node,
     bool obscureText = false,
     bool isPasswordField = false,
     TextInputType? keyboardType,
@@ -100,6 +103,8 @@ class _SignUpState extends ConsumerState<SignUp> {
         borderRadius: BorderRadius.circular(size.width * 0.2),
       ),
       child: TextFormField(
+        controller: controller,
+        focusNode: node,
         validator: validator,
         onChanged: onChanged,
         obscureText: obscureText,
@@ -142,9 +147,12 @@ class _SignUpState extends ConsumerState<SignUp> {
       label: 'Firstname',
       hint: 'Enter your firstname',
       iconData: FontAwesomeIcons.user,
+      controller: _controllersMap[_FieldsKeys.firstname]!.controller,
+      node: _controllersMap[_FieldsKeys.firstname]!.node,
       validator: (val) =>
           _validateRegularText(val, 'Please enter your firstname'),
-      onChanged: (val) => _updateValuesMap('firstname', val),
+      // onChanged: (val) => _updateValuesMap('firstname', val),
+      onChanged: (val) {},
     );
   }
 
@@ -154,9 +162,12 @@ class _SignUpState extends ConsumerState<SignUp> {
       label: 'Lastname',
       hint: 'Enter your lastname',
       iconData: Icons.family_restroom,
+      controller: _controllersMap[_FieldsKeys.lastname]!.controller,
+      node: _controllersMap[_FieldsKeys.lastname]!.node,
       validator: (val) =>
           _validateRegularText(val, 'Please enter your lastname'),
-      onChanged: (val) => _updateValuesMap('lastname', val),
+      // onChanged: (val) => _updateValuesMap('lastname', val),
+      onChanged: (val) {},
     );
   }
 
@@ -167,8 +178,11 @@ class _SignUpState extends ConsumerState<SignUp> {
       hint: 'Enter your phone number',
       iconData: FontAwesomeIcons.mobileScreenButton,
       keyboardType: TextInputType.phone,
+      controller: _controllersMap[_FieldsKeys.phone]!.controller,
+      node: _controllersMap[_FieldsKeys.phone]!.node,
       validator: _validatePhoneNumber,
-      onChanged: (val) => _updateValuesMap('phone', val),
+      // onChanged: (val) => _updateValuesMap('phone', val),
+      onChanged: (val) {},
     );
   }
 
@@ -179,8 +193,11 @@ class _SignUpState extends ConsumerState<SignUp> {
       hint: 'Enter your email',
       iconData: Icons.email_outlined,
       keyboardType: TextInputType.emailAddress,
+      controller: _controllersMap[_FieldsKeys.email]!.controller,
+      node: _controllersMap[_FieldsKeys.email]!.node,
       validator: _emailValidator,
-      onChanged: (val) => _updateValuesMap('email', val),
+      // onChanged: (val) => _updateValuesMap('email', val),
+      onChanged: (val) {},
     );
   }
 
@@ -194,8 +211,11 @@ class _SignUpState extends ConsumerState<SignUp> {
         iconData: Icons.password,
         obscureText: isObscured,
         isPasswordField: true,
+        controller: _controllersMap[_FieldsKeys.password]!.controller,
+        node: _controllersMap[_FieldsKeys.password]!.node,
         validator: passwordValidator,
-        onChanged: (val) => _updateValuesMap('password', val),
+        // onChanged: (val) => _updateValuesMap('password', val),
+        onChanged: (val) {},
       ),
     );
   }
@@ -222,10 +242,16 @@ class _SignUpState extends ConsumerState<SignUp> {
   }
 
   _termsAndConditions(Size size) {
-    return _TermsAndConditions(
-      size: size,
-      onChanged: (isChecked) => _updateValuesMap('t&c', isChecked),
-      signUpButtonTappedNotifier: _signUpButtonTappedNotifier,
+    return ValueListenableBuilder(
+      valueListenable: _isFormSubmittedNotifier,
+      builder: (context, isFormSubmitted, child) {
+        return _TermsAndConditions(
+          size: size,
+          initValue: isFormSubmitted ? false : null,
+          onChanged: (isChecked) => _isTandCChecked = isChecked ?? false,
+          signUpButtonTappedNotifier: _signUpButtonTappedNotifier,
+        );
+      },
     );
   }
 
@@ -302,54 +328,88 @@ class _SignUpState extends ConsumerState<SignUp> {
   }
 
   _onSignUpTapped() {
+    // close / hide keyboard
+    _closeKeyboard();
     // Update the notifier to display the error message only when the checkbox
     // is unchecked; if the notifier value is false, the error message
     // will not be shown, even if the checkbox remains unchecked.
     _signUpButtonTappedNotifier.value = true;
     // Validate returns true if the form is valid, or false otherwise.
-    if (_formKey.currentState!.validate() && _formValues['t&c']) {
+
+    if (_formKey.currentState!.validate() && _isTandCChecked) {
       // show popup
-      showLoadingPopup(context);
+      showSignUpPopup(context);
       // update the provider
       ref.read(authProvider).signUp(
-            UserInformation(
-              docId: '',
-              firstName: _formValues['firstname'],
-              lastName: _formValues['lastname'],
-              phoneNumber: _formValues['phone'],
-              imgUrl: '',
-              email: _formValues['email'],
-            ),
-            _formValues['password'],
-            () {},
-            (error) {},
-          );
-      // Dismiss the loading popup if form validation fails
-      Navigator.of(context).pop(); // This closes the bottom sheet
+        UserInformation(
+          docId: '',
+          firstName: _controllersMap[_FieldsKeys.firstname]!.controller.text,
+          lastName: _controllersMap[_FieldsKeys.lastname]!.controller.text,
+          phoneNumber: _controllersMap[_FieldsKeys.phone]!.controller.text,
+          imgUrl: '',
+          email: _controllersMap[_FieldsKeys.email]!.controller.text,
+        ),
+        _controllersMap[_FieldsKeys.password]!.controller.text,
+        () {
+          _isFormSubmittedNotifier.value = false;
+          _reset();
+        },
+        (error) {
+          _reset();
+          // show error popup
+          // To-Do
+        },
+      );
     }
   }
 
-  Map<String, dynamic> _initValuesMap() {
-    return {
-      'firstname': '',
-      'lastname': '',
-      'phone': '',
-      'email': '',
-      'password': '',
-      't&c': false,
-    };
+  _closeKeyboard() {
+    if (FocusScope.of(context).hasFocus) {
+      FocusScope.of(context).unfocus(); // Close the keyboard
+    }
   }
 
-  void _updateValuesMap(String key, dynamic val) => _formValues[key] = val;
+  _reset() {
+    _closeKeyboard();
+    // Dismiss the loading popup if form validation fails
+    Navigator.of(context).pop(); // This closes the bottom sheet
+    // clear all field
+    _controllersMap.forEach((key, model) {
+      // Clear the text for each controller
+      model.controller.clear();
+      // Unfocus fields
+      model.node.unfocus();
+    });
+    // uncheck t&c checkbox
+    _isTandCChecked = false;
+    _signUpButtonTappedNotifier.value = false;
+  }
+
+  Map<_FieldsKeys, _SignUpTFFModel> _initClearControllersMap() {
+    return {
+      _FieldsKeys.firstname: _SignUpTFFModel(
+          controller: TextEditingController(), node: FocusNode()),
+      _FieldsKeys.lastname: _SignUpTFFModel(
+          controller: TextEditingController(), node: FocusNode()),
+      _FieldsKeys.phone: _SignUpTFFModel(
+          controller: TextEditingController(), node: FocusNode()),
+      _FieldsKeys.email: _SignUpTFFModel(
+          controller: TextEditingController(), node: FocusNode()),
+      _FieldsKeys.password: _SignUpTFFModel(
+          controller: TextEditingController(), node: FocusNode()),
+    };
+  }
 }
 
 class _TermsAndConditions extends StatefulWidget {
   final void Function(bool?) onChanged; // Callback to notify the parent
   final Size size;
+  final bool? initValue;
   final ValueNotifier<bool> signUpButtonTappedNotifier;
   const _TermsAndConditions({
     required this.onChanged,
     required this.size,
+    required this.initValue,
     required this.signUpButtonTappedNotifier,
   });
 
@@ -361,27 +421,42 @@ class _TermsAndConditionsState extends State<_TermsAndConditions> {
   bool _isChecked = false;
 
   @override
+  void initState() {
+    super.initState();
+    _reset();
+  }
+
+  _reset() {
+    if (widget.initValue != null) {
+      _isChecked = widget.initValue!;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _reset();
     Size checkBoxSize = Size(widget.size.width * 0.1, widget.size.height);
     double space = widget.size.width * 0.2;
     Size labelSize = Size(
         widget.size.width - checkBoxSize.width - space, widget.size.height);
     return ValueListenableBuilder(
       valueListenable: widget.signUpButtonTappedNotifier,
-      builder: (context, isbuttonTapped, child) => SizedBox(
-        width: widget.size.width,
-        height: !isbuttonTapped
-            ? widget.size.height
-            : !_isChecked
-                ? 2 * widget.size.height
-                : widget.size.height,
-        child: Column(
-          children: [
-            _tAndcWidget(checkBoxSize, labelSize),
-            _errorMessageWidget(space, checkBoxSize),
-          ],
-        ),
-      ),
+      builder: (context, isbuttonTapped, child) {
+        return SizedBox(
+          width: widget.size.width,
+          height: !isbuttonTapped
+              ? widget.size.height
+              : !_isChecked
+                  ? 2 * widget.size.height
+                  : widget.size.height,
+          child: Column(
+            children: [
+              _tAndcWidget(checkBoxSize, labelSize),
+              _errorMessageWidget(space, checkBoxSize),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -481,3 +556,12 @@ class _TermsAndConditionsState extends State<_TermsAndConditions> {
         recognizer: TapGestureRecognizer()..onTap = onTap,
       );
 }
+
+class _SignUpTFFModel {
+  final TextEditingController controller;
+  final FocusNode node;
+
+  _SignUpTFFModel({required this.controller, required this.node});
+}
+
+enum _FieldsKeys { firstname, lastname, phone, email, password }

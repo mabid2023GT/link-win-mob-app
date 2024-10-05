@@ -110,31 +110,6 @@ class OnBoardingPage extends StatelessWidget {
         _descriptionWidget(context),
       ],
     );
-
-    // return LayoutBuilderChild(
-    //   child: (minSize, maxSize) => Container(
-    //     color: Colors.transparent,
-    //     width: maxSize.width,
-    //     height: maxSize.height,
-    //     child: ResponsivePercentageLayout(
-    //       size: maxSize,
-    //       screenUtil: screenUtil,
-    //       isRow: false,
-    //       percentages: const [
-    //         5,
-    //         15,
-    //         60,
-    //         20,
-    //       ],
-    //       children: [
-    //         _welcomToWidget(context),
-    //         _linkWinWidget(context),
-    //         _imageWidget(context),
-    //         _descriptionWidget(context),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 
   _welcomToWidget(BuildContext context) {
@@ -275,8 +250,8 @@ class NextButton extends StatelessWidget {
       child: (minSize, maxSize) => Stack(
         children: [
           Positioned(
-            bottom: 0,
-            right: 0,
+            bottom: maxSize.height * 0.1,
+            right: maxSize.width * 0.05,
             child: Transform.rotate(
               angle: math.pi / 5,
               child: InkWell(

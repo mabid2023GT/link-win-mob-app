@@ -1,39 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:link_win_mob_app/core/utils/screen_util.dart';
+import 'package:link_win_mob_app/core/config/colors.dart';
+import 'package:link_win_mob_app/widgets/popups/auth/auth_popup.dart';
 
-void showLoadingPopup(BuildContext context) {
-  ScreenUtil screenUtil = ScreenUtil(context);
-  Size size = Size(
-    screenUtil.widthPercentage(80),
-    screenUtil.heightPercentage(50),
-  );
-  double leftRightPad = screenUtil.widthPercentage(5);
-  double topBottomPad = screenUtil.heightPercentage(5);
+void showSignUpPopup(BuildContext context) {
   showModalBottomSheet(
     context: context,
     isDismissible: false,
     isScrollControlled: true,
-    builder: (context) {
-      return AnimatedPadding(
-        duration: const Duration(milliseconds: 300),
-        padding: EdgeInsets.only(
-          left: leftRightPad,
-          right: leftRightPad,
-          top: topBottomPad,
-          bottom: topBottomPad,
-        ),
-        child: Container(
-          width: size.width,
-          height: size.height,
-          decoration: BoxDecoration(
-            color: Colors.greenAccent,
-            borderRadius: BorderRadius.circular(size.width * 0.1),
-          ),
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      );
-    },
+    enableDrag: false,
+    backgroundColor: transparent,
+    builder: (context) => DraggableScrollableSheet(
+      initialChildSize: 1,
+      maxChildSize: 1,
+      minChildSize: 1,
+      builder: (context, scrollController) => AuthPopup(),
+    ),
   );
 }
