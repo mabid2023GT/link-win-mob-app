@@ -320,40 +320,62 @@ class _SignUpState extends ConsumerState<SignUp> {
   }
 
   _onSignUpTapped() {
-    // close / hide keyboard
+    // Close / hide keyboard and await a small delay to ensure it's fully closed
     _closeKeyboard();
+
     // Update the notifier to display the error message only when the checkbox
     // is unchecked; if the notifier value is false, the error message
     // will not be shown, even if the checkbox remains unchecked.
     _checkboxNotifier.value.isSignUpButtonTapped = true;
-    // Validate returns true if the form is valid, or false otherwise.
-
     if (_formKey.currentState!.validate() &&
         _checkboxNotifier.value.isChecked) {
       // show popup
       showSignUpPopup(context);
       // update the provider
       ref.read(authProvider).signUp(
-        UserInformation(
-          docId: '',
-          firstName: _controllersMap[_FieldsKeys.firstname]!.controller.text,
-          lastName: _controllersMap[_FieldsKeys.lastname]!.controller.text,
-          phoneNumber: _controllersMap[_FieldsKeys.phone]!.controller.text,
-          imgUrl: '',
-          email: _controllersMap[_FieldsKeys.email]!.controller.text,
-        ),
-        _controllersMap[_FieldsKeys.password]!.controller.text,
-        () {
-          _checkboxNotifier.value.isFormSubmitted = true;
-          _reset();
-        },
-        (error) {
-          // _reset();
-          // show error popup
-          // To-Do
-        },
-      );
+            _createUserInfoObject(),
+            _controllersMap[_FieldsKeys.password]!.controller.text,
+            _onSignUpSuccess,
+            _onSignInSuccess,
+            _onSignUpError,
+            _onSignInError,
+          );
     }
+  }
+
+  UserInformation _createUserInfoObject() {
+    return UserInformation(
+      docId: '',
+      firstName: _controllersMap[_FieldsKeys.firstname]!.controller.text,
+      lastName: _controllersMap[_FieldsKeys.lastname]!.controller.text,
+      phoneNumber: _controllersMap[_FieldsKeys.phone]!.controller.text,
+      imgUrl: '',
+      email: _controllersMap[_FieldsKeys.email]!.controller.text,
+    );
+  }
+
+  _onSignUpSuccess() {
+    _checkboxNotifier.value.isFormSubmitted = true;
+    _reset();
+    // Dismiss the loading popup if form validation fails
+    Navigator.of(context).pop(); // This closes the bottom sheet
+  }
+
+  _onSignUpError(dynamic error) {}
+  _onSignInError(dynamic error) {}
+  _onSignInSuccess() {
+    ref.read(authProvider).sendVerificationEmail(
+      () => showVerificationEmailPopup(context),
+      () {
+        // dismiss verification popup
+        Navigator.of(context).pop();
+        // dismiss Auth screen
+        Navigator.of(context).pop();
+      },
+      (error) {
+        // Show error popup
+      },
+    );
   }
 
   _closeKeyboard() {
@@ -363,9 +385,6 @@ class _SignUpState extends ConsumerState<SignUp> {
   }
 
   _reset() {
-    _closeKeyboard();
-    // Dismiss the loading popup if form validation fails
-    Navigator.of(context).pop(); // This closes the bottom sheet
     // clear all field
     _controllersMap.forEach((key, model) {
       // Clear the text for each controller

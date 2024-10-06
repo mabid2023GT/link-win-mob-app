@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen/home_screen_app_bar.dart';
 import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
-import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/providers/auth/user_provider.dart';
+import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/core/models/profile/user_info.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
@@ -17,57 +18,62 @@ class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   bool isEditedMode = false;
-  bool isOk = true;
-  UserInformation user = Users.user;
+  bool isOk = true; // Track if validations are OK
   late UserInformation editedUser;
+  // Assume you get this from somewhere, e.g., auth provider
+  late String userId;
 
   @override
   void initState() {
     super.initState();
-    editedUser = user.copy();
-  }
-
-  @override
-  void dispose() {
-    FocusScope.of(context).unfocus();
-    super.dispose();
+    editedUser = UserInformation.empty();
+    // Fetch user data using the user ID, Get user ID from auth provider
+    userId = ref.read(authProvider).user?.uid ?? '';
+    if (userId.isNotEmpty) {
+      ref.read(userProvider.notifier).fetchUserById(userId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // Listen for changes in the auth provider.
-    // If the user signs out, the NotAuthenticatedWidget will be displayed
-    // immediately; otherwise, the profile screen will be shown.
-    // ref.read(authProvider).signOut();
-
-    final user = ref.watch(authProvider).user;
-    // Check if the user is signed in
-    if (user == null) {
+    if (userId.isEmpty) {
       return NotAuthenticatedWidget();
-    } else {
-      ScreenUtil screenUtil = ScreenUtil(context);
-      if (!isEditedMode) {
-        editedUser.updateUserInfo(
-          UserInformation(
-            docId: 'user!.uid',
-            firstName: 'firstName',
-            lastName: 'lastName',
-            phoneNumber: 'phoneNumber',
-            imgUrl: 'imgUrl',
-            email: 'email',
-          ),
-        );
-      }
-      return _profilePage(screenUtil);
     }
+    final userState = ref.watch(userProvider);
+    ScreenUtil screenUtil = ScreenUtil(context);
+
+    return userState.when(
+      loading: () => _loadingWidget(screenUtil),
+      error: (error, stackTrace) => _errorWidget(screenUtil, error, stackTrace),
+      data: (user) {
+        if (user == null) {
+          return NotAuthenticatedWidget();
+        }
+        return _profilePage(screenUtil, user);
+      },
+    );
   }
 
-  _profilePage(ScreenUtil screenUtil) {
+  _loadingWidget(ScreenUtil screenUtil) => Center(
+        child: CircularProgressIndicator(),
+      );
+
+  _errorWidget(ScreenUtil screenUtil, Object error, StackTrace stackTrace) {
+    return Container(
+      width: screenUtil.screenWidth,
+      height: screenUtil.screenHeight,
+      color: Colors.red,
+      alignment: AlignmentDirectional.center,
+      child: Text(error.toString()),
+    );
+  }
+
+  _profilePage(ScreenUtil screenUtil, UserInformation user) {
     return Scaffold(
       backgroundColor: transparent,
       appBar: const HomeScreenAppBar(),
@@ -77,15 +83,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         percentages: const [5, 20, 70, 5],
         children: [
           const SizedBox(),
-          _buildCircleAvatar(),
-          _profileDetails(screenUtil),
+          _buildCircleAvatar(user),
+          _profileDetails(screenUtil, user),
           const SizedBox(),
         ],
       ),
     );
   }
 
-  _profileDetails(ScreenUtil screenUtil) {
+  _profileDetails(ScreenUtil screenUtil, UserInformation user) {
     return LayoutBuilderChild(
       child: (minSize, maxSize) {
         double leftRightPadding = maxSize.width * 0.05;
@@ -120,15 +126,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               if (!isEditedMode) ...[
                 LayoutBuilderChild(child: (minSize, maxSize) {
                   return Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       LinkWinIcon(
-                        iconData: Icons.edit,
+                        iconData: FontAwesomeIcons.rightFromBracket,
                         iconSize: Size(maxSize.height, maxSize.height),
-                        iconSizeRatio: 0.7,
+                        iconSizeRatio: 0.5,
                         iconColor: kBlack,
                         splashColor: kSelectedTabColor,
-                        backgroundColor: Colors.amber,
+                        backgroundColor: kHeaderColor,
+                        onTap: () => ref.read(authProvider).signOut(),
+                      ),
+                      LinkWinIcon(
+                        iconData: FontAwesomeIcons.userPen,
+                        iconSize: Size(maxSize.height, maxSize.height),
+                        iconSizeRatio: 0.5,
+                        iconColor: kBlack,
+                        splashColor: kSelectedTabColor,
+                        backgroundColor: kHeaderColor,
                         onTap: () {
                           setState(() {
                             isEditedMode = true;
@@ -160,7 +175,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               }, validatePhoneNumber),
               const SizedBox(),
               if (isEditedMode) ...[
-                _actionsWidget(screenUtil),
+                _actionsWidget(screenUtil, user),
                 const SizedBox(),
               ]
             ],
@@ -231,7 +246,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     });
   }
 
-  _actionsWidget(ScreenUtil screenUtil) {
+  _actionsWidget(ScreenUtil screenUtil, UserInformation user) {
     return LayoutBuilderChild(
       child: (minSize, maxSize) {
         Size buttonSize = Size(maxSize.width * 0.3, maxSize.height);
@@ -289,32 +304,32 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  _buildCircleAvatar() {
+  _buildCircleAvatar(UserInformation user) {
     return LayoutBuilderChild(
       child: (minSize, maxSize) => Container(
         width: maxSize.width,
         height: maxSize.height,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: editedUser.imgUrl.isEmpty ? kRed : k1Gray,
+          color: user.imgUrl.isEmpty ? kRed : k1Gray,
           shape: BoxShape.circle,
         ),
         child: Stack(
           children: [
             Center(
-              child: editedUser.imgUrl.isNotEmpty
+              child: user.imgUrl.isNotEmpty
                   ? Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           image: NetworkImage(
-                              isEditedMode ? editedUser.imgUrl : user.imgUrl),
+                              isEditedMode ? user.imgUrl : user.imgUrl),
                           fit: BoxFit.contain,
                         ),
                       ),
                     )
                   : Text(
-                      createShortenedName(editedUser),
+                      createShortenedName(user),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 24,

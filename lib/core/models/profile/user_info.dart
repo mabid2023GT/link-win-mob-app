@@ -17,6 +17,24 @@ class UserInformation {
     required this.email,
   });
 
+  // Copy constructor
+  UserInformation.copy(UserInformation user)
+      : docId = user.docId,
+        firstName = user.firstName,
+        lastName = user.lastName,
+        phoneNumber = user.phoneNumber,
+        imgUrl = user.imgUrl,
+        email = user.email;
+
+  // Default constructor with empty parameters
+  UserInformation.empty()
+      : docId = '',
+        firstName = '',
+        lastName = '',
+        phoneNumber = '',
+        imgUrl = '',
+        email = '';
+
   String get displayName => '$firstName $lastName';
 
   UserInformation copy({
@@ -28,7 +46,7 @@ class UserInformation {
     String? email,
   }) {
     return UserInformation(
-      docId: docId ?? '',
+      docId: docId ?? this.docId,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -38,6 +56,7 @@ class UserInformation {
   }
 
   void updateUserInfo(UserInformation user) {
+    docId = user.docId;
     firstName = user.firstName;
     lastName = user.lastName;
     email = user.email;

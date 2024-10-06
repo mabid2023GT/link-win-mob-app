@@ -82,7 +82,7 @@ class HomeScreenAppBar extends ConsumerWidget implements PreferredSizeWidget {
     );
   }
 
-  _actions(User? user, ScreenUtil screenUtil) {
+  List<Widget>? _actions(User? user, ScreenUtil screenUtil) {
     return user == null
         ? null
         : [

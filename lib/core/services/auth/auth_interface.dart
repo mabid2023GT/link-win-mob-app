@@ -13,6 +13,11 @@ abstract class AuthInterface {
     void Function(dynamic error) onError,
   );
 
+  Future<void> sendVerificationEmail(
+    void Function() onSuccess,
+    void Function(dynamic error) onError,
+  );
+
   Future<void> signOut();
 
   User? getCurrentUser();

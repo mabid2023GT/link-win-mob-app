@@ -40,7 +40,7 @@ abstract class UsersInterface {
   Future<void> updateUser(
     UserInformation user,
     void Function() onSuccess,
-    void Function(dynamic error) onError,
+    void Function(Object?, StackTrace) onError,
   );
 
   /// Deletes a user from the database based on the provided user ID.

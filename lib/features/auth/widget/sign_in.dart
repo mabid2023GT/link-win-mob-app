@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
+import 'package:link_win_mob_app/widgets/popups/modal_bottom_sheet.dart';
 
 class SignIn extends ConsumerStatefulWidget {
   final Size size;
@@ -191,10 +193,17 @@ class _SignInState extends ConsumerState<SignIn> {
     if (_formKey.currentState!.validate() &&
         !(_email.isEmpty || _password.isEmpty)) {
       ref.read(authProvider).signIn(
-            _email,
-            _password,
-            (error) {},
-          );
+        _email,
+        _password,
+        () {
+          context.go('/home');
+          ref.read(authProvider).handleUnverifiedUser(
+              () => showVerificationEmailPopup(context), () {
+            Navigator.of(context).pop();
+          });
+        },
+        (error) {},
+      );
     }
   }
 }

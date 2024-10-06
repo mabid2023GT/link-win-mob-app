@@ -22,7 +22,12 @@ class AuthApi implements AuthInterface {
         email: userInfo.email,
         password: password,
       );
-      // Step 2: Try to add the user to Firestore, with retry logic
+      // Step 2
+      // Use the UID from the authentication service
+      // to create a document in the users collection,
+      // with the UID as the document ID.
+      userInfo = userInfo.copy(docId: userCredential.user!.uid);
+      // Step 3: Try to add the user to Firestore, with retry logic
       bool addedToFirestore =
           await _addUserToFirestore(userInfo, onSuccess, onError, maxRetries);
       // Return the user if Firestore operation succeeded
@@ -92,4 +97,20 @@ class AuthApi implements AuthInterface {
 
   @override
   Stream<User?> get authStateChanges => _auth.authStateChanges();
+
+  @override
+  Future<void> sendVerificationEmail(
+    void Function() onSuccess,
+    void Function(dynamic error) onError,
+  ) async {
+    User? user = _auth.currentUser;
+    if (user != null && !user.emailVerified) {
+      try {
+        await user.sendEmailVerification();
+        onSuccess();
+      } catch (error) {
+        onError(error);
+      }
+    }
+  }
 }

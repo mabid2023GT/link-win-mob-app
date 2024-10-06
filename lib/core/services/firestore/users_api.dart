@@ -19,7 +19,8 @@ class UsersApi implements UsersInterface {
     void Function(dynamic error) onError,
   ) {
     return _usersCol
-        .add(user.toMap())
+        .doc(user.docId)
+        .set(user.toMap())
         .then((val) => onSuccess())
         .catchError((error) => onError(error));
   }
@@ -28,13 +29,15 @@ class UsersApi implements UsersInterface {
   Future<void> updateUser(
     UserInformation user,
     void Function() onSuccess,
-    void Function(dynamic error) onError,
+    void Function(Object?, StackTrace) onError,
   ) {
     return _usersCol
         .doc(user.docId)
         .update(user.toMap())
         .then((val) => onSuccess())
-        .catchError((error) => onError(error));
+        .onError(
+          (error, stackTrace) => onError(error, stackTrace),
+        );
   }
 
   @override
