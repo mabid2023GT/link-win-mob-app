@@ -23,10 +23,9 @@ class SignUp extends ConsumerStatefulWidget {
 class _SignUpState extends ConsumerState<SignUp> {
   final _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _obscuredNotifier = ValueNotifier(true);
-  final ValueNotifier<bool> _signUpButtonTappedNotifier = ValueNotifier(false);
-  final ValueNotifier<bool> _isFormSubmittedNotifier = ValueNotifier(false);
+  final ValueNotifier<_TermsAndConditionsModel> _checkboxNotifier =
+      ValueNotifier(_TermsAndConditionsModel.copy(null));
   late final Map<_FieldsKeys, _SignUpTFFModel> _controllersMap;
-  bool _isTandCChecked = false;
 
   @override
   void initState() {
@@ -242,16 +241,9 @@ class _SignUpState extends ConsumerState<SignUp> {
   }
 
   _termsAndConditions(Size size) {
-    return ValueListenableBuilder(
-      valueListenable: _isFormSubmittedNotifier,
-      builder: (context, isFormSubmitted, child) {
-        return _TermsAndConditions(
-          size: size,
-          initValue: isFormSubmitted ? false : null,
-          onChanged: (isChecked) => _isTandCChecked = isChecked ?? false,
-          signUpButtonTappedNotifier: _signUpButtonTappedNotifier,
-        );
-      },
+    return _TermsAndConditions(
+      size: size,
+      checkboxNotifier: _checkboxNotifier,
     );
   }
 
@@ -333,10 +325,11 @@ class _SignUpState extends ConsumerState<SignUp> {
     // Update the notifier to display the error message only when the checkbox
     // is unchecked; if the notifier value is false, the error message
     // will not be shown, even if the checkbox remains unchecked.
-    _signUpButtonTappedNotifier.value = true;
+    _checkboxNotifier.value.isSignUpButtonTapped = true;
     // Validate returns true if the form is valid, or false otherwise.
 
-    if (_formKey.currentState!.validate() && _isTandCChecked) {
+    if (_formKey.currentState!.validate() &&
+        _checkboxNotifier.value.isChecked) {
       // show popup
       showSignUpPopup(context);
       // update the provider
@@ -351,11 +344,11 @@ class _SignUpState extends ConsumerState<SignUp> {
         ),
         _controllersMap[_FieldsKeys.password]!.controller.text,
         () {
-          _isFormSubmittedNotifier.value = false;
+          _checkboxNotifier.value.isFormSubmitted = true;
           _reset();
         },
         (error) {
-          _reset();
+          // _reset();
           // show error popup
           // To-Do
         },
@@ -381,8 +374,8 @@ class _SignUpState extends ConsumerState<SignUp> {
       model.node.unfocus();
     });
     // uncheck t&c checkbox
-    _isTandCChecked = false;
-    _signUpButtonTappedNotifier.value = false;
+    _checkboxNotifier.value.isChecked = false;
+    _checkboxNotifier.value.isSignUpButtonTapped = false;
   }
 
   Map<_FieldsKeys, _SignUpTFFModel> _initClearControllersMap() {
@@ -402,15 +395,11 @@ class _SignUpState extends ConsumerState<SignUp> {
 }
 
 class _TermsAndConditions extends StatefulWidget {
-  final void Function(bool?) onChanged; // Callback to notify the parent
   final Size size;
-  final bool? initValue;
-  final ValueNotifier<bool> signUpButtonTappedNotifier;
+  final ValueNotifier<_TermsAndConditionsModel?> checkboxNotifier;
   const _TermsAndConditions({
-    required this.onChanged,
     required this.size,
-    required this.initValue,
-    required this.signUpButtonTappedNotifier,
+    required this.checkboxNotifier,
   });
 
   @override
@@ -418,35 +407,20 @@ class _TermsAndConditions extends StatefulWidget {
 }
 
 class _TermsAndConditionsState extends State<_TermsAndConditions> {
-  bool _isChecked = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _reset();
-  }
-
-  _reset() {
-    if (widget.initValue != null) {
-      _isChecked = widget.initValue!;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    _reset();
     Size checkBoxSize = Size(widget.size.width * 0.1, widget.size.height);
     double space = widget.size.width * 0.2;
     Size labelSize = Size(
         widget.size.width - checkBoxSize.width - space, widget.size.height);
     return ValueListenableBuilder(
-      valueListenable: widget.signUpButtonTappedNotifier,
-      builder: (context, isbuttonTapped, child) {
+      valueListenable: widget.checkboxNotifier,
+      builder: (context, model, child) {
         return SizedBox(
           width: widget.size.width,
-          height: !isbuttonTapped
+          height: (model == null || !model.isSignUpButtonTapped)
               ? widget.size.height
-              : !_isChecked
+              : !model.isChecked
                   ? 2 * widget.size.height
                   : widget.size.height,
           child: Column(
@@ -485,9 +459,10 @@ class _TermsAndConditionsState extends State<_TermsAndConditions> {
 
   _errorMessageWidget(double space, Size checkBoxSize) {
     return ValueListenableBuilder(
-      valueListenable: widget.signUpButtonTappedNotifier,
-      builder: (context, isbuttonTapped, child) => Visibility(
-        visible: isbuttonTapped && !_isChecked,
+      valueListenable: widget.checkboxNotifier,
+      builder: (context, model, child) => Visibility(
+        visible:
+            (model != null && model.isSignUpButtonTapped && !model.isChecked),
         child: Container(
           width: widget.size.width - space - checkBoxSize.width,
           height: widget.size.height * 0.5,
@@ -506,13 +481,16 @@ class _TermsAndConditionsState extends State<_TermsAndConditions> {
   }
 
   _checkBox() {
-    return Checkbox(
-      value: _isChecked,
-      onChanged: (bool? newValue) {
-        setState(
-          () {
-            _isChecked = newValue ?? false;
-            widget.onChanged(_isChecked);
+    return ValueListenableBuilder(
+      valueListenable: widget.checkboxNotifier,
+      builder: (context, model, child) {
+        return Checkbox(
+          value: model == null ? false : model.isChecked,
+          onChanged: (bool? val) {
+            widget.checkboxNotifier.value ??=
+                _TermsAndConditionsModel.copy(null);
+            widget.checkboxNotifier.value = widget.checkboxNotifier.value!
+                .copyWith(isChecked: val ?? false);
           },
         );
       },
@@ -555,6 +533,37 @@ class _TermsAndConditionsState extends State<_TermsAndConditions> {
         ),
         recognizer: TapGestureRecognizer()..onTap = onTap,
       );
+}
+
+class _TermsAndConditionsModel {
+  bool isFormSubmitted;
+  bool isSignUpButtonTapped;
+  bool isChecked;
+
+  _TermsAndConditionsModel({
+    required this.isFormSubmitted,
+    required this.isSignUpButtonTapped,
+    required this.isChecked,
+  });
+
+  // Copy constructor with a nullable _TermsAndConditionsModel parameter
+  _TermsAndConditionsModel.copy(_TermsAndConditionsModel? model)
+      : isFormSubmitted = model?.isFormSubmitted ?? false,
+        isSignUpButtonTapped = model?.isSignUpButtonTapped ?? false,
+        isChecked = model?.isChecked ?? false;
+
+  // copyWith method
+  _TermsAndConditionsModel copyWith({
+    bool? isFormSubmitted,
+    bool? isSignUpButtonTapped,
+    bool? isChecked,
+  }) {
+    return _TermsAndConditionsModel(
+      isFormSubmitted: isFormSubmitted ?? this.isFormSubmitted,
+      isSignUpButtonTapped: isSignUpButtonTapped ?? this.isSignUpButtonTapped,
+      isChecked: isChecked ?? this.isChecked,
+    );
+  }
 }
 
 class _SignUpTFFModel {
