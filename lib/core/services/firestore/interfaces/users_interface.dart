@@ -17,7 +17,7 @@ abstract class UsersInterface {
   ///   the addition fails.
   Future<void> addUser(
     UserInformation user,
-    void Function(DocumentReference<Object?> val) onSuccess,
+    void Function() onSuccess,
     void Function(dynamic error) onError,
   );
 
@@ -40,7 +40,7 @@ abstract class UsersInterface {
   Future<void> updateUser(
     UserInformation user,
     void Function() onSuccess,
-    void Function(dynamic error) onError,
+    void Function(Object?, StackTrace) onError,
   );
 
   /// Deletes a user from the database based on the provided user ID.

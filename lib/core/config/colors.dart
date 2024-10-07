@@ -35,3 +35,7 @@ const historyIconColor = Color.fromARGB(255, 0, 21, 253);
 const transparent = Colors.transparent;
 
 const white = Colors.white;
+
+// Auth Screen Colors
+const auSCardColor = Color(0xFFFFE8D6);
+// Auth Screen Colors - End

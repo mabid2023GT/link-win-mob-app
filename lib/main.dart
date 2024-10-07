@@ -8,6 +8,7 @@ import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/features/auth/auth_screen.dart';
 import 'package:link_win_mob_app/features/home/homepage.dart';
 import 'package:link_win_mob_app/features/on_boarding/on_boarding_screen.dart';
+import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,17 +41,28 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return const OnBoardingScreen();
+        return Consumer(
+          builder: (context, ref, child) {
+            final authState = ref.watch(authProvider);
+            if (authState.user != null) {
+              // User is signed in, redirect to home
+              return const HomePage();
+            } else {
+              // User is not signed in, show onboarding
+              return const OnBoardingScreen();
+            }
+          },
+        );
       },
       routes: <RouteBase>[
         GoRoute(
           path: 'auth',
           builder: (BuildContext context, GoRouterState state) {
-            return const AuthScreen();
+            return AuthScreen();
           },
         ),
         GoRoute(
-          path: 'nav',
+          path: 'home',
           builder: (BuildContext context, GoRouterState state) {
             return const HomePage();
           },
