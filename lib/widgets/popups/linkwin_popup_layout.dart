@@ -8,12 +8,13 @@ import 'package:link_win_mob_app/widgets/link_win_button.dart';
 class LWPopupLayout extends StatelessWidget {
   final String title;
   final String message;
+  final bool isMessageBelowChild;
   final Duration duration;
   final Color backgroundColor;
   final Color borderColor;
   final LWPopupLayoutButtons? leftButton;
   final LWPopupLayoutButtons? rightButton;
-  final bool withCircleIndicator;
+  final Widget Function(Size size)? child;
   const LWPopupLayout({
     super.key,
     required this.title,
@@ -23,7 +24,8 @@ class LWPopupLayout extends StatelessWidget {
     required this.borderColor,
     this.leftButton,
     this.rightButton,
-    this.withCircleIndicator = false,
+    this.child,
+    this.isMessageBelowChild = false,
   });
 
   @override
@@ -137,12 +139,13 @@ class LWPopupLayout extends StatelessWidget {
     return LayoutBuilderChild(
       child: (minSize, maxSize) {
         double leftRightPad = maxSize.width * 0.05;
-        double topBottomPad = maxSize.height * 0.15;
+        double topBottomPad = maxSize.height * (child == null ? 0.15 : 0.05);
         Size size = Size(maxSize.width - 2 * leftRightPad,
             maxSize.height - 2 * topBottomPad);
         Size buttonSize = Size(
             _numOfButtons() <= 1 ? size.width * 0.6 : size.width * 0.45,
             size.height * 0.15);
+        Size childSize = Size(size.width, size.height * 0.35);
         return Padding(
           padding: EdgeInsets.only(
             left: leftRightPad,
@@ -153,20 +156,62 @@ class LWPopupLayout extends StatelessWidget {
           child: SizedBox(
             width: size.width,
             height: size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _title(),
-                if (withCircleIndicator) CircularProgressIndicator(),
-                _message(),
-                if (leftButton != null || rightButton != null)
-                  _actions(buttonSize),
-              ],
-            ),
+            child: child == null
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: _contentChildren(childSize, buttonSize),
+                  )
+                : SizedBox(
+                    width: maxSize.width,
+                    height: maxSize.height,
+                    child: ListView(
+                      children:
+                          _contentChildrenForListView(childSize, buttonSize),
+                    ),
+                  ),
           ),
         );
       },
     );
+  }
+
+  List<Widget> _contentChildren(Size childSize, Size buttonSize) {
+    return [
+      _title(),
+      if (isMessageBelowChild) ...[
+        if (child != null) child!(childSize),
+        _message(),
+      ] else ...[
+        _message(),
+        if (child != null) child!(childSize),
+      ],
+      if (leftButton != null || rightButton != null) _actions(buttonSize),
+    ];
+  }
+
+  List<Widget> _contentChildrenForListView(Size childSize, Size buttonSize) {
+    return [
+      Center(
+        child: _title(),
+      ),
+      SizedBox(height: buttonSize.height * 0.5),
+      if (isMessageBelowChild) ...[
+        if (child != null) ...[
+          child!(childSize),
+          SizedBox(height: buttonSize.height * 0.5),
+        ],
+        _message(),
+      ] else ...[
+        _message(),
+        if (child != null) ...[
+          SizedBox(height: buttonSize.height * 0.5),
+          child!(childSize)
+        ],
+      ],
+      SizedBox(height: buttonSize.height * 0.5),
+      if (leftButton != null || rightButton != null) _actions(buttonSize),
+      SizedBox(height: buttonSize.height * 4),
+    ];
   }
 
   _actions(Size buttonSize) {
@@ -197,6 +242,7 @@ class LWPopupLayout extends StatelessWidget {
     return Text(
       message,
       textAlign: TextAlign.center,
+      // overflow: TextOverflow.ellipsis,
       style: TextStyle(
         fontSize: 18,
         fontFamily: 'Loto',
@@ -208,6 +254,7 @@ class LWPopupLayout extends StatelessWidget {
   _title() {
     return Text(
       title,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
         fontSize: 22,
         fontFamily: 'Loto',

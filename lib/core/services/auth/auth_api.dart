@@ -113,4 +113,18 @@ class AuthApi implements AuthInterface {
       }
     }
   }
+
+  @override
+  Future<void> sendPasswordResetEmail(
+    String email,
+    void Function() onSuccess,
+    void Function(dynamic error) onError,
+  ) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      onSuccess();
+    } catch (error) {
+      onError(error);
+    }
+  }
 }

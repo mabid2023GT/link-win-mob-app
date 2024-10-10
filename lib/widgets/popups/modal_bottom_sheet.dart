@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/widgets/popups/auth/auth_popup.dart';
+import 'package:link_win_mob_app/widgets/popups/auth/reset_password_popup.dart';
 import 'package:link_win_mob_app/widgets/popups/auth/verification_email_popup.dart';
 
 void _showFixedModalBottomSheet(BuildContext context, Widget child) {
@@ -24,3 +25,6 @@ void showSignUpPopup(BuildContext context) =>
 
 void showVerificationEmailPopup(BuildContext context) =>
     _showFixedModalBottomSheet(context, VerificationEmailPopup());
+
+void showResetPasswordPopup(BuildContext context) =>
+    _showFixedModalBottomSheet(context, ResetPasswordPopup());
