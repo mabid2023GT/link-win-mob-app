@@ -143,7 +143,7 @@ class _SignInState extends ConsumerState<SignIn> {
 
   _forgotPassword(Size size) {
     return InkWell(
-      onTap: () {},
+      onTap: () => showResetPasswordPopup(context),
       child: Container(
         width: size.width,
         height: size.height,
@@ -152,7 +152,7 @@ class _SignInState extends ConsumerState<SignIn> {
           'Forgot your password?',
           style: TextStyle(
             fontSize: 18,
-            color: Colors.blue,
+            color: kBlue,
             fontWeight: FontWeight.w400,
             fontFamily: 'Lato',
           ),

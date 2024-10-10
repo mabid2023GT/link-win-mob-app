@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -64,6 +65,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       );
 
   _errorWidget(ScreenUtil screenUtil, Object error, StackTrace stackTrace) {
+    if (error is FirebaseException && error.code == 'permission-denied') {
+      return NotAuthenticatedWidget();
+    }
     return Container(
       width: screenUtil.screenWidth,
       height: screenUtil.screenHeight,

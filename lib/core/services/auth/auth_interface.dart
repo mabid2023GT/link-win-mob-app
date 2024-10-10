@@ -23,4 +23,10 @@ abstract class AuthInterface {
   User? getCurrentUser();
 
   Stream<User?> get authStateChanges;
+
+  Future<void> sendPasswordResetEmail(
+    String email,
+    void Function() onSuccess,
+    void Function(dynamic error) onError,
+  );
 }

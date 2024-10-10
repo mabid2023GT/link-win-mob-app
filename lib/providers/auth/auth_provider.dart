@@ -62,6 +62,14 @@ class AuthNotifier extends ChangeNotifier {
     notifyListeners(); // Notify listeners to update UI or any other dependent state
   }
 
+  Future<void> resetPassword(
+    String email,
+    void Function() onSuccess,
+    void Function(dynamic error) onError,
+  ) async {
+    await _authApi.sendPasswordResetEmail(email, onSuccess, onError);
+  }
+
   Future<void> sendVerificationEmail(
     void Function() showPopup,
     void Function() onSuccess,
