@@ -24,6 +24,8 @@ class _SignInState extends ConsumerState<SignIn> {
 
   String _email = '';
   String _password = '';
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,7 @@ class _SignInState extends ConsumerState<SignIn> {
     required String label,
     required String hint,
     required IconData iconData,
+    required FocusNode focusNode,
     required void Function(String) onChanged,
     required String? Function(String?)? validator,
     bool obscureText = false,
@@ -77,6 +80,7 @@ class _SignInState extends ConsumerState<SignIn> {
         borderRadius: BorderRadius.circular(size.width * 0.2),
       ),
       child: TextFormField(
+        focusNode: focusNode,
         validator: validator,
         onChanged: onChanged,
         obscureText: obscureText,
@@ -122,6 +126,7 @@ class _SignInState extends ConsumerState<SignIn> {
       keyboardType: TextInputType.emailAddress,
       validator: (val) => _validateRegularText(val, 'Please enter email'),
       onChanged: (val) => _email = val,
+      focusNode: _emailFocusNode,
     );
   }
 
@@ -137,6 +142,7 @@ class _SignInState extends ConsumerState<SignIn> {
         isPasswordField: true,
         validator: (val) => _validateRegularText(val, 'Please enter password'),
         onChanged: (val) => _password = val,
+        focusNode: _passwordFocusNode,
       ),
     );
   }
@@ -166,7 +172,7 @@ class _SignInState extends ConsumerState<SignIn> {
       width: size.width,
       height: size.height,
       child: ElevatedButton(
-        onPressed: _signInTapper,
+        onPressed: _signInTapped,
         style: ElevatedButton.styleFrom(
           backgroundColor: kHeaderColor,
         ),
@@ -189,21 +195,49 @@ class _SignInState extends ConsumerState<SignIn> {
     return null;
   }
 
-  _signInTapper() {
+  _signInTapped() {
     if (_formKey.currentState!.validate() &&
         !(_email.isEmpty || _password.isEmpty)) {
-      ref.read(authProvider).signIn(
-        _email,
-        _password,
+      _closeKeyboard(context);
+      // Wait until the keyboard is fully dismissed before continuing
+      Future.delayed(
+        const Duration(milliseconds: 300),
         () {
-          context.go('/home');
-          ref.read(authProvider).handleUnverifiedUser(
-              () => showVerificationEmailPopup(context), () {
-            Navigator.of(context).pop();
-          });
+          // Make sure the keyboard is fully dismissed before navigation
+          WidgetsBinding.instance.addPostFrameCallback(
+            (timeStamp) {
+              // show popup
+              showSignInPopup(context);
+              // call singin method
+              ref.read(authProvider).signIn(
+                _email,
+                _password,
+                () {
+                  // Dismiss the loading popup if form validation fails
+                  Navigator.of(context).pop();
+                  // go to home page after authentication
+                  context.go('/home');
+                  // check if need to verified email
+                  ref.read(authProvider).handleUnverifiedUser(
+                        () => showVerificationEmailPopup(context),
+                        () => Navigator.of(context).pop(),
+                      );
+                },
+                (error) {},
+              );
+            },
+          );
         },
-        (error) {},
       );
     }
+  }
+
+  _closeKeyboard(BuildContext context) {
+    if (FocusScope.of(context).hasFocus) {
+      FocusScope.of(context).unfocus(); // Close the keyboard
+    }
+    // Unfocus both the email and password FocusNodes
+    _emailFocusNode.unfocus();
+    _passwordFocusNode.unfocus();
   }
 }

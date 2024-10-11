@@ -23,6 +23,14 @@ void _showFixedModalBottomSheet(BuildContext context, Widget child) {
 void showSignUpPopup(BuildContext context) =>
     _showFixedModalBottomSheet(context, AuthPopup());
 
+void showSignInPopup(BuildContext context) => _showFixedModalBottomSheet(
+      context,
+      AuthPopup(
+        title: 'Signing In ...',
+        message: 'Kindly wait a moment; we will be done soon!',
+      ),
+    );
+
 void showVerificationEmailPopup(BuildContext context) =>
     _showFixedModalBottomSheet(context, VerificationEmailPopup());
 
