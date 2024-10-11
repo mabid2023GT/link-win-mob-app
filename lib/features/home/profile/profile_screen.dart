@@ -1,41 +1,83 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen/home_screen_app_bar.dart';
+import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
+import 'package:link_win_mob_app/providers/auth/user_provider.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
-import 'package:link_win_mob_app/providers/profile/user_provider.dart';
 import 'package:link_win_mob_app/core/models/profile/user_info.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:link_win_mob_app/widgets/link_win_text_field_widget.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:link_win_mob_app/features/auth/widget/not_authenticated_widget.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   bool isEditedMode = false;
-  bool isOk = true;
-  UserInformation user = Users.user;
+  bool isOk = true; // Track if validations are OK
   late UserInformation editedUser;
+  // Assume you get this from somewhere, e.g., auth provider
+  late String userId;
 
   @override
   void initState() {
     super.initState();
-    editedUser = user.copy();
+    editedUser = UserInformation.empty();
+    // Fetch user data using the user ID, Get user ID from auth provider
+    userId = ref.read(authProvider).user?.uid ?? '';
+    if (userId.isNotEmpty) {
+      ref.read(userProvider.notifier).fetchUserById(userId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil screenUtil = ScreenUtil(context);
-    if (!isEditedMode) {
-      editedUser.updateUserInfo(user);
+    if (userId.isEmpty) {
+      return NotAuthenticatedWidget();
     }
+    final userState = ref.watch(userProvider);
+    ScreenUtil screenUtil = ScreenUtil(context);
 
+    return userState.when(
+      loading: () => _loadingWidget(screenUtil),
+      error: (error, stackTrace) => _errorWidget(screenUtil, error, stackTrace),
+      data: (user) {
+        if (user == null) {
+          return NotAuthenticatedWidget();
+        }
+        return _profilePage(screenUtil, user);
+      },
+    );
+  }
+
+  _loadingWidget(ScreenUtil screenUtil) => Center(
+        child: CircularProgressIndicator(),
+      );
+
+  _errorWidget(ScreenUtil screenUtil, Object error, StackTrace stackTrace) {
+    if (error is FirebaseException && error.code == 'permission-denied') {
+      return NotAuthenticatedWidget();
+    }
+    return Container(
+      width: screenUtil.screenWidth,
+      height: screenUtil.screenHeight,
+      color: Colors.red,
+      alignment: AlignmentDirectional.center,
+      child: Text(error.toString()),
+    );
+  }
+
+  _profilePage(ScreenUtil screenUtil, UserInformation user) {
     return Scaffold(
       backgroundColor: transparent,
       appBar: const HomeScreenAppBar(),
@@ -45,15 +87,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         percentages: const [5, 20, 70, 5],
         children: [
           const SizedBox(),
-          _buildCircleAvatar(),
-          _profileDetails(screenUtil),
+          _buildCircleAvatar(user),
+          _profileDetails(screenUtil, user),
           const SizedBox(),
         ],
       ),
     );
   }
 
-  _profileDetails(ScreenUtil screenUtil) {
+  _profileDetails(ScreenUtil screenUtil, UserInformation user) {
     return LayoutBuilderChild(
       child: (minSize, maxSize) {
         double leftRightPadding = maxSize.width * 0.05;
@@ -88,15 +130,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (!isEditedMode) ...[
                 LayoutBuilderChild(child: (minSize, maxSize) {
                   return Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       LinkWinIcon(
-                        iconData: Icons.edit,
+                        iconData: FontAwesomeIcons.rightFromBracket,
                         iconSize: Size(maxSize.height, maxSize.height),
-                        iconSizeRatio: 0.7,
+                        iconSizeRatio: 0.5,
                         iconColor: kBlack,
                         splashColor: kSelectedTabColor,
-                        backgroundColor: Colors.amber,
+                        backgroundColor: kHeaderColor,
+                        onTap: () => ref.read(authProvider).signOut(),
+                      ),
+                      LinkWinIcon(
+                        iconData: FontAwesomeIcons.userPen,
+                        iconSize: Size(maxSize.height, maxSize.height),
+                        iconSizeRatio: 0.5,
+                        iconColor: kBlack,
+                        splashColor: kSelectedTabColor,
+                        backgroundColor: kHeaderColor,
                         onTap: () {
                           setState(() {
                             isEditedMode = true;
@@ -128,7 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }, validatePhoneNumber),
               const SizedBox(),
               if (isEditedMode) ...[
-                _actionsWidget(screenUtil),
+                _actionsWidget(screenUtil, user),
                 const SizedBox(),
               ]
             ],
@@ -148,7 +199,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               alignment: AlignmentDirectional.centerStart,
               child: LWTextFieldWidget(
                 label: label,
-                text: value,
+                hint: value,
                 icon: icon,
                 onChanged: onChanged,
                 validateValue: validateValue,
@@ -199,7 +250,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  _actionsWidget(ScreenUtil screenUtil) {
+  _actionsWidget(ScreenUtil screenUtil, UserInformation user) {
     return LayoutBuilderChild(
       child: (minSize, maxSize) {
         Size buttonSize = Size(maxSize.width * 0.3, maxSize.height);
@@ -257,32 +308,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  _buildCircleAvatar() {
+  _buildCircleAvatar(UserInformation user) {
     return LayoutBuilderChild(
       child: (minSize, maxSize) => Container(
         width: maxSize.width,
         height: maxSize.height,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: editedUser.imgUrl.isEmpty ? kRed : k1Gray,
+          color: user.imgUrl.isEmpty ? kRed : k1Gray,
           shape: BoxShape.circle,
         ),
         child: Stack(
           children: [
             Center(
-              child: editedUser.imgUrl.isNotEmpty
+              child: user.imgUrl.isNotEmpty
                   ? Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           image: NetworkImage(
-                              isEditedMode ? editedUser.imgUrl : user.imgUrl),
+                              isEditedMode ? user.imgUrl : user.imgUrl),
                           fit: BoxFit.contain,
                         ),
                       ),
                     )
                   : Text(
-                      createShortenedName(editedUser),
+                      createShortenedName(user),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 24,
