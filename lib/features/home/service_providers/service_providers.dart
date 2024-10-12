@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
+import 'package:link_win_mob_app/features/home/service_providers/widgets/service_provider_search_engine.dart';
 import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/features/auth/widget/not_authenticated_widget.dart';
@@ -192,7 +193,7 @@ class _ServiceProvidersState extends ConsumerState<ServiceProviders> {
               case 1:
                 return _bW();
               case 2:
-                return _cW();
+                return _widgetWrapper(ServiceProviderSearchEngine());
               case 3:
                 return _dW();
               default:
@@ -216,9 +217,15 @@ class _ServiceProvidersState extends ConsumerState<ServiceProviders> {
     );
   }
 
-  _cW() {
-    return Container(
-      color: kSelectedTabColor,
+  _widgetWrapper(Widget child) {
+    return LayoutChildBuilder(
+      child: (minSize, maxSize) {
+        double sidePad = maxSize.width * 0.05;
+        return Padding(
+          padding: EdgeInsets.only(left: sidePad, right: sidePad),
+          child: child,
+        );
+      },
     );
   }
 

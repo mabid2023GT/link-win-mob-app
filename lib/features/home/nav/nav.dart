@@ -31,7 +31,8 @@ class HomeNav extends StatelessWidget {
               Container(
                 height: halfSize.height,
                 width: halfSize.width,
-                color: kHeaderColor,
+                // color: kHeaderColor,
+                color: kWhite,
               ),
               Container(
                 height: halfSize.height,
