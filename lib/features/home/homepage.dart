@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/features/home/employment_hub/employment_hub.dart';
 import 'package:link_win_mob_app/features/home/main_screen/home_screen.dart';
 import 'package:link_win_mob_app/features/home/nav/nav.dart';
 import 'package:link_win_mob_app/features/home/nav/nav_floating_action_button.dart';
@@ -24,7 +23,9 @@ class _HomePageState extends ConsumerState<HomePage> {
   final _pages = [
     const HomeScreen(),
     const ServiceProviders(),
-    const EmploymentHub(),
+    Container(
+      color: kRed,
+    ),
     const ProfileScreen(),
   ];
 
@@ -48,7 +49,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         Size bottomNavBarSize = Size(maxSize.width, maxSize.height * 0.1);
         return Scaffold(

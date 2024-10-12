@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/errors/responsive_ui_error.dart';
 
-class LayoutBuilderChild extends StatelessWidget {
+class LayoutChildBuilder extends StatelessWidget {
   final Widget Function(Size minSize, Size maxSize) child;
-  const LayoutBuilderChild({super.key, required this.child});
+  const LayoutChildBuilder({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

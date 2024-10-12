@@ -66,7 +66,7 @@ class _LWTextFieldWidgetState extends State<LWTextFieldWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         double leftRightPad = maxSize.width * 0.05;
         return Container(

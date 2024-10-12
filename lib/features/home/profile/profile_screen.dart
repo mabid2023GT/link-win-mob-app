@@ -96,7 +96,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   _profileDetails(ScreenUtil screenUtil, UserInformation user) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         double leftRightPadding = maxSize.width * 0.05;
         double topBottomPadding = maxSize.height * 0.05;
@@ -128,7 +128,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ],
             children: [
               if (!isEditedMode) ...[
-                LayoutBuilderChild(child: (minSize, maxSize) {
+                LayoutChildBuilder(child: (minSize, maxSize) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -191,7 +191,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   _detailsWidgetLayout(IconData icon, String label, String value,
       ValueChanged<String> onChanged, String? Function(String)? validateValue) {
-    return LayoutBuilderChild(child: (minSize, maxSize) {
+    return LayoutChildBuilder(child: (minSize, maxSize) {
       return isEditedMode
           ? Container(
               width: maxSize.width,
@@ -251,7 +251,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   _actionsWidget(ScreenUtil screenUtil, UserInformation user) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         Size buttonSize = Size(maxSize.width * 0.3, maxSize.height);
         return Row(
@@ -309,7 +309,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   _buildCircleAvatar(UserInformation user) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) => Container(
         width: maxSize.width,
         height: maxSize.height,

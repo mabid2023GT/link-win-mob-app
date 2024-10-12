@@ -34,7 +34,7 @@ class FeedPost extends ConsumerWidget {
     ScreenUtil screenUtil = ScreenUtil(context);
     double bordeWidth = 2;
 
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) => Container(
         width: maxSize.width,
         height: maxSize.height,
@@ -69,7 +69,7 @@ class FeedPost extends ConsumerWidget {
     BuildContext context,
     FeedPostData? feedPostData,
   ) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         Size headerSize = Size(
           maxSize.width,

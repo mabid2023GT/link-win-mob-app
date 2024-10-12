@@ -62,7 +62,7 @@ class PostProfileDetails extends StatelessWidget {
   }
 
   _headerDetails(BuildContext context) {
-    return LayoutBuilderChild(child: (minSize, maxSize) {
+    return LayoutChildBuilder(child: (minSize, maxSize) {
       Size imageSize = Size(maxSize.width * 0.25, maxSize.height);
       double space = maxSize.width * 0.05;
       Size detailsSize =
@@ -125,7 +125,7 @@ class PostProfileDetails extends StatelessWidget {
   }
 
   _headerMoreVert(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) => LinkWinIcon(
         iconSize: Size(maxSize.height * 0.75, maxSize.height * 0.75),
         splashColor: kSelectedTabColor,
