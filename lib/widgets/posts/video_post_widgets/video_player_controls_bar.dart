@@ -27,7 +27,7 @@ class VideoPlayerControlsBar extends StatefulWidget {
 class _VideoPlayerControlsBarState extends State<VideoPlayerControlsBar> {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         Size sideSize = Size(maxSize.width * 0.2, maxSize.height);
         Size videoControllerSize =

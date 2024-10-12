@@ -12,7 +12,7 @@ class FeedBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final feed = ref.watch(feedProvider);
 
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         Size seperatorSize = Size(maxSize.width, maxSize.height * 0.03);
         return SizedBox(

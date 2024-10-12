@@ -18,7 +18,7 @@ class AutoResponsivePercentageLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) => ResponsivePercentageLayout(
         size: maxSize,
         screenUtil: screenUtil,

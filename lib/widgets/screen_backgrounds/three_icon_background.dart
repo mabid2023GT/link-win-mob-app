@@ -24,7 +24,7 @@ class ThreeIconBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: darkColor,
-      body: LayoutBuilderChild(
+      body: LayoutChildBuilder(
         child: (minSize, maxSize) {
           Size circularIconSize =
               Size(maxSize.width * 0.3, maxSize.height * 0.3);

@@ -136,7 +136,7 @@ class LWPopupLayout extends StatelessWidget {
   }
 
   _content() {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         double leftRightPad = maxSize.width * 0.05;
         double topBottomPad = maxSize.height * (child == null ? 0.15 : 0.05);

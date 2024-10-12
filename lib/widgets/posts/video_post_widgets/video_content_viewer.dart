@@ -120,7 +120,7 @@ class _VideoContentViewerState extends ConsumerState<VideoContentViewer> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         return Stack(
           children: [

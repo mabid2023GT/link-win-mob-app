@@ -65,7 +65,7 @@ class _FeedHeaderState extends ConsumerState<FeedHeader> {
   Widget build(BuildContext context) {
     final sponsoredAds = ref.watch(feedSponsoredAdsProvider);
 
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         double headerLeftRightPadding = maxSize.width * 0.02;
         double leftRightPadding = maxSize.width * 0.0;
@@ -131,7 +131,7 @@ class _FeedHeaderState extends ConsumerState<FeedHeader> {
   }
 
   Widget _buildSponsoredList(List<FeedSponsoredAdsData> sponsoredAds) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         double topBottomPadding = maxSize.height * 0.03;
         Size adSize =
@@ -189,7 +189,7 @@ class SponsoredTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     String sponsoredLabel = "Sponsored";
 
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         Size childSize = Size(maxSize.width * 0.2, maxSize.height);
         return Container(

@@ -18,7 +18,7 @@ class FeedPostBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(child: (minSize, maxSize) {
+    return LayoutChildBuilder(child: (minSize, maxSize) {
       BorderRadius contentBorderRadius = BorderRadius.only(
         topLeft: Radius.circular(
           maxSize.width * borderRadiusPercentage * 0.9,

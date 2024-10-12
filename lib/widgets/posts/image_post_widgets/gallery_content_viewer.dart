@@ -64,7 +64,7 @@ class _GalleryContentViewerState extends State<GalleryContentViewer> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         double bottomPos = maxSize.height * widget.bottomPosRatio;
         Size indicatorSize = Size(

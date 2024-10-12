@@ -67,7 +67,7 @@ class AuthScreen extends ConsumerWidget {
   }
 
   _background({required Widget child}) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         Size childSize = Size(maxSize.width * 0.9, maxSize.height * 0.9);
         return Container(

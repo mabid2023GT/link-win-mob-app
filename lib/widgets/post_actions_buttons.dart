@@ -28,7 +28,7 @@ class PostActionsButtons extends ConsumerWidget {
     final feedPostData =
         ref.watch(feedProvider.notifier).fetchPost(pageIndex, postId);
 
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         Size iconSize = Size(maxSize.width, maxSize.height * 0.15);
         return SizedBox(

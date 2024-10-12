@@ -34,7 +34,7 @@ class SyncFeedPostActionButton extends ConsumerWidget {
     final feedPostData =
         ref.watch(feedProvider.notifier).fetchPost(pageIndex, postId);
 
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) => LinkWinIcon(
         iconSize: maxSize,
         splashColor: activeColor.withOpacity(0.5),

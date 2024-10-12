@@ -113,7 +113,7 @@ class OnBoardingPage extends StatelessWidget {
   }
 
   _welcomToWidget(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) => Container(
         width: maxSize.width,
         height: maxSize.height,
@@ -131,7 +131,7 @@ class OnBoardingPage extends StatelessWidget {
   }
 
   _linkWinWidget(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) => Container(
         width: maxSize.width,
         height: maxSize.height,
@@ -149,7 +149,7 @@ class OnBoardingPage extends StatelessWidget {
   }
 
   _imageWidget(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         return SizedBox(
           width: maxSize.width,
@@ -166,7 +166,7 @@ class OnBoardingPage extends StatelessWidget {
   }
 
   _descriptionWidget(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) => Container(
         width: maxSize.width,
         height: maxSize.height,
@@ -198,7 +198,7 @@ class PageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(
@@ -246,7 +246,7 @@ class NextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) => Stack(
         children: [
           Positioned(

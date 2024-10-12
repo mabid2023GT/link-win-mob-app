@@ -49,7 +49,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         Size bottomNavBarSize = Size(maxSize.width, maxSize.height * 0.1);
         return Scaffold(

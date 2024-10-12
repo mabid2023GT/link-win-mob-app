@@ -28,7 +28,7 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         double iconSize = maxSize.height * 0.55;
         return actionLabel != null

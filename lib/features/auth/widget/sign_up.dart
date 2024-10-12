@@ -40,7 +40,7 @@ class _SignUpState extends ConsumerState<SignUp> {
 
     return Scaffold(
       backgroundColor: transparent,
-      body: LayoutBuilderChild(
+      body: LayoutChildBuilder(
         child: (minSize, maxSize) {
           return SingleChildScrollView(
             physics: BouncingScrollPhysics(),

@@ -85,7 +85,7 @@ class SingleVideoPostState extends ConsumerState<SingleVideoPost> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         return Scaffold(
           backgroundColor: kBlack,

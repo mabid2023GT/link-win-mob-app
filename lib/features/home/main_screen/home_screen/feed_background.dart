@@ -13,7 +13,7 @@ class FeedBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilderChild(
+    return LayoutChildBuilder(
       child: (minSize, maxSize) {
         double shapeWidth = maxSize.width * 1.77;
         double shapeHeight = maxSize.height * 1.4;
