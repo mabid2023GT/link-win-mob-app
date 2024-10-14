@@ -1,6 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:link_win_mob_app/core/models/service_providers/service_providers_search_model.dart';
 
+final currentQueryIndexProvider = StateProvider<int>(
+  (ref) => 0,
+);
+
 final serviceProvidersSearchQueryProvider = StateNotifierProvider<
     ServiceProvidersSearchQueryNotifier, ServiceProvidersSearchQuery>(
   (ref) => ServiceProvidersSearchQueryNotifier(),
