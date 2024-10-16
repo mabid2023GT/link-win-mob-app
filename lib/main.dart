@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +11,19 @@ import 'package:link_win_mob_app/features/auth/auth_screen.dart';
 import 'package:link_win_mob_app/features/home/homepage.dart';
 import 'package:link_win_mob_app/features/on_boarding/on_boarding_screen.dart';
 import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
+import 'package:rive/rive.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await _initFirebase();
+
+  /// Initialize Rive's text, audio, and layout engines.
+  /// This will automatically be called the first time a RiveFile is loaded if
+  /// it has not been initialized. And does not need to be called.
+  ///
+  /// However, calling it early here makes the first
+  /// visible Rive graphic load faster.
+  unawaited(RiveFile.initialize());
   runApp(
     const ProviderScope(
       child: MyApp(),

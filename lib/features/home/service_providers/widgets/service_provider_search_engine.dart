@@ -48,18 +48,13 @@ class ServiceProviderSearchEngine extends ConsumerWidget {
     return LayoutChildBuilder(
       child: (minSize, maxSize) {
         Size queriesBoxSize = Size(maxSize.width, maxSize.height);
-        Size querySize = Size(maxSize.width, maxSize.height * 0.15);
 
         return ValueListenableBuilder(
           valueListenable: _isActionsWidgetVisibleNotifier,
           builder: (context, isActionsWidgetVisible, child) {
-            return SizedBox(
-              width: queriesBoxSize.width,
-              height: queriesBoxSize.height,
-              child: ServiceProviderSearchQueryBox(
-                queries: searchQuery.queryCriteriaMap,
-                queryWidgetSize: querySize,
-              ),
+            return ServiceProviderSearchQueryBox(
+              queries: searchQuery.queryCriteriaMap,
+              size: queriesBoxSize,
             );
           },
         );

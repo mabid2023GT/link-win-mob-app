@@ -1,15 +1,16 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
-import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
+import 'package:rive/rive.dart';
 
 class ServiceProviderSearchQueryBox extends StatefulWidget {
   final Map<String, List<String>> queries;
-  final Size queryWidgetSize;
+  final Size size;
   const ServiceProviderSearchQueryBox({
     super.key,
     required this.queries,
-    required this.queryWidgetSize,
+    required this.size,
   });
 
   @override
@@ -19,95 +20,197 @@ class ServiceProviderSearchQueryBox extends StatefulWidget {
 
 class _ServiceProviderSearchQueryBoxState
     extends State<ServiceProviderSearchQueryBox> {
-  bool _isOptionsWidgetVisible = true;
+  //
+  final AudioPlayer _typingSoundEffectPlayer = AudioPlayer();
+  //
+  bool _isOptionsWidgetVisible = false;
+  bool _isChatbotTyping = false;
+  // queries data
   List<String> _queries = [];
   final List<Widget> _queriesWidgets = [];
   int _currentQueryIndex = 0;
+  // declare size attributs
+  late Size _queryWidgetSize;
+  late Size _optionsWidgetSize;
+  // scroll controller
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    // initialize size attributes
+    _queryWidgetSize = Size(widget.size.width, widget.size.height * 0.15);
+    _optionsWidgetSize = Size(widget.size.width, widget.size.height * 0.3);
     // store the queries as list to fetch it by index
     _queries = widget.queries.keys.toList();
     // Add the first question initially
     _addNextQuery();
+    // You can call the scrollToBottom method initially or after a delay if needed.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+  }
+
+  @override
+  void didUpdateWidget(ServiceProviderSearchQueryBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Scroll to the bottom after every update.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   _addNextQuery() {
-    if (_currentQueryIndex < widget.queries.length) {
+    if (_currentQueryIndex < _queries.length) {
       String query = _queries[_currentQueryIndex];
       // add new query widget to the list
       _queriesWidgets.add(
         _queryWidget(
-          widget.queryWidgetSize,
           query,
           true,
         ),
       );
       _queriesWidgets.add(
         SizedBox(
-          height: widget.queryWidgetSize.height * 0.1,
+          height: widget.size.height * 0.05,
         ),
       );
+      // Trigger a UI rebuild with the new question added
+      setState(() {
+        // hide the typing widget
+        _isChatbotTyping = false;
+        // Make the options widget visible
+        _isOptionsWidgetVisible = true;
+        // Scroll to the bottom after every update.
+        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+      });
+    }
+  }
+
+  _addSelectedOption(String selectedOption) async {
+    if (_currentQueryIndex < _queries.length) {
       _queriesWidgets.add(
         _queryWidget(
-          widget.queryWidgetSize,
-          'Im fine thanks',
+          selectedOption,
           false,
         ),
       );
       _queriesWidgets.add(
         SizedBox(
-          height: widget.queryWidgetSize.height * 0.4,
+          height: widget.size.height * 0.1,
         ),
       );
       // Trigger a UI rebuild with the new question added
-      setState(() {});
+      setState(() {
+        // hide the options widget
+        _isOptionsWidgetVisible = false;
+        // Increment to show the next question
+        _currentQueryIndex++;
+        // display the typing widget
+        _isChatbotTyping = true;
+        // Scroll to the bottom after every update.
+        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+      });
+      if (_currentQueryIndex < _queries.length) {
+        // Play typing sound
+        await _typingSoundEffectPlayer.setVolume(1.0);
+        await _typingSoundEffectPlayer
+            .play(AssetSource('sounds/typing_sound_effect.mp3'));
+        // Add a delay of 2 to 3 seconds before calling _addNextQuery
+        Future.delayed(const Duration(seconds: 2), () async {
+          await _typingSoundEffectPlayer.stop();
+          // add next query
+          _addNextQuery();
+        });
+      }
     }
-  }
-
-  void _handleOptionSelected() {
-    // Increment to show the next question
-    _currentQueryIndex++;
-    // Add the next question (if any)
-    _addNextQuery();
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutChildBuilder(
-      child: (minSize, maxSize) {
-        return Stack(
-          children: [
-            Positioned(
-              left: 0,
-              right: 0,
-              child: SizedBox(
-                width: maxSize.width,
-                height: maxSize.height,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: _queriesWidgets,
-                  ),
-                ),
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          child: SizedBox(
+            width: widget.size.width,
+            height: widget.size.height,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  ..._queriesWidgets, // Add space at the bottom when the options widget is visible to ensure the last query is clearly displayed
+                  _chatbotTypingWidget(),
+                  _bottomspaceWidget(),
+                ],
               ),
             ),
-            Visibility(
-              visible: _isOptionsWidgetVisible,
-              child: _optionsWidget(maxSize),
-            ),
-          ],
-        );
-      },
+          ),
+        ),
+        Visibility(
+          visible: _isOptionsWidgetVisible,
+          child: _optionsWidget(),
+        ),
+        Visibility(
+          visible: _currentQueryIndex >= _queries.length,
+          child: _searchWidget(),
+        ),
+      ],
     );
   }
 
-  _queryWidget(Size size, String value, bool isQuery) {
-    Size iconSize = Size(size.width * 0.15, size.height);
-    double prefixSpaceSize = isQuery ? 0 : size.width * 0.15;
-    double spaceSize = size.width * 0.05;
+  _bottomspaceWidget() {
+    return Visibility(
+      visible:
+          _isOptionsWidgetVisible || (_currentQueryIndex >= _queries.length),
+      child: SizedBox(
+        height: _optionsWidgetSize.height *
+            ((_currentQueryIndex >= _queries.length) ? 0.5 : 1),
+      ),
+    );
+  }
+
+  _chatbotTypingWidget() {
+    return Visibility(
+      visible: _isChatbotTyping && (_currentQueryIndex < _queries.length),
+      child: Container(
+        width: _queryWidgetSize.width,
+        height: _queryWidgetSize.height,
+        color: transparent,
+        alignment: AlignmentDirectional.centerStart,
+        child: SizedBox(
+          width: _queryWidgetSize.width * 0.3,
+          height: _queryWidgetSize.height,
+          child: RiveAnimation.asset(
+            'assets/riv/typing_effect.riv',
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
+    );
+  }
+
+  _queryWidget(String value, bool isQuery) {
+    Size iconSize =
+        Size(_queryWidgetSize.width * 0.15, _queryWidgetSize.height);
+    double prefixSpaceSize = isQuery ? 0 : _queryWidgetSize.width * 0.15;
+    double spaceSize = _queryWidgetSize.width * 0.05;
     Size labelSize = Size(
-        size.width - iconSize.width - spaceSize - prefixSpaceSize, size.height);
+        _queryWidgetSize.width - iconSize.width - spaceSize - prefixSpaceSize,
+        _queryWidgetSize.height);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -143,18 +246,147 @@ class _ServiceProviderSearchQueryBoxState
     );
   }
 
-  _optionsWidget(Size size) {
+  _searchWidget() {
+    Size size =
+        Size(_optionsWidgetSize.width * 0.6, _optionsWidgetSize.height * 0.6);
+    double sidePos = (_optionsWidgetSize.width - size.width) * 0.5;
+    return Positioned(
+      bottom: 0,
+      left: sidePos,
+      right: sidePos,
+      child: Material(
+        color: transparent,
+        child: InkWell(
+          onTap: () {},
+          splashColor: kWhite,
+          child: Container(
+            width: size.width,
+            height: size.height,
+            decoration: BoxDecoration(
+              color: kSelectedTabColor,
+              borderRadius: BorderRadius.circular(size.width * 0.1),
+              border: Border.all(color: kBlack, width: 2),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: size.width * 0.2,
+                  height: size.height,
+                  child: Icon(
+                    FontAwesomeIcons.searchengin,
+                    size: size.height * 0.5,
+                  ),
+                ),
+                Container(
+                  width: size.width * 0.5,
+                  height: size.height,
+                  alignment: AlignmentDirectional.center,
+                  child: Text(
+                    'Search',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Lato'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _optionsWidget() {
+    if (_currentQueryIndex >= _queries.length) {
+      return SizedBox();
+    }
+    // Fetch options
+    String currentQuery = _queries[_currentQueryIndex];
+    List<String> optionsList = widget.queries[currentQuery] ?? [];
+    // Declare sizes and dimensions
+    double sidePad = _optionsWidgetSize.width * 0.05;
+    double topBottomPad = _optionsWidgetSize.height * 0.05;
+    Size childSize = Size(_optionsWidgetSize.width - 2 * sidePad,
+        _optionsWidgetSize.height - 2 * topBottomPad);
+
     return Positioned(
       bottom: 0,
       left: 0,
       right: 0,
-      child: InkWell(
-        onTap: _handleOptionSelected,
-        child: Container(
-          width: size.width * 0.9,
-          height: size.height * 0.3,
-          color: k1Gray.withOpacity(0.4),
-          child: Text('Next'),
+      child: Container(
+        width: _optionsWidgetSize.width,
+        height: _optionsWidgetSize.height,
+        padding: EdgeInsets.only(
+          left: sidePad,
+          right: sidePad,
+          top: topBottomPad,
+          bottom: topBottomPad,
+        ),
+        decoration: BoxDecoration(
+            color: kWhite.withOpacity(0.4),
+            borderRadius:
+                BorderRadius.circular(_optionsWidgetSize.width * 0.1)),
+        child: optionsList.length <= 2
+            ? _twoOrFewerOptionsWidget(optionsList, childSize)
+            : _optionsAsListView(optionsList, childSize),
+      ),
+    );
+  }
+
+  _optionsAsListView(List<String> optionsList, Size size) {
+    return ListView.separated(
+      itemCount: optionsList.length,
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index) {
+        String option = optionsList[index];
+        return _optionBox(
+          option,
+          size,
+        );
+      },
+      separatorBuilder: (context, index) {
+        return SizedBox(
+          width: size.width * 0.05,
+        );
+      },
+    );
+  }
+
+  _twoOrFewerOptionsWidget(List<String> optionsList, Size size) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: optionsList
+          .map(
+            (option) => _optionBox(
+              option,
+              size,
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  Widget _optionBox(String option, Size size) {
+    return InkWell(
+      onTap: () => _addSelectedOption(option),
+      child: Container(
+        width: size.width * 0.4,
+        height: size.height * 0.8,
+        decoration: BoxDecoration(
+          color: kHeaderColor.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(size.width * 0.1),
+        ),
+        alignment: AlignmentDirectional.center,
+        child: Text(
+          option,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Lato',
+          ),
         ),
       ),
     );
