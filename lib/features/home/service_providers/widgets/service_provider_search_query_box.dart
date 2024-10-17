@@ -325,9 +325,10 @@ class _ServiceProviderSearchQueryBoxState
           bottom: topBottomPad,
         ),
         decoration: BoxDecoration(
-            color: kWhite.withOpacity(0.4),
-            borderRadius:
-                BorderRadius.circular(_optionsWidgetSize.width * 0.1)),
+          color: kWhite.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(_optionsWidgetSize.width * 0.1),
+          border: Border.all(color: kBlack, width: 1),
+        ),
         child: optionsList.length <= 2
             ? _twoOrFewerOptionsWidget(optionsList, childSize)
             : _optionsAsListView(optionsList, childSize),
@@ -377,6 +378,7 @@ class _ServiceProviderSearchQueryBoxState
         decoration: BoxDecoration(
           color: kHeaderColor.withOpacity(0.5),
           borderRadius: BorderRadius.circular(size.width * 0.1),
+          border: Border.all(color: kBlack, width: 1),
         ),
         alignment: AlignmentDirectional.center,
         child: Text(

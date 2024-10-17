@@ -4,6 +4,7 @@ import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/features/home/service_providers/widgets/service_provider_appointment_overview.dart';
 import 'package:link_win_mob_app/features/home/service_providers/widgets/service_provider_search_engine.dart';
+import 'package:link_win_mob_app/features/home/service_providers/widgets/service_provider_virtual_assistance_overview.dart';
 import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/auto_responsive_percentage_layout.dart';
 import 'package:link_win_mob_app/features/auth/widget/not_authenticated_widget.dart';
@@ -189,16 +190,15 @@ class _ServiceProvidersState extends ConsumerState<ServiceProviders> {
           valueListenable: _tappedIconNotifier,
           builder: (context, value, child) {
             switch (value) {
-              case 0:
-                return _aW();
               case 1:
                 return _widgetWrapper(ServiceProviderAppointmentOverview());
               case 2:
                 return _widgetWrapper(ServiceProviderSearchEngine());
               case 3:
-                return _dW();
+                return _widgetWrapper(_dW());
               default:
-                return _aW();
+                return _widgetWrapper(
+                    ServiceProviderVirtualAssistanceOverview());
             }
           },
         );
@@ -206,21 +206,31 @@ class _ServiceProvidersState extends ConsumerState<ServiceProviders> {
     );
   }
 
-  _aW() {
-    return Container(
-      width: 500,
-      height: 300,
-      color: Colors.yellow,
-    );
-  }
-
   _widgetWrapper(Widget child) {
     return LayoutChildBuilder(
       child: (minSize, maxSize) {
-        double sidePad = maxSize.width * 0.05;
+        double sidePad = maxSize.width * 0.03;
+        double bottomPad = maxSize.height * 0.08;
+        double topPad = maxSize.height * 0.025;
+        Size size = Size(
+            maxSize.width - 2 * sidePad, maxSize.height - bottomPad - topPad);
         return Padding(
-          padding: EdgeInsets.only(left: sidePad, right: sidePad),
-          child: child,
+          padding: EdgeInsets.only(
+            left: sidePad,
+            right: sidePad,
+            top: topPad,
+            bottom: bottomPad,
+          ),
+          child: Container(
+            width: size.width,
+            height: size.height,
+            decoration: BoxDecoration(
+              color: kHeaderColor,
+              borderRadius: BorderRadius.circular(size.width * 0.05),
+              border: Border.all(color: kBlack, width: 1),
+            ),
+            child: child,
+          ),
         );
       },
     );
@@ -228,8 +238,6 @@ class _ServiceProvidersState extends ConsumerState<ServiceProviders> {
 
   _dW() {
     return Container(
-      width: 500,
-      height: 300,
       color: kRed,
     );
   }

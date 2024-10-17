@@ -14,4 +14,22 @@ class ServiceProvidersAppointmentModel {
     required this.isCompleted,
     required this.rating,
   });
+
+  ServiceProvidersAppointmentModel copyWith({
+    String? providerName,
+    String? category,
+    String? date,
+    String? time,
+    bool? isCompleted,
+    int? rating,
+  }) {
+    return ServiceProvidersAppointmentModel(
+      providerName: providerName ?? this.providerName,
+      category: category ?? this.category,
+      date: date ?? this.date,
+      time: time ?? this.time,
+      isCompleted: isCompleted ?? this.isCompleted,
+      rating: rating ?? this.rating,
+    );
+  }
 }

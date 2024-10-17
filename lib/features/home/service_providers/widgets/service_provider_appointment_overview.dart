@@ -1,105 +1,82 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/models/service_providers/service_providers_appointment_model.dart';
+import 'package:link_win_mob_app/providers/service_providers/service_providers_search_appointments_notifier.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
 
-class ServiceProviderAppointmentOverview extends StatefulWidget {
+class ServiceProviderAppointmentOverview extends ConsumerStatefulWidget {
   const ServiceProviderAppointmentOverview({super.key});
 
   @override
-  State<ServiceProviderAppointmentOverview> createState() =>
+  ConsumerState<ServiceProviderAppointmentOverview> createState() =>
       _ServiceProviderAppointmentOverviewState();
 }
 
 class _ServiceProviderAppointmentOverviewState
-    extends State<ServiceProviderAppointmentOverview> {
-  final List<ServiceProvidersAppointmentModel> _listOfAppointments = [
-    ServiceProvidersAppointmentModel(
-      providerName: 'Ali Krabo',
-      category: 'Plumbing',
-      date: '18/10/2024',
-      time: '14:00',
-      isCompleted: false,
-      rating: 0,
-    ),
-    ServiceProvidersAppointmentModel(
-      providerName: 'Hado Krum',
-      category: 'House Cleaning',
-      date: '28/10/2024',
-      time: '10:00',
-      isCompleted: true,
-      rating: 0,
-    ),
-    ServiceProvidersAppointmentModel(
-      providerName: 'David Krite',
-      category: 'Electrical Work',
-      date: '22/10/2024',
-      time: '12:30',
-      isCompleted: false,
-      rating: 0,
-    ),
-  ];
-
+    extends ConsumerState<ServiceProviderAppointmentOverview> {
   @override
   Widget build(BuildContext context) {
+    List<ServiceProvidersAppointmentModel> listOfAppointments =
+        ref.watch(serviceProvidersSearchAppointmentsProvider);
+
     return LayoutChildBuilder(
       child: (minSize, maxSize) {
-        double bottomPad = maxSize.height * 0.1;
-        double topPad = maxSize.height * 0.025;
         Size titleSize = Size(maxSize.width * 0.9, maxSize.height * 0.1);
         Size numOfAppointmentsSize =
             Size(maxSize.width * 0.9, maxSize.height * 0.075);
         Size appointmentWidgetSize =
             Size(maxSize.width * 0.9, maxSize.height * 0.4);
 
-        return Padding(
-          padding: EdgeInsets.only(top: topPad, bottom: bottomPad),
-          child: Container(
-            width: maxSize.width,
-            height: maxSize.height,
-            decoration: BoxDecoration(
-              color: kHeaderColor,
-              borderRadius: BorderRadius.circular(maxSize.width * 0.05),
-              border: Border.all(color: kBlack, width: 1),
-            ),
-            child: SingleChildScrollView(
-              child: _body(
-                  titleSize, numOfAppointmentsSize, appointmentWidgetSize),
-            ),
-          ),
+        return SingleChildScrollView(
+          child: _body(titleSize, numOfAppointmentsSize, appointmentWidgetSize,
+              listOfAppointments),
         );
       },
     );
   }
 
   _body(
-      Size titleSize, Size numOfAppointmentsSize, Size appointmentWidgetSize) {
+    Size titleSize,
+    Size numOfAppointmentsSize,
+    Size appointmentWidgetSize,
+    List<ServiceProvidersAppointmentModel> listOfAppointments,
+  ) {
     return Column(
       children: [
         _title(titleSize),
-        _numOfAppointments(numOfAppointmentsSize),
-        ..._listOfAppointments.map(
-          (appointment) => Column(
-            children: [
-              _appointmentWidget(appointment, appointmentWidgetSize),
-              SizedBox(
-                height: appointmentWidgetSize.height * 0.1,
-              ),
-            ],
-          ),
+        _numOfAppointments(numOfAppointmentsSize, listOfAppointments),
+        ...listOfAppointments.asMap().entries.map(
+          (entry) {
+            // Get the index
+            final index = entry.key;
+            // Get the appointment
+            final appointment = entry.value;
+            return Column(
+              children: [
+                _appointmentWidget(appointment, appointmentWidgetSize, index),
+                SizedBox(
+                  height: appointmentWidgetSize.height * 0.1,
+                ),
+              ],
+            );
+          },
         ),
       ],
     );
   }
 
-  _numOfAppointments(Size numOfAppointmentsSize) {
+  _numOfAppointments(
+    Size numOfAppointmentsSize,
+    List<ServiceProvidersAppointmentModel> listOfAppointments,
+  ) {
     return Container(
       width: numOfAppointmentsSize.width,
       height: numOfAppointmentsSize.height,
       alignment: AlignmentDirectional.centerEnd,
       child: Text(
-        '25 Appointments',
+        '${listOfAppointments.length} Appointments',
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w600,
@@ -128,6 +105,7 @@ class _ServiceProviderAppointmentOverviewState
   _appointmentWidget(
     ServiceProvidersAppointmentModel appointment,
     Size appointmentWidgetSize,
+    int index,
   ) {
     double sidePad = appointmentWidgetSize.width * 0.05;
     double topBottomPad = appointmentWidgetSize.height * 0.05;
@@ -163,7 +141,7 @@ class _ServiceProviderAppointmentOverviewState
           ),
           appointment.isCompleted
               ? _ratingWidget(ratingSize)
-              : _actionsWidget(actionsSize),
+              : _actionsWidget(actionsSize, index),
         ],
       ),
     );
@@ -277,7 +255,7 @@ class _ServiceProviderAppointmentOverviewState
     );
   }
 
-  _actionsWidget(Size size) {
+  _actionsWidget(Size size, int index) {
     Size buttonSize = Size(size.width * 0.45, size.height);
     return SizedBox(
       width: size.width,
@@ -289,7 +267,9 @@ class _ServiceProviderAppointmentOverviewState
               (val) => Material(
                 color: transparent,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () => ref
+                      .read(serviceProvidersSearchAppointmentsProvider.notifier)
+                      .updateIsCompletedStatus(index, true),
                   splashColor: kHeaderColor,
                   child: Container(
                     width: buttonSize.width,
