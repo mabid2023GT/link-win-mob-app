@@ -53,9 +53,10 @@ class CoverPhotoContainer extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: childBackgroundWrapper,
                         borderRadius: BorderRadius.circular(
-                            maxSize.width * borderRadiusRatio),
+                            maxSize.width * borderRadiusRatio * 0.9),
                       ),
-                      child: child),
+                      child: child,
+                    ),
             );
           },
         );
