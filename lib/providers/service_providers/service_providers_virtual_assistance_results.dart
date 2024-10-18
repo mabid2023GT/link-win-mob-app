@@ -12,6 +12,20 @@ class ServiceProvidersVirtualAssistanceResultsNotifier
     extends StateNotifier<Map<String, ServiceProvidersVirtualAssistanceQuery>> {
   ServiceProvidersVirtualAssistanceResultsNotifier()
       : super(_initialServiceProvidersVirtualAssistanceResultsData());
+
+  Future<void> stopQuery(String queryId) async {
+    // Get the query from the state using the queryId
+    final query = state[queryId];
+    if (query != null && query.isQueryActive) {
+      // Update the query to mark it as inactive
+      final updatedQuery = query.copyWith(isQueryActive: false);
+      // Update the state with the modified query
+      state = {
+        ...state,
+        queryId: updatedQuery,
+      };
+    }
+  }
 }
 
 Map<String, ServiceProvidersVirtualAssistanceQuery>
@@ -24,6 +38,7 @@ Map<String, ServiceProvidersVirtualAssistanceQuery>
       budget: '100\$ - 250\$',
       showRatingsAndReviews: true,
       location: 'Haifa District',
+      isQueryActive: false,
       queryResult: [
         ServiceProvidersModel(
           displayName: 'Top Plumber',
@@ -51,6 +66,7 @@ Map<String, ServiceProvidersVirtualAssistanceQuery>
       budget: '300\$ - 500\$',
       showRatingsAndReviews: true,
       location: 'Tel-Aviv',
+      isQueryActive: false,
       queryResult: [
         ServiceProvidersModel(
           displayName: 'Electrico',
@@ -74,6 +90,7 @@ Map<String, ServiceProvidersVirtualAssistanceQuery>
       showRatingsAndReviews: false,
       location: 'Accre District',
       queryResult: [],
+      isQueryActive: true,
     ),
     'query9t5': ServiceProvidersVirtualAssistanceQuery(
       queryId: 'query9t5',
@@ -82,6 +99,7 @@ Map<String, ServiceProvidersVirtualAssistanceQuery>
       budget: '300\$ +',
       showRatingsAndReviews: true,
       location: 'Nabuls',
+      isQueryActive: true,
       queryResult: [
         ServiceProvidersModel(
           displayName: 'Wadoly Brand',

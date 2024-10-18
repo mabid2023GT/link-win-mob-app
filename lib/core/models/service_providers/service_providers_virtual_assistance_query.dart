@@ -28,6 +28,10 @@ class ServiceProvidersVirtualAssistanceQuery {
   /// The list of service providers returned by the query.
   final List<ServiceProvidersModel> queryResult;
 
+  /// If `true`, the query is currently active.
+  /// If `false`, the query is inactive or completed.
+  final bool isQueryActive;
+
   /// Creates a [ServiceProvidersVirtualAssistanceQuery] with the given parameters.
   ///
   /// * [queryId] - The unique identifier for the query (required).
@@ -37,6 +41,7 @@ class ServiceProvidersVirtualAssistanceQuery {
   /// * [showRatingsAndReviews] - Whether to include ratings and reviews (required).
   /// * [location] - The location where the service is required (required).
   /// * [queryResult] - The list of service providers returned by the query (required).
+  /// * [isQueryActive] - Whether the query is currently active or not (required).
   ServiceProvidersVirtualAssistanceQuery({
     required this.queryId,
     required this.category,
@@ -45,6 +50,7 @@ class ServiceProvidersVirtualAssistanceQuery {
     required this.showRatingsAndReviews,
     required this.location,
     required this.queryResult,
+    required this.isQueryActive,
   });
 
   /// Returns a new instance of [ServiceProvidersVirtualAssistanceQuery] with the
@@ -57,6 +63,7 @@ class ServiceProvidersVirtualAssistanceQuery {
   /// * [showRatingsAndReviews] - The new value for showing ratings and reviews (optional).
   /// * [location] - The new location (optional).
   /// * [queryResult] - The updated list of service providers (optional).
+  /// * [isQueryActive] - The new active state of the query (optional).
   ServiceProvidersVirtualAssistanceQuery copyWith({
     String? queryId,
     String? category,
@@ -65,6 +72,7 @@ class ServiceProvidersVirtualAssistanceQuery {
     bool? showRatingsAndReviews,
     String? location,
     List<ServiceProvidersModel>? queryResult,
+    bool? isQueryActive,
   }) {
     return ServiceProvidersVirtualAssistanceQuery(
       category: category ?? this.category,
@@ -75,6 +83,7 @@ class ServiceProvidersVirtualAssistanceQuery {
       location: location ?? this.location,
       queryResult: queryResult ?? this.queryResult,
       queryId: queryId ?? this.queryId,
+      isQueryActive: isQueryActive ?? this.isQueryActive,
     );
   }
 }
