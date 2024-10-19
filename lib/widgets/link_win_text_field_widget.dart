@@ -16,6 +16,7 @@ class LWTextFieldWidget extends StatefulWidget {
   final double borderRadiusRatio;
   final double iconSizeRatio;
   final bool obscureText;
+  final double? errorFontSize;
 
   const LWTextFieldWidget({
     super.key,
@@ -30,6 +31,7 @@ class LWTextFieldWidget extends StatefulWidget {
     this.borderRadiusRatio = 0.05,
     this.iconSizeRatio = 0.3,
     this.obscureText = false,
+    this.errorFontSize,
   });
 
   @override
@@ -129,6 +131,12 @@ class _LWTextFieldWidgetState extends State<LWTextFieldWidget> {
         borderSide: BorderSide(color: kBlack, width: 1),
       ),
       errorText: _errorText,
+      errorStyle: widget.errorFontSize != null
+          ? TextStyle(
+              fontSize: widget.errorFontSize,
+              fontFamily: 'Lato',
+            )
+          : null,
     );
   }
 

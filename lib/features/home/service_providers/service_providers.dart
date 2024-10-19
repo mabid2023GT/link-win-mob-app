@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/utils/screen_util.dart';
 import 'package:link_win_mob_app/features/home/service_providers/widgets/service_provider_appointment_overview.dart';
+import 'package:link_win_mob_app/features/home/service_providers/widgets/service_provider_profile.dart';
 import 'package:link_win_mob_app/features/home/service_providers/widgets/service_provider_search_engine.dart';
 import 'package:link_win_mob_app/features/home/service_providers/widgets/service_provider_virtual_assistance_overview.dart';
 import 'package:link_win_mob_app/providers/auth/auth_provider.dart';
@@ -33,7 +34,16 @@ class _ServiceProvidersState extends ConsumerState<ServiceProviders> {
       return NotAuthenticatedWidget();
     } else {
       ScreenUtil screenUtil = ScreenUtil(context);
-      return _serviceProvider(screenUtil);
+      return Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+          child: SizedBox(
+            width: screenUtil.screenWidth,
+            height: screenUtil.screenHeight,
+            child: _serviceProvider(screenUtil),
+          ),
+        ),
+      );
     }
   }
 
@@ -195,7 +205,7 @@ class _ServiceProvidersState extends ConsumerState<ServiceProviders> {
               case 2:
                 return _widgetWrapper(ServiceProviderSearchEngine());
               case 3:
-                return _widgetWrapper(_dW());
+                return _widgetWrapper(ServiceProviderProfile());
               default:
                 return _widgetWrapper(
                     ServiceProviderVirtualAssistanceOverview());
@@ -233,12 +243,6 @@ class _ServiceProvidersState extends ConsumerState<ServiceProviders> {
           ),
         );
       },
-    );
-  }
-
-  _dW() {
-    return Container(
-      color: kRed,
     );
   }
 }
