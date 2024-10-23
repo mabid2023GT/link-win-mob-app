@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:link_win_mob_app/core/config/colors.dart';
 import 'package:link_win_mob_app/core/models/service_providers/service_providers_model.dart';
+import 'package:link_win_mob_app/core/models/service_providers/service_providers_work_time_entity.dart';
 import 'package:link_win_mob_app/core/utils/enums/days_of_week_enum.dart';
 import 'package:link_win_mob_app/providers/service_providers/service_provider_account_notifier.dart';
 import 'package:link_win_mob_app/responsive_ui_tools/widgets/layout_builder_child.dart';
+import 'package:link_win_mob_app/widgets/buttons/link_win_button.dart';
 import 'package:link_win_mob_app/widgets/link_win_icon.dart';
 import 'package:link_win_mob_app/widgets/link_win_text_field_widget.dart';
+import 'package:link_win_mob_app/widgets/popups/modal_bottom_sheet.dart';
 
 class ServiceProviderProfile extends ConsumerStatefulWidget {
   const ServiceProviderProfile({super.key});
@@ -38,6 +41,8 @@ class _ServiceProviderProfileState
             Size(coverPhotoBoxSize.width, maxSize.height * 0.15);
         Size workTimeBoxSize =
             Size(coverPhotoBoxSize.width, maxSize.height * 0.9);
+        Size saveButtonSize =
+            Size(coverPhotoBoxSize.width * 0.5, maxSize.height * 0.125);
         double space = maxSize.height * 0.025;
         return SingleChildScrollView(
           child: Column(
@@ -51,6 +56,12 @@ class _ServiceProviderProfileState
               _space(space),
               _workTimeBox(workTimeBoxSize, myAccount),
               _space(space),
+              SizedBox(
+                width: saveButtonSize.width,
+                height: saveButtonSize.height,
+                child: LWButton(label: 'Save', onTap: _onSaveButtonTapped),
+              ),
+              _space(maxSize.height * 0.2),
             ],
           ),
         );
@@ -142,9 +153,7 @@ class _ServiceProviderProfileState
     );
   }
 
-  _displayNameEditIconTapped() {
-    _displayNameModeNotifier.value = true;
-  }
+  _displayNameEditIconTapped() => _displayNameModeNotifier.value = true;
 
   _displayNameSaveIconTapped() async {
     // close / hide the keyboard
@@ -168,7 +177,10 @@ class _ServiceProviderProfileState
     Size photoSize = Size(size.width, size.height * 0.7);
     Size buttonBoxSize = Size(size.width, size.height - photoSize.height);
     Size buttonSize =
-        Size(buttonBoxSize.width * 0.75, buttonBoxSize.height * 0.85);
+        Size(buttonBoxSize.width * 0.75, buttonBoxSize.height * 0.75);
+    double sidePad = (buttonBoxSize.width - buttonSize.width) * 0.5;
+    double topBottomPad = (buttonBoxSize.height - buttonSize.height) * 0.5;
+
     return SizedBox(
       width: size.width,
       height: size.height,
@@ -179,10 +191,20 @@ class _ServiceProviderProfileState
             height: photoSize.height,
             child: _coverPhoto(photoSize, myAccount),
           ),
-          SizedBox(
+          Container(
             width: buttonBoxSize.width,
             height: buttonBoxSize.height,
-            child: _updateCoverPhoto(buttonSize),
+            padding: EdgeInsets.only(
+              left: sidePad,
+              right: sidePad,
+              top: topBottomPad,
+              bottom: topBottomPad,
+            ),
+            child: LWButton(
+              label: 'Choose Image',
+              onTap: () {},
+              iconData: Icons.photo_library_outlined,
+            ),
           ),
         ],
       ),
@@ -207,57 +229,6 @@ class _ServiceProviderProfileState
           ),
         ),
       ),
-    );
-  }
-
-  _updateCoverPhoto(Size buttonSize) {
-    BorderRadius borderRadius = BorderRadius.circular(buttonSize.width * 0.2);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Container(
-          width: buttonSize.width,
-          height: buttonSize.height,
-          decoration: BoxDecoration(
-            color: kHeaderColor,
-            borderRadius: borderRadius,
-            border: Border.all(
-              width: 1,
-              color: kBlack,
-            ),
-          ),
-          child: Material(
-            color: transparent,
-            child: InkWell(
-              onTap: () {},
-              customBorder: RoundedRectangleBorder(
-                borderRadius: borderRadius,
-              ),
-              splashColor: kWhite,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Icon(
-                    Icons.photo_library_outlined,
-                    size: buttonSize.height * 0.6,
-                    color: kBlack,
-                  ),
-                  Text(
-                    'Choose Image',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: kBlack,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Lato',
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -330,6 +301,7 @@ class _ServiceProviderProfileState
       height: size.height,
       child: Card(
         elevation: 10,
+        color: kWhite,
         child: Padding(
           padding: EdgeInsetsDirectional.only(
             start: sidePad,
@@ -349,10 +321,13 @@ class _ServiceProviderProfileState
     );
   }
 
-  Widget _workTimeRow(Size rowSize, DaysOfWeek day, String? timeRange) {
+  Widget _workTimeRow(Size rowSize, DaysOfWeek day,
+      ServiceProvidersWorkTimeEntity? workTimeEntity) {
     Size daySize = Size(rowSize.width * 0.33, rowSize.height);
     Size timeRangeSize = Size(rowSize.width * 0.45, rowSize.height);
     Size editIconSize = Size(rowSize.width * 0.15, rowSize.height);
+    String dayOfWeek = day.capitalizeFirstLetter(day.name);
+    String timeRange = workTimeEntity?.displayTime() ?? 'Vacation';
     return SizedBox(
       width: rowSize.width,
       height: rowSize.height,
@@ -364,7 +339,7 @@ class _ServiceProviderProfileState
             height: daySize.height,
             alignment: AlignmentDirectional.centerStart,
             child: Text(
-              day.capitalizeFirstLetter(day.name),
+              dayOfWeek,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -377,7 +352,7 @@ class _ServiceProviderProfileState
             height: timeRangeSize.height,
             alignment: AlignmentDirectional.center,
             child: Text(
-              timeRange ?? 'Vacation',
+              timeRange,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
@@ -395,7 +370,17 @@ class _ServiceProviderProfileState
               iconColor: kBlack,
               iconData: FontAwesomeIcons.penToSquare,
               iconSizeRatio: 0.5,
-              onTap: () {},
+              onTap: () => showStartEndTimePickerPopup(
+                context,
+                day.name,
+                (newWorkTime, onComplete) async {
+                  // update worktime using provider
+                  await ref
+                      .read(serviceProviderAccountProvider.notifier)
+                      .updateWorkTimeEntity(newWorkTime);
+                  onComplete();
+                },
+              ),
             ),
           ),
         ],
@@ -420,11 +405,34 @@ class _ServiceProviderProfileState
     if (value.length >= 20) {
       return 'Must be under 20 characters.';
     }
-    // Check if the value contains only letters using a regular expression
-    if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(value)) {
-      return 'Only letters are allowed.';
+    // Check if the value contains only letters, numbers, and spaces using a regular expression
+    if (!RegExp(r'^[a-zA-Z0-9 ]+$').hasMatch(value)) {
+      return 'Only letters and numbers are allowed.';
     }
     // If all validations pass, return null (indicating no error)
     return null;
+  }
+
+  void _onSaveButtonTapped() async {
+    showWaitingPopup(context, 'Saving Changes', 'Saving in progress...',
+        'Your patience is appreciated!');
+    await ref.read(serviceProviderAccountProvider.notifier).saveUpdatedInfo(() {
+      // hide waiting popup
+      Navigator.of(context).pop();
+    }, (error) {
+      // hide waiting popup
+      Navigator.of(context).pop();
+      showErrorPopup(
+        context,
+        'Error Occurred',
+        error,
+        'Try Later!',
+        'Close',
+        () {
+          // hide error popup
+          Navigator.of(context).pop();
+        },
+      );
+    });
   }
 }

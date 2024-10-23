@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:link_win_mob_app/core/models/service_providers/service_providers_appointment_model.dart';
 import 'package:link_win_mob_app/core/models/service_providers/service_providers_model.dart';
 
 abstract class ServiceProvidersInterface {
@@ -89,4 +90,60 @@ abstract class ServiceProvidersInterface {
   /// emit `null` if the provider is not found.
   Stream<ServiceProvidersModel?> getServiceProviderByIdStream(
       String serviceProviderId);
+
+  /// Fetches the appointments of service providers for a specific user from the database.
+  ///
+  /// This method takes a [String] userId and retrieves the list of appointments
+  /// associated with that user. Upon successful retrieval, it returns a [Stream]
+  /// of [List<Appointment>] representing the user's appointments with service providers.
+  ///
+  /// Parameters:
+  /// - [userId]: A [String] representing the unique identifier of the user whose
+  ///   service provider appointments are to be fetched.
+  ///
+  /// Returns:
+  /// A [Stream] of [List<Appointment>] representing the appointments of the user's
+  /// service providers.
+  Stream<List<ServiceProvidersAppointmentModel>>
+      fetchUserServiceProvidersAppointments(String userId);
+
+  /// Updates a specific appointment for a user's service providers in the database.
+  ///
+  /// This method takes a [String] userId and an [ServiceProvidersAppointmentModel] object. It updates the
+  /// appointment in the database with the provided details. Upon successful update,
+  /// the [onSuccess] callback is invoked. If there is an error, the [onError]
+  /// callback is triggered.
+  ///
+  /// Parameters:
+  /// - [userId]: A [String] representing the unique identifier of the user.
+  /// - [appointment]: An [ServiceProvidersAppointmentModel] object representing the updated details of
+  ///   the appointment.
+  /// - [onSuccess]: A callback function invoked upon successful update.
+  /// - [onError]: A callback function that receives the error information if the update fails.
+  Future<void> updateUserServiceProvidersAppointments(
+    String userId,
+    ServiceProvidersAppointmentModel appointment,
+    void Function() onSuccess,
+    void Function(dynamic error) onError,
+  );
+
+  /// Adds a new appointment for a user's service providers to the database.
+  ///
+  /// This method takes a [String] userId and a [ServiceProvidersAppointmentModel] object
+  /// representing the appointment details. Upon successful addition, the [onSuccess]
+  /// callback is invoked. If there is an error during the addition, the [onError]
+  /// callback is triggered with the error information.
+  ///
+  /// Parameters:
+  /// - [userId]: A [String] representing the unique identifier of the user.
+  /// - [appointment]: A [ServiceProvidersAppointmentModel] object containing the details
+  ///   of the appointment to be added.
+  /// - [onSuccess]: A callback function that is invoked upon successful addition.
+  /// - [onError]: A callback function that receives the error information if the addition fails.
+  Future<void> addUserServiceProvidersAppointments(
+    String userId,
+    ServiceProvidersAppointmentModel appointment,
+    void Function() onSuccess,
+    void Function(dynamic error) onError,
+  );
 }

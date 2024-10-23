@@ -1,9 +1,11 @@
+import 'package:link_win_mob_app/core/models/service_providers/service_providers_work_time_entity.dart';
+
 class ServiceProvidersModel {
   final String displayName;
   final double rating;
   final String coverPhotoPath;
   final bool isCurrentlyAvailable;
-  final Map<String, String> workTime;
+  final Map<String, ServiceProvidersWorkTimeEntity> workTime;
 
   ServiceProvidersModel({
     required this.displayName,
@@ -18,21 +20,25 @@ class ServiceProvidersModel {
     double? rating,
     String? coverPhotoPath,
     bool? isCurrentlyAvailable,
-    Map<String, String>? workTime,
+    Map<String, ServiceProvidersWorkTimeEntity>? workTimeMap,
+    ServiceProvidersWorkTimeEntity? workTimeEntity,
   }) {
-    if (workTime != null && workTime.isNotEmpty) {
-      workTime.forEach(
+    if (workTimeMap != null && workTimeMap.isNotEmpty) {
+      workTimeMap.forEach(
         (day, time) {
-          this.workTime[day] = time;
+          workTime[day] = time;
         },
       );
+    }
+    if (workTimeEntity != null) {
+      workTime[workTimeEntity.day] = workTimeEntity;
     }
     return ServiceProvidersModel(
       displayName: displayName ?? this.displayName,
       rating: rating ?? this.rating,
       coverPhotoPath: coverPhotoPath ?? this.coverPhotoPath,
       isCurrentlyAvailable: isCurrentlyAvailable ?? this.isCurrentlyAvailable,
-      workTime: this.workTime,
+      workTime: workTime,
     );
   }
 }

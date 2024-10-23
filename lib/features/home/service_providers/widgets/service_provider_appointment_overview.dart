@@ -63,6 +63,9 @@ class _ServiceProviderAppointmentOverviewState
             );
           },
         ),
+        SizedBox(
+          height: appointmentWidgetSize.height * 0.4,
+        ),
       ],
     );
   }
